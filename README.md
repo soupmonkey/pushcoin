@@ -1,7 +1,7 @@
 Welcome Developers
 ==================
 
-If you haven't read the PushCoin SDK, please go here:
+If you haven't read the PushCoin SDK, please visit: 
 https://pushcoin.com/Pub/SDK/WelcomeDevelopers
 
 This README describes the PushCoin project files. At the top level, you 

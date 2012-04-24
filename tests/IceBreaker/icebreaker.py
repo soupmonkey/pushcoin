@@ -7,6 +7,30 @@ from optparse import OptionParser,OptionError
 from pyparsing import *
 
 class RmoteCall:
+	# CMD: `register'
+	def register(self):
+		# validate input
+		self.require('aid')
+		self.require('iid')
+		self.require('pkey')
+		msg = {
+				u"mid": u"register",
+				u"aid": unicode(self.args['aid']), 
+				u"iid": unicode(self.args['iid']), 
+				u"pkey": self.args['pkey'], 
+				u"agent": unicode(self.args.get('agent', 'cli_sim')), 
+			}
+		print self.send( msg )
+
+	# CMD: `ping'
+	def ping(self):
+		msg = {
+				u"mid": u"ping",
+			}
+		res = self.send( msg )
+		server_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(res['tm']))
+		log.info('RETN %s', server_time )
+
 	def __init__(self, options, cmd, args):
 		# store the cmd and args for the command-handler
 		self.options = options
@@ -40,31 +64,8 @@ class RmoteCall:
 		log.info('CALL %s%s sz=%s', msg['mid'], str(self.args), len( bson_obj ) )
 		remote_call = urllib2.urlopen(self.options.url, bson_obj )
 		bin_res = remote_call.read()
+		log.info('%s', bin_res.encode('hex') )
 		return pymongo.bson.BSON( bin_res ).to_dict()
-
-	# CMD: `register'
-	def register(self):
-		# validate input
-		self.require('aid')
-		self.require('iid')
-		self.require('pkey')
-		msg = {
-				"mid": "register",
-				"aid": self.args['aid'], 
-				"iid": self.args['iid'], 
-				"pkey": self.args['pkey'], 
-				"agent": self.args.get('agent', 'cli_sim'), 
-			}
-		print self.send( msg )
-
-	# CMD: `ping'
-	def ping(self):
-		msg = {
-				"mid": "ping",
-			}
-		res = self.send( msg )
-		server_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(res['tm']))
-		log.info('RETN %s', server_time )
 
 if __name__ == "__main__":
 	# start with basic logger configuration

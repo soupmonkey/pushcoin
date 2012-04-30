@@ -203,23 +203,66 @@ class Block:
 			return self.capacity - self.meta.length
 
 
-	def read_int64( self ):
+	def read_data( self, c, sz ):
 		assert self.mode == 'I'
-		if self.remaining() < 8:
+		if self.remaining() < sz:
 			raise PcosError( PARSE_MESSAGE_TOO_SHORT )
 
-		(val,) = struct.unpack_from("<q", self.doc.data, self.meta.start + self.offset)
-		self.offset += 8
+		(val,) = struct.unpack_from("<"+c, self.doc.data, self.meta.start + self.offset)
+		self.offset += sz
 		return val
 
 
-	def write_int64( self, val ):
+	def write_data( self, c, sz, val ):
 		assert self.mode == 'O'
-		if self.remaining() < 8:
+		if self.remaining() < sz:
 			raise PcosError( PARSE_MESSAGE_TOO_SHORT )
-		struct.pack_into("<q", self.data, self.meta.length, val)
-		self.meta.length += 8
+		struct.pack_into("<"+c, self.data, self.meta.length, val)
+		self.meta.length += sz
+
+
+	def read_byte( self ):
+		return self.read_data('B', 1)
+
+	def write_byte( self, val ):
+		self.write_data('B', 1, val)
+
+	def read_char( self ):
+		return self.read_data('c', 1)
+
+	def write_char( self, val ):
+		self.write_data('c', 1, val)
+
+	def read_bool( self ):
+		return self.read_data('?', 1)
+
+	def write_bool( self, val ):
+		self.write_data('?', 1, val)
+
+	def read_int16( self ):
+		return self.read_data('h', 2)
+
+	def write_int16( self, val ):
+		self.write_data('h', 2, val)
+
+	def read_int32( self ):
+		return self.read_data('i', 4)
+
+	def write_int32( self, val ):
+		self.write_data('i', 4, val)
+
+	def read_int64( self ):
+		return self.read_data('q', 8)
+
+	def write_int64( self, val ):
+		self.write_data('q', 8, val)
 		
+	def read_double( self ):
+		return self.read_data('d', 8)
+
+	def write_double( self, val ):
+		self.write_data('d', 8, val)
+
 
 def _reading_test_pong():
 	"""Tests if parser handles Pong message correctly"""

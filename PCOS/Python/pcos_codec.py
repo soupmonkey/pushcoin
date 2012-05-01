@@ -283,11 +283,11 @@ class Block:
 		self.write_data(str(length)+'s', length, val )
 
 	def read_fixed_string( self, length ):
-		return read_data(str(length)+'c', length)
+		return read_data(str(length)+'s', length)
 
 	def write_fixed_string( self, val ):
 		length = len( val )
-		self.write_data(str(length)+'c', length, val )
+		self.write_data(str(length)+'s', length, val )
 
 def _reading_test_pong():
 	"""Tests if parser handles Pong message correctly"""
@@ -330,7 +330,7 @@ def _writing_test_error():
 
 	bo = Block( 'Bo', 50, 'O' )
 	bo.write_int32( 100 )
-	bo.write_short_string( 'missing required parameter' )
+	bo.write_fixed_string( 'miss' )
 
 	msg = Doc( name="Er" )
 	msg.add( bo )

@@ -282,6 +282,12 @@ class Block:
 		self.write_int16( length )
 		self.write_data(str(length)+'s', length, val )
 
+	def read_fixed_string( self, length ):
+		return read_data(str(length)+'c', length)
+
+	def write_fixed_string( self, val ):
+		length = len( val )
+		self.write_data(str(length)+'c', length, val )
 
 def _reading_test_pong():
 	"""Tests if parser handles Pong message correctly"""

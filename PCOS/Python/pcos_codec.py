@@ -263,6 +263,25 @@ class Block:
 	def write_double( self, val ):
 		self.write_data('d', 8, val)
 
+	def read_short_string( self ):
+		length = self.read_byte()
+		return read_data(str(length)+'s', length)
+
+	def write_short_string( self, val ):
+		length = len( val )
+		assert length < 256
+		self.write_byte( length )
+		self.write_data(str(length)+'s', length, val )
+
+	def read_long_string( self ):
+		length = self.read_int16()
+		return read_data(str(length)+'s', length)
+
+	def write_long_string( self, val ):
+		length = len( val )
+		self.write_int16( length )
+		self.write_data(str(length)+'s', length, val )
+
 
 def _reading_test_pong():
 	"""Tests if parser handles Pong message correctly"""
@@ -299,6 +318,30 @@ def _writing_test_pong():
 
 	assert str(generated_data.raw) == str(sample_data)
 
+
+def _writing_test_error():
+	"""Tests if parser produces correct PCOS Error message"""
+
+	bo = Block( 'Bo', 50, 'O' )
+	bo.write_int32( 100 )
+	bo.write_short_string( 'missing required parameter' )
+
+	msg = Doc( name="Er" )
+	msg.add( bo )
+	
+	# Get encoded PCOS data 	
+	generated_data = msg.encoded()
+
+	reqf = open('data.pcos', 'w')
+	reqf.write( generated_data.raw )
+	reqf.close()
+
+	# Comparison data
+#sample_data = binascii.unhexlify( '50434f53506f16000100546d0800609d9e4f00000000' )
+#
+#assert str(generated_data.raw) == str(sample_data)
+
+
 if __name__ == "__main__":
 	"""Tests basic parser functionality."""
 
@@ -307,6 +350,7 @@ if __name__ == "__main__":
 	
 	# Writing test...
 	_writing_test_pong()
+	_writing_test_error()
 
 	print "Looks good."
 

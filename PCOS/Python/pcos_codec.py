@@ -289,6 +289,7 @@ class Block:
 		length = len( val )
 		self.write_data(str(length)+'s', length, val )
 
+
 def _reading_test_pong():
 	"""Tests if parser handles Pong message correctly"""
 
@@ -343,9 +344,8 @@ def _writing_test_error():
 	reqf.close()
 
 	# Comparison data
-#sample_data = binascii.unhexlify( '50434f53506f16000100546d0800609d9e4f00000000' )
-#
-#assert str(generated_data.raw) == str(sample_data)
+	sample_data = binascii.unhexlify( '50434f53457216000100426f0800640000006d697373' )
+	assert str(generated_data.raw) == str(sample_data)
 
 
 if __name__ == "__main__":

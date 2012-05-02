@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">IceBreaker</string>
+    <string name="configure_title">Choose amount to create shortcut</string>
+
+</resources>

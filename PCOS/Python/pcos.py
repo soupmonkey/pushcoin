@@ -31,6 +31,7 @@ PROTOCOL_MAGIC = 'PCOS'
 PARSE_MESSAGE_TOO_SHORT = 1
 PARSE_BAD_MAGIC = 2
 PARSE_UNKNOWN_BLOCK_MODE = 3
+PARSE_INVALID_ID = 4
 
 class PcosError( Exception ):
 	""" Basis for all exceptions thrown from the PCOS codec."""
@@ -57,9 +58,13 @@ class Doc:
 	def __init__( self, data = None, name = None ): 
 		"""Constructs PCOS from binary data."""
 
+		if name and len( name ) != 2:
+				raise PcosError( PARSE_INVALID_ID )
+			
+		self.message_id = name 
+
 		# map of blocks, such that for a given block-name, we can quickly access its data
 		self.blocks = { }
-		self.message_id = name 
 
 		if data:
 			payload_length = len( data )
@@ -141,7 +146,7 @@ class Doc:
 			ctypes.memmove( ctypes.byref( payload, write_offset ), b.data, b.size() )
 			write_offset += b.size()
 
-		return payload
+		return payload.raw
 
 
 	def _data_segment_size( self ):
@@ -322,7 +327,7 @@ def _writing_test_pong():
 
 	# Comparison data
 	sample_data = binascii.unhexlify( '50434f53506f16000100546d0800609d9e4f00000000' )
-	assert str(generated_data.raw) == str(sample_data)
+	assert str(generated_data) == str(sample_data)
 
 
 def _writing_test_error():
@@ -339,12 +344,12 @@ def _writing_test_error():
 	generated_data = msg.encoded()
 
 	reqf = open('data.pcos', 'w')
-	reqf.write( generated_data.raw )
+	reqf.write( generated_data )
 	reqf.close()
 
 	# Comparison data
 	sample_data = binascii.unhexlify( '50434f53457216000100426f0800640000006d697373' )
-	assert str(generated_data.raw) == str(sample_data)
+	assert str(generated_data) == str(sample_data)
 
 
 if __name__ == "__main__":

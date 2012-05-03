@@ -1,17 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import sys, urllib2, time, struct
+import sys, urllib2, time
 import logging as log
+import pcos
 from config import *
 from optparse import OptionParser,OptionError
 from pyparsing import *
-
-PCOS_MIN_MESSAGE_LENGTH = 10                                                                           
-PCOS_BLOCK_META_LENGTH = 4
-PCOS_HEADER_MAGIC = 'PCOS'  
-
-class BlockMeta:
-	pass;
 
 class RmoteCall:
 #	# CMD: `register'
@@ -31,10 +25,15 @@ class RmoteCall:
 
 	# CMD: `ping'
 	def ping(self):
-		(msg_id, blocks) = self.send( 'Pi', [] )
-		tm_block = blocks['Tm']
-		(tm,) = self.pong.unpack_from( tm_block )
-		server_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(tm))
+
+		req = pcos.Doc( name="Pi" )
+		res = self.send( req )
+		# jump to the block of interest
+		tm = res.block( 'Tm' )
+
+		# read block field(s)
+		tm_epoch = tm.read_int64();
+		server_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(tm_epoch))
 		log.info('RETN %s', server_time )
 
 	def __init__(self, options, cmd, args):
@@ -42,11 +41,6 @@ class RmoteCall:
 		self.options = options
 		self.cmd = cmd
 		self.args = args
-
-		# PCOS structs
-		self.header = struct.Struct('<4s2shh')
-		self.block_meta = struct.Struct('<2sh')
-		self.pong = struct.Struct('<q')
 
 		# list of commands (PushCoin requests) we are supporting:
 		self.lookup = {
@@ -70,56 +64,28 @@ class RmoteCall:
 		cmd();
 		
 	# sends request to the server, returns result
-	def send(self, msg_id, blocks):
-		if len(msg_id) != 2:
-			raise RuntimeError("Invalid message-id '%s' -- must be two characters" % (msg_id))		
+	def send(self, req):
 
-		# write block enumeration, compute total length
-		total_length = PCOS_MIN_MESSAGE_LENGTH
-		block_enum = ''
-		block_data = ''
-		for b in blocks:
-			block_length = len(b.data)
-			block_value = (b.identifier, block_length)
-			block_enum += self.block_meta.pack( *block_value );
-			block_data += b.data;
-			total_length += block_length + PCOS_BLOCK_META_LENGTH
+		# Get encoded PCOS data 	
+		encoded = req.encoded()
 
-		hdr_values = (PCOS_HEADER_MAGIC, msg_id, total_length, len(blocks) )
-		hdr = self.header.pack( *hdr_values );
-		payload = ''.join( (hdr, block_enum, block_data) )
+		# For debugging, we write request and response
+		if self.options.is_writing_io:
+			reqf = open('request.pcos', 'w')
+			reqf.write( encoded )
+			reqf.close()
 
-		reqf = open('request.pcos', 'w')
-		reqf.write( payload )
-		reqf.close()
-
-		log.info('CALL %s%s sz=%s', self.cmd, str(self.args), total_length )
-		remote_call = urllib2.urlopen(self.options.url, payload )
+		log.info('CALL %s%s', self.cmd, str(self.args) )
+		remote_call = urllib2.urlopen(self.options.url, encoded )
 		response = remote_call.read()
 
-		reqf = open('response.pcos', 'w')
-		reqf.write( response )
-		reqf.close()
+		if self.options.is_writing_io:
+			reqf = open('response.pcos', 'w')
+			reqf.write( response )
+			reqf.close()
 
-    # determine length of the response
-		if len( response ) < PCOS_MIN_MESSAGE_LENGTH:
-			raise RuntimeError('response payload too short')
-		
-		# parse the message header
-		(magic, message_id, length, block_count) = self.header.unpack_from(response)
-		log.info("RCV '%s' sz=%s blocks=%s", message_id, length, block_count )
-
-		res = { }
-		# create map of blocks
-		meta_offset = PCOS_MIN_MESSAGE_LENGTH
-		block_offset = PCOS_MIN_MESSAGE_LENGTH + block_count * PCOS_BLOCK_META_LENGTH
-		for i in range(0, block_count):
-			(block_id, block_length) = self.block_meta.unpack_from(response, meta_offset)
-			res[block_id] = response[ block_offset : block_offset + block_length]
-			block_offset += block_length
-			meta_offset += PCOS_BLOCK_META_LENGTH
-
-		return (message_id, res)
+		# return a lightweight PCOS document 
+		return pcos.Doc( response )
 
 if __name__ == "__main__":
 	# start with basic logger configuration
@@ -130,6 +96,7 @@ if __name__ == "__main__":
 	version = "PushCoin IceBreaker v1.0"
 	parser = OptionParser(usage, version = version)
 	parser.add_option("-C", "--url", dest="url", action="store", default="https://api.pushcoin.com:20001/pcos/", help="server URL")
+	parser.add_option("-S", "--save-io", dest="is_writing_io", action="store_true", default=False, help="save request and response to files")
 	
 	if len(sys.argv) == 0:
 		parser.print_help()

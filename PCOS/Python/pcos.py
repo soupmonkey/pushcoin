@@ -322,7 +322,6 @@ def _writing_test_pong():
 
 	# Comparison data
 	sample_data = binascii.unhexlify( '50434f53506f16000100546d0800609d9e4f00000000' )
-
 	assert str(generated_data.raw) == str(sample_data)
 
 

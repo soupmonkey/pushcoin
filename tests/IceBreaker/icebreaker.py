@@ -84,8 +84,21 @@ class RmoteCall:
 			reqf.write( response )
 			reqf.close()
 
+		res = pcos.Doc( response )
+		# check if response is not an error
+		if res.message_id == 'Er':
+			# jump to the block of interest
+			er = res.block( 'Bo' )
+			if er:
+				code = er.read_int32();
+				what = er.read_short_string();
+				log.error( '%s (#%s)', what, code )
+			else:
+				log.error( 'ERROR -- cause unknown' )
+			raise RuntimeError('error result') 
+
 		# return a lightweight PCOS document 
-		return pcos.Doc( response )
+		return res
 
 if __name__ == "__main__":
 	# start with basic logger configuration

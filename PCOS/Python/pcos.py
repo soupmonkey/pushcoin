@@ -28,10 +28,10 @@ BLOCK_META_LENGTH = 4
 PROTOCOL_MAGIC = 'PCOS'
 
 # PCOS parser error codes
-PARSE_MESSAGE_TOO_SHORT = 1
-PARSE_BAD_MAGIC = 2
-PARSE_UNKNOWN_BLOCK_MODE = 3
-PARSE_INVALID_ID = 4
+PARSE_MESSAGE_TOO_SHORT = 110
+PARSE_BAD_MAGIC = 111
+PARSE_UNKNOWN_BLOCK_MODE = 112
+PARSE_INVALID_ID = 113
 
 class PcosError( Exception ):
 	""" Basis for all exceptions thrown from the PCOS codec."""
@@ -270,7 +270,7 @@ class Block:
 
 	def read_short_string( self ):
 		length = self.read_byte()
-		return read_data(str(length)+'s', length)
+		return self.read_data(str(length)+'s', length)
 
 	def write_short_string( self, val ):
 		length = len( val )
@@ -280,7 +280,7 @@ class Block:
 
 	def read_long_string( self ):
 		length = self.read_int16()
-		return read_data(str(length)+'s', length)
+		return self.read_data(str(length)+'s', length)
 
 	def write_long_string( self, val ):
 		length = len( val )
@@ -288,7 +288,7 @@ class Block:
 		self.write_data(str(length)+'s', length, val )
 
 	def read_fixed_string( self, length ):
-		return read_data(str(length)+'s', length)
+		return self.read_data(str(length)+'s', length)
 
 	def write_fixed_string( self, val ):
 		length = len( val )

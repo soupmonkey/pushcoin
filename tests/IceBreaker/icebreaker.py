@@ -3,25 +3,23 @@
 import sys, urllib2, time
 import logging as log
 import pcos
-from config import *
 from optparse import OptionParser,OptionError
 from pyparsing import *
 
 class RmoteCall:
-#	# CMD: `register'
-#	def register(self):
-#		# validate input
-#		self.require('aid')
-#		self.require('iid')
-#		self.require('pkey')
-#		msg = {
-#				u"mid": u"register",
-#				u"aid": unicode(self.args['aid']), 
-#				u"iid": unicode(self.args['iid']), 
-#				u"pkey": self.args['pkey'], 
-#				u"agent": unicode(self.args.get('agent', 'cli_sim')), 
-#			}
-#		print self.send( msg )
+
+	# CMD: `register'
+	def register(self):
+		req = pcos.Doc( name="Re" )
+		bo = pcos.Block( 'Bo', 512, 'O' )
+		bo.write_short_string( self.args['registration_id'] )
+		bo.write_long_string( '>> PUBLIC-KEY GOES HERE <<' )
+		bo.write_short_string( ';'.join( ('IceBreaker/1.0', sys.platform, sys.byteorder, sys.version) ) )
+		req.add( bo )
+
+		res = self.send( req )
+
+		# jump to the block of interest
 
 	# CMD: `ping'
 	def ping(self):
@@ -46,16 +44,12 @@ class RmoteCall:
 		self.lookup = {
 #		"register": self.register,
 			"ping": self.ping,
+			"register": self.register,
 		}		
 
 	# invoked if user asks for an unknown command
 	def unknown_command(self):
 		raise RuntimeError("'%s' is not a recognized command" % self.cmd)
-
-	# helper in checking required input param 
-	def require(self, name):
-		if name not in self.args:
-			raise RuntimeError("CMD '%s': missing argument '%s'" % (self.cmd, name))		
 
 	# entry point to call out to the server
 	def call(self):
@@ -120,6 +114,8 @@ if __name__ == "__main__":
 	if len(args) < 1: 
 		raise RuntimeError('missing command argument') 
 
+	print version
+
 	cmd = args[0]
 	cmd_args = { }
 	if len(args) > 1: 
@@ -127,14 +123,13 @@ if __name__ == "__main__":
 		# composing from pyparsing objects
 		integer = Regex(r'[+-]?\d+')
 		real = Regex(r'[+-]?\d+\.\d*')
-		ident = Word(alphanums)
+		ident = Regex(r'\w+')
 		value = real | integer | quotedString.setParseAction(removeQuotes)
 
 		# define a key-value pair, and a configline as one or more of these
 		configline = dictOf(ident + Suppress('='), value + Suppress(Optional(':')))
 		cmd_args = configline.parseString(args[1]).asDict()
-
-	print version
+		print ("Parsed arguments: " + str(cmd_args))
 	
 	pushCoin = RmoteCall(options, cmd, cmd_args)
 	pushCoin.call()

@@ -28,10 +28,9 @@ BLOCK_META_LENGTH = 4
 PROTOCOL_MAGIC = 'PCOS'
 
 # PCOS parser error codes
-PARSE_MESSAGE_TOO_SHORT = 110
-PARSE_BAD_MAGIC = 111
-PARSE_UNKNOWN_BLOCK_MODE = 112
-PARSE_INVALID_ID = 113
+ERR_INTERNAL_ERROR = 100
+ERR_MALFORMED_MESSAGE = 101
+ERR_INCOMPATIBLE_REQUEST = 102
 
 class PcosError( Exception ):
 	""" Basis for all exceptions thrown from the PCOS codec."""
@@ -59,7 +58,7 @@ class Doc:
 		"""Constructs PCOS from binary data."""
 
 		if name and len( name ) != 2:
-				raise PcosError( PARSE_INVALID_ID )
+				raise PcosError( ERR_MALFORMED_MESSAGE, 'malformed message-ID' )
 			
 		self.message_id = name 
 
@@ -69,21 +68,21 @@ class Doc:
 		if data:
 			payload_length = len( data )
 			if payload_length < MIN_MESSAGE_LENGTH:
-				raise PcosError( PARSE_MESSAGE_TOO_SHORT )
+				raise PcosError( ERR_MALFORMED_MESSAGE )
 
 			# parse the message header
 			self.magic, self.message_id, self.length, self.block_count = Doc._HEADER_PARSER.unpack_from( data )
 
 			# check if magic matches our encoding tag
 			if self.magic != PROTOCOL_MAGIC:
-				raise PcosError( PARSE_BAD_MAGIC )
+				raise PcosError( ERR_INCOMPATIBLE_REQUEST )
 
 			# check if payload is big enough to even hold block_count meta records
 			# -- we could be lied!
 			block_offset = MIN_MESSAGE_LENGTH + self.block_count * BLOCK_META_LENGTH
 
 			if payload_length < block_offset:
-				raise PcosError( PARSE_MESSAGE_TOO_SHORT )
+				raise PcosError( ERR_MALFORMED_MESSAGE )
 
 			# data appears to be "one of ours", store it
 			self.data = data
@@ -108,7 +107,7 @@ class Doc:
 			# all the block meta information collected -- check if payload's large enough
 			# to hold all the "claimed" block-data
 			if total_claimed_length < payload_length:
-				raise PcosError( PARSE_MESSAGE_TOO_SHORT )
+				raise PcosError( ERR_MALFORMED_MESSAGE )
 
 
 	def block( self, name ):
@@ -166,7 +165,7 @@ class Block:
 		elif mode == 'O':
 			self.init_as_output_block( v1, v2 ) 
 		else:
-			raise PcosError( PARSE_UNKNOWN_BLOCK_MODE )
+			raise PcosError( ERR_INTERNAL_ERROR, "pcos: unknown block mode" )
 
 
 	def init_as_output_block( self, name, size ):
@@ -211,7 +210,7 @@ class Block:
 	def read_data( self, c, sz ):
 		assert self.mode == 'I'
 		if self.remaining() < sz:
-			raise PcosError( PARSE_MESSAGE_TOO_SHORT )
+			raise PcosError( ERR_MALFORMED_MESSAGE )
 
 		(val,) = struct.unpack_from("<"+c, self.doc.data, self.meta.start + self.offset)
 		self.offset += sz
@@ -221,7 +220,7 @@ class Block:
 	def write_data( self, c, sz, val ):
 		assert self.mode == 'O'
 		if self.remaining() < sz:
-			raise PcosError( PARSE_MESSAGE_TOO_SHORT )
+			raise PcosError( ERR_MALFORMED_MESSAGE )
 		struct.pack_into("<"+c, self.data, self.meta.length, val)
 		self.meta.length += sz
 

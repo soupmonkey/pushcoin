@@ -18,14 +18,19 @@ __author__  = '''Slawomir Lisznianski <sl@minta.com>'''
 
 import binascii, struct, ctypes
 
-# This is an absolute minimum length (in bytes) for a PCOS serialized object.
-MIN_MESSAGE_LENGTH = 10
+# This is an absolute minimum length (in bytes) for a PCOS serialized object:
+#
+#   min_size = sizeof_header(16) + sizeof_empty_unbounded_array(2)
+#
+# Note: the empty unbounded array implies no block enumerations.
+MIN_MESSAGE_LENGTH = 18
 
 # Block-meta record has a fixed size of 4 bytes
 BLOCK_META_LENGTH = 4
 
 # A four-byte identifier for PCOS protocol.
 PROTOCOL_MAGIC = 'PCOS'
+RESERVED_HDR_FIELD = b'\0\0\0\0\0\0'
 
 # PCOS parser error codes
 ERR_INTERNAL_ERROR = 100
@@ -50,7 +55,7 @@ class Doc:
 	"""Parses binary data, presumably PCOS-encoded, and constructs a lightweight document."""
 
 	# private PCOS header and block-meta parsers
-	_HEADER_PARSER = struct.Struct('<4s2shh')
+	_HEADER_PARSER = struct.Struct('<4si2s6sh')
 	_BLOCK_META = struct.Struct('<2sh')
 
 
@@ -71,7 +76,7 @@ class Doc:
 				raise PcosError( ERR_MALFORMED_MESSAGE )
 
 			# parse the message header
-			self.magic, self.message_id, self.length, self.block_count = Doc._HEADER_PARSER.unpack_from( data )
+			self.magic, self.length, self.message_id, reserved, self.block_count = Doc._HEADER_PARSER.unpack_from( data )
 
 			# check if magic matches our encoding tag
 			if self.magic != PROTOCOL_MAGIC:
@@ -132,7 +137,7 @@ class Doc:
 		write_offset = 0
 		total_length = MIN_MESSAGE_LENGTH + BLOCK_META_LENGTH * len(self.blocks) + self._data_segment_size()
 		payload = ctypes.create_string_buffer( total_length )
-		Doc._HEADER_PARSER.pack_into( payload, write_offset, PROTOCOL_MAGIC, self.message_id, total_length, len(self.blocks) );
+		Doc._HEADER_PARSER.pack_into( payload, write_offset, PROTOCOL_MAGIC, total_length, self.message_id, RESERVED_HDR_FIELD, len(self.blocks) );
 		write_offset += MIN_MESSAGE_LENGTH
 
 		# write block enumeration

@@ -69,7 +69,7 @@ class RmoteCall:
 			reqf.write( encoded )
 			reqf.close()
 
-		log.info('CALL %s%s', self.cmd, str(self.args) )
+		log.info('CALL %s %s', self.cmd, str(self.args) )
 		remote_call = urllib2.urlopen(self.options.url, encoded )
 		response = remote_call.read()
 

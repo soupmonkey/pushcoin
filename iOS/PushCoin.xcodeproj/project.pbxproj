@@ -1,0 +1,818 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0D19E2CD1541CCAE00C8671B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D19E2CC1541CCAE00C8671B /* UIKit.framework */; };
+		0D19E2CF1541CCAE00C8671B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D19E2CE1541CCAE00C8671B /* Foundation.framework */; };
+		0D19E2D11541CCAE00C8671B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D19E2D01541CCAE00C8671B /* CoreGraphics.framework */; };
+		0D19E2D71541CCAE00C8671B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0D19E2D51541CCAE00C8671B /* InfoPlist.strings */; };
+		0D19E2D91541CCAE00C8671B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D19E2D81541CCAE00C8671B /* main.m */; };
+		0D19E2DD1541CCAE00C8671B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D19E2DC1541CCAE00C8671B /* AppDelegate.m */; };
+		0D19E2E01541CCAE00C8671B /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0D19E2DE1541CCAE00C8671B /* MainStoryboard.storyboard */; };
+		0D19E2E31541CCAE00C8671B /* PayController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D19E2E21541CCAE00C8671B /* PayController.mm */; };
+		0D19E2E51541CCAE00C8671B /* first.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D19E2E41541CCAE00C8671B /* first.png */; };
+		0D19E2E71541CCAE00C8671B /* first@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D19E2E61541CCAE00C8671B /* first@2x.png */; };
+		0D19E2EA1541CCAE00C8671B /* ReceiveController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D19E2E91541CCAE00C8671B /* ReceiveController.mm */; };
+		0D19E2EC1541CCAE00C8671B /* second.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D19E2EB1541CCAE00C8671B /* second.png */; };
+		0D19E2EE1541CCAE00C8671B /* second@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D19E2ED1541CCAE00C8671B /* second@2x.png */; };
+		0D20D8A015571ED300098838 /* PCOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89715571ED300098838 /* PCOS.m */; };
+		0D20D8A215571ED300098838 /* PCOSMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89B15571ED300098838 /* PCOSMessage.m */; };
+		0D20D8A315571ED300098838 /* PushCoinMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89D15571ED300098838 /* PushCoinMessages.m */; };
+		0D20D8A415571ED300098838 /* PCOSTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89F15571ED300098838 /* PCOSTypes.m */; };
+		0D3EA61A154872FB0088EFE1 /* pushcoin_com.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0D3EA619154872FB0088EFE1 /* pushcoin_com.pub */; };
+		0D3EA61D154877670088EFE1 /* OpenSSLWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA61C154877670088EFE1 /* OpenSSLWrapper.m */; };
+		0D3EA6201548783D0088EFE1 /* PushCoinConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA61F1548783D0088EFE1 /* PushCoinConfig.m */; };
+		0D3EA6231548FB0A0088EFE1 /* PushCoinWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */; };
+		0D3EA63F154936C50088EFE1 /* ChallengeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA63E154936C50088EFE1 /* ChallengeController.m */; };
+		0D7A8F80154202EC00634A79 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F7E154202EC00634A79 /* AddressBook.framework */; };
+		0D7A8F81154202EC00634A79 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F7F154202EC00634A79 /* AddressBookUI.framework */; };
+		0D7A8F83154202F700634A79 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F82154202F700634A79 /* AudioToolbox.framework */; };
+		0D7A8F851542030100634A79 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F841542030100634A79 /* AVFoundation.framework */; };
+		0D7A8F881542031400634A79 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F861542031400634A79 /* CoreMedia.framework */; };
+		0D7A8F891542031400634A79 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F871542031400634A79 /* CoreVideo.framework */; };
+		0D7A8F8B1542031C00634A79 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F8A1542031C00634A79 /* libiconv.dylib */; };
+		0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8FBE154218B700634A79 /* QuartzCore.framework */; };
+		0D7A8FCB1542466300634A79 /* libqrencoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8FC815421B7000634A79 /* libqrencoder.a */; };
+		0D7A8FE51542609600634A79 /* SettingsController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D7A8FE41542609600634A79 /* SettingsController.mm */; };
+		0D7A8FF41542636400634A79 /* libZXingWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8FEF1542633200634A79 /* libZXingWidget.a */; };
+		0D7A8FF71543614000634A79 /* QRViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D7A8FF61543614000634A79 /* QRViewController.mm */; };
+		0DACCD741558A02A00A69DED /* PCOSParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DACCD731558A02A00A69DED /* PCOSParser.m */; };
+		0DAFD23C15478E930010459A /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFD23915478E5E0010459A /* libcrypto.a */; };
+		0DAFD24C1547A8180010459A /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DAFD24B1547A8180010459A /* KeychainWrapper.m */; };
+		0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFD24D1547ACBA0010459A /* Security.framework */; };
+		0DBC48F61543BF2F00E56EDF /* numpad-bg_11_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48D31543BF2F00E56EDF /* numpad-bg_11_h.png */; };
+		0DBC48F71543BF2F00E56EDF /* numpad-bg_10_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48D41543BF2F00E56EDF /* numpad-bg_10_h.png */; };
+		0DBC48F81543BF2F00E56EDF /* numpad-bg_9_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48D51543BF2F00E56EDF /* numpad-bg_9_h.png */; };
+		0DBC48F91543BF2F00E56EDF /* numpad-bg_8_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48D61543BF2F00E56EDF /* numpad-bg_8_h.png */; };
+		0DBC48FA1543BF2F00E56EDF /* numpad-bg_7_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48D71543BF2F00E56EDF /* numpad-bg_7_h.png */; };
+		0DBC48FB1543BF2F00E56EDF /* numpad-bg_6_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48D81543BF2F00E56EDF /* numpad-bg_6_h.png */; };
+		0DBC48FC1543BF2F00E56EDF /* numpad-bg_5_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48D91543BF2F00E56EDF /* numpad-bg_5_h.png */; };
+		0DBC48FD1543BF2F00E56EDF /* numpad-bg_4_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48DA1543BF2F00E56EDF /* numpad-bg_4_h.png */; };
+		0DBC48FE1543BF2F00E56EDF /* numpad-bg_3_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48DB1543BF2F00E56EDF /* numpad-bg_3_h.png */; };
+		0DBC48FF1543BF2F00E56EDF /* numpad-bg_2_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48DC1543BF2F00E56EDF /* numpad-bg_2_h.png */; };
+		0DBC49001543BF2F00E56EDF /* numpad-bg_1_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48DD1543BF2F00E56EDF /* numpad-bg_1_h.png */; };
+		0DBC49011543BF2F00E56EDF /* numpad-bg_0_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48DE1543BF2F00E56EDF /* numpad-bg_0_h.png */; };
+		0DBC49021543BF2F00E56EDF /* numpad-bg_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48DF1543BF2F00E56EDF /* numpad-bg_0.png */; };
+		0DBC49031543BF2F00E56EDF /* numpad-bg_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48E01543BF2F00E56EDF /* numpad-bg_1.png */; };
+		0DBC49041543BF2F00E56EDF /* numpad-bg_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48E11543BF2F00E56EDF /* numpad-bg_2.png */; };
+		0DBC49051543BF2F00E56EDF /* numpad-bg_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48E21543BF2F00E56EDF /* numpad-bg_3.png */; };
+		0DBC49061543BF2F00E56EDF /* numpad-bg_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48E31543BF2F00E56EDF /* numpad-bg_4.png */; };
+		0DBC49071543BF2F00E56EDF /* numpad-bg_5.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48E41543BF2F00E56EDF /* numpad-bg_5.png */; };
+		0DBC49081543BF2F00E56EDF /* numpad-bg_6.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48E51543BF2F00E56EDF /* numpad-bg_6.png */; };
+		0DBC49091543BF2F00E56EDF /* numpad-bg_7.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48E61543BF2F00E56EDF /* numpad-bg_7.png */; };
+		0DBC490A1543BF2F00E56EDF /* numpad-bg_8.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48E71543BF2F00E56EDF /* numpad-bg_8.png */; };
+		0DBC490B1543BF2F00E56EDF /* numpad-bg_9.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48E81543BF2F00E56EDF /* numpad-bg_9.png */; };
+		0DBC490C1543BF2F00E56EDF /* numpad-bg_10.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48E91543BF2F00E56EDF /* numpad-bg_10.png */; };
+		0DBC490D1543BF2F00E56EDF /* numpad-bg_11.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48EA1543BF2F00E56EDF /* numpad-bg_11.png */; };
+		0DBC490E1543BF2F00E56EDF /* keyNE_BG_touched.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48EB1543BF2F00E56EDF /* keyNE_BG_touched.png */; };
+		0DBC490F1543BF2F00E56EDF /* keyNW_BG_touched.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48EC1543BF2F00E56EDF /* keyNW_BG_touched.png */; };
+		0DBC49101543BF2F00E56EDF /* keyBG_touched.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48ED1543BF2F00E56EDF /* keyBG_touched.png */; };
+		0DBC49111543BF2F00E56EDF /* keySE_BG_touched.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48EE1543BF2F00E56EDF /* keySE_BG_touched.png */; };
+		0DBC49121543BF2F00E56EDF /* keySW_BG_touched.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48EF1543BF2F00E56EDF /* keySW_BG_touched.png */; };
+		0DBC49131543BF2F00E56EDF /* keySW_BG.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48F01543BF2F00E56EDF /* keySW_BG.png */; };
+		0DBC49141543BF2F00E56EDF /* keySE_BG.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48F11543BF2F00E56EDF /* keySE_BG.png */; };
+		0DBC49151543BF2F00E56EDF /* keyNE_BG.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48F21543BF2F00E56EDF /* keyNE_BG.png */; };
+		0DBC49161543BF2F00E56EDF /* keyNW_BG.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48F31543BF2F00E56EDF /* keyNW_BG.png */; };
+		0DBC49171543BF2F00E56EDF /* keyBG.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48F41543BF2F00E56EDF /* keyBG.png */; };
+		0DBC49181543BF2F00E56EDF /* keypad.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DBC48F51543BF2F00E56EDF /* keypad.png */; };
+		0DBC491B1543BF3700E56EDF /* VSKeypadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DBC491A1543BF3700E56EDF /* VSKeypadView.m */; };
+		0DF680261545B28500F5E784 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 0DF680251545B28500F5E784 /* README */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		0D3EA6681549CB070088EFE1 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.proto";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"${DERIVED_SOURCES_DIR}/${INPUT_FILE_BASE}.pb.h",
+				"${DERIVED_SOURCES_DIR}/${INPUT_FILE_BASE}.pb.m",
+			);
+			script = "/usr/local/bin/protoc --plugin=/usr/local/bin/protoc-gen-objc --proto_path=${INPUT_FILE_DIR} --objc_out=${DERIVED_SOURCES_DIR} ${INPUT_FILE_PATH}";
+		};
+/* End PBXBuildRule section */
+
+/* Begin PBXContainerItemProxy section */
+		0D7A8FC715421B7000634A79 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D7A8FC015421B7000634A79 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9672D35713BD662F0002B0E2;
+			remoteInfo = qrencoder;
+		};
+		0D7A8FC91542465F00634A79 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D7A8FC015421B7000634A79 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 9672D35613BD662F0002B0E2;
+			remoteInfo = qrencoder;
+		};
+		0D7A8FEE1542633200634A79 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D7A8FE61542633100634A79 /* ZXingWidget.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = ZXingWidget;
+		};
+		0D7A8FF01542633200634A79 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D7A8FE61542633100634A79 /* ZXingWidget.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1D60398D13DF7CAD006F4B51;
+			remoteInfo = ZXingTests;
+		};
+		0D7A8FF21542635E00634A79 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D7A8FE61542633100634A79 /* ZXingWidget.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+			remoteInfo = ZXingWidget;
+		};
+		0DAFD23815478E5E0010459A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0DAFD23115478E5E0010459A /* openssl.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9069D28C0FCE659A0042E34C;
+			remoteInfo = crypto;
+		};
+		0DAFD23A15478E8C0010459A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0DAFD23115478E5E0010459A /* openssl.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 9069D28B0FCE659A0042E34C;
+			remoteInfo = crypto;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0D19E2C81541CCAE00C8671B /* PushCoin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PushCoin.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D19E2CC1541CCAE00C8671B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		0D19E2CE1541CCAE00C8671B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		0D19E2D01541CCAE00C8671B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		0D19E2D41541CCAE00C8671B /* PushCoin-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PushCoin-Info.plist"; sourceTree = "<group>"; };
+		0D19E2D61541CCAE00C8671B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		0D19E2D81541CCAE00C8671B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		0D19E2DA1541CCAE00C8671B /* PushCoin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PushCoin-Prefix.pch"; sourceTree = "<group>"; };
+		0D19E2DB1541CCAE00C8671B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		0D19E2DC1541CCAE00C8671B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		0D19E2DF1541CCAE00C8671B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		0D19E2E11541CCAE00C8671B /* PayController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PayController.h; sourceTree = "<group>"; };
+		0D19E2E21541CCAE00C8671B /* PayController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PayController.mm; sourceTree = "<group>"; };
+		0D19E2E41541CCAE00C8671B /* first.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = first.png; path = PushCoin/first.png; sourceTree = "<group>"; };
+		0D19E2E61541CCAE00C8671B /* first@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "first@2x.png"; path = "PushCoin/first@2x.png"; sourceTree = "<group>"; };
+		0D19E2E81541CCAE00C8671B /* ReceiveController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReceiveController.h; sourceTree = "<group>"; };
+		0D19E2E91541CCAE00C8671B /* ReceiveController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ReceiveController.mm; sourceTree = "<group>"; };
+		0D19E2EB1541CCAE00C8671B /* second.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = second.png; path = PushCoin/second.png; sourceTree = "<group>"; };
+		0D19E2ED1541CCAE00C8671B /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "second@2x.png"; path = "PushCoin/second@2x.png"; sourceTree = "<group>"; };
+		0D20D89615571ED300098838 /* PCOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOS.h; sourceTree = "<group>"; };
+		0D20D89715571ED300098838 /* PCOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOS.m; sourceTree = "<group>"; };
+		0D20D89A15571ED300098838 /* PCOSMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSMessage.h; sourceTree = "<group>"; };
+		0D20D89B15571ED300098838 /* PCOSMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSMessage.m; sourceTree = "<group>"; };
+		0D20D89C15571ED300098838 /* PushCoinMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushCoinMessages.h; sourceTree = "<group>"; };
+		0D20D89D15571ED300098838 /* PushCoinMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushCoinMessages.m; sourceTree = "<group>"; };
+		0D20D89E15571ED300098838 /* PCOSTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSTypes.h; sourceTree = "<group>"; };
+		0D20D89F15571ED300098838 /* PCOSTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSTypes.m; sourceTree = "<group>"; };
+		0D20D8A515576E1700098838 /* PCOS-CPP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PCOS-CPP.h"; sourceTree = "<group>"; };
+		0D3EA619154872FB0088EFE1 /* pushcoin_com.pub */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = pushcoin_com.pub; sourceTree = "<group>"; };
+		0D3EA61B154877670088EFE1 /* OpenSSLWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenSSLWrapper.h; sourceTree = "<group>"; };
+		0D3EA61C154877670088EFE1 /* OpenSSLWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenSSLWrapper.m; sourceTree = "<group>"; };
+		0D3EA61E1548783D0088EFE1 /* PushCoinConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushCoinConfig.h; sourceTree = "<group>"; };
+		0D3EA61F1548783D0088EFE1 /* PushCoinConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushCoinConfig.m; sourceTree = "<group>"; };
+		0D3EA6211548FB0A0088EFE1 /* PushCoinWebService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushCoinWebService.h; sourceTree = "<group>"; };
+		0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushCoinWebService.m; sourceTree = "<group>"; };
+		0D3EA63D154936C50088EFE1 /* ChallengeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChallengeController.h; sourceTree = "<group>"; };
+		0D3EA63E154936C50088EFE1 /* ChallengeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChallengeController.m; sourceTree = "<group>"; };
+		0D7A8F7E154202EC00634A79 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		0D7A8F7F154202EC00634A79 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		0D7A8F82154202F700634A79 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		0D7A8F841542030100634A79 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		0D7A8F861542031400634A79 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		0D7A8F871542031400634A79 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		0D7A8F8A1542031C00634A79 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		0D7A8FBB154217CD00634A79 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		0D7A8FBE154218B700634A79 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		0D7A8FC015421B7000634A79 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = QRCodeEncoderObjectiveCAtGithub.xcodeproj; path = ../../v1/QRCodeEncoderObjectiveC/QRCodeEncoderObjectiveCAtGithub.xcodeproj; sourceTree = "<group>"; };
+		0D7A8FE31542609600634A79 /* SettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsController.h; sourceTree = "<group>"; };
+		0D7A8FE41542609600634A79 /* SettingsController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SettingsController.mm; sourceTree = "<group>"; };
+		0D7A8FE61542633100634A79 /* ZXingWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZXingWidget.xcodeproj; path = "../../v1/zxing-2.0/iphone/ZXingWidget/ZXingWidget.xcodeproj"; sourceTree = "<group>"; };
+		0D7A8FF51543614000634A79 /* QRViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRViewController.h; sourceTree = "<group>"; };
+		0D7A8FF61543614000634A79 /* QRViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QRViewController.mm; sourceTree = "<group>"; };
+		0DACCD721558A02A00A69DED /* PCOSParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSParser.h; sourceTree = "<group>"; };
+		0DACCD731558A02A00A69DED /* PCOSParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSParser.m; sourceTree = "<group>"; };
+		0DAFD23115478E5E0010459A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "../../v1/openssl-xcode/openssl.xcodeproj"; sourceTree = "<group>"; };
+		0DAFD24A1547A8180010459A /* KeychainWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainWrapper.h; sourceTree = "<group>"; };
+		0DAFD24B1547A8180010459A /* KeychainWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainWrapper.m; sourceTree = "<group>"; };
+		0DAFD24D1547ACBA0010459A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		0DBC48D31543BF2F00E56EDF /* numpad-bg_11_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_11_h.png"; sourceTree = "<group>"; };
+		0DBC48D41543BF2F00E56EDF /* numpad-bg_10_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_10_h.png"; sourceTree = "<group>"; };
+		0DBC48D51543BF2F00E56EDF /* numpad-bg_9_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_9_h.png"; sourceTree = "<group>"; };
+		0DBC48D61543BF2F00E56EDF /* numpad-bg_8_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_8_h.png"; sourceTree = "<group>"; };
+		0DBC48D71543BF2F00E56EDF /* numpad-bg_7_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_7_h.png"; sourceTree = "<group>"; };
+		0DBC48D81543BF2F00E56EDF /* numpad-bg_6_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_6_h.png"; sourceTree = "<group>"; };
+		0DBC48D91543BF2F00E56EDF /* numpad-bg_5_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_5_h.png"; sourceTree = "<group>"; };
+		0DBC48DA1543BF2F00E56EDF /* numpad-bg_4_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_4_h.png"; sourceTree = "<group>"; };
+		0DBC48DB1543BF2F00E56EDF /* numpad-bg_3_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_3_h.png"; sourceTree = "<group>"; };
+		0DBC48DC1543BF2F00E56EDF /* numpad-bg_2_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_2_h.png"; sourceTree = "<group>"; };
+		0DBC48DD1543BF2F00E56EDF /* numpad-bg_1_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_1_h.png"; sourceTree = "<group>"; };
+		0DBC48DE1543BF2F00E56EDF /* numpad-bg_0_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_0_h.png"; sourceTree = "<group>"; };
+		0DBC48DF1543BF2F00E56EDF /* numpad-bg_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_0.png"; sourceTree = "<group>"; };
+		0DBC48E01543BF2F00E56EDF /* numpad-bg_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_1.png"; sourceTree = "<group>"; };
+		0DBC48E11543BF2F00E56EDF /* numpad-bg_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_2.png"; sourceTree = "<group>"; };
+		0DBC48E21543BF2F00E56EDF /* numpad-bg_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_3.png"; sourceTree = "<group>"; };
+		0DBC48E31543BF2F00E56EDF /* numpad-bg_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_4.png"; sourceTree = "<group>"; };
+		0DBC48E41543BF2F00E56EDF /* numpad-bg_5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_5.png"; sourceTree = "<group>"; };
+		0DBC48E51543BF2F00E56EDF /* numpad-bg_6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_6.png"; sourceTree = "<group>"; };
+		0DBC48E61543BF2F00E56EDF /* numpad-bg_7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_7.png"; sourceTree = "<group>"; };
+		0DBC48E71543BF2F00E56EDF /* numpad-bg_8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_8.png"; sourceTree = "<group>"; };
+		0DBC48E81543BF2F00E56EDF /* numpad-bg_9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_9.png"; sourceTree = "<group>"; };
+		0DBC48E91543BF2F00E56EDF /* numpad-bg_10.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_10.png"; sourceTree = "<group>"; };
+		0DBC48EA1543BF2F00E56EDF /* numpad-bg_11.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "numpad-bg_11.png"; sourceTree = "<group>"; };
+		0DBC48EB1543BF2F00E56EDF /* keyNE_BG_touched.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = keyNE_BG_touched.png; sourceTree = "<group>"; };
+		0DBC48EC1543BF2F00E56EDF /* keyNW_BG_touched.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = keyNW_BG_touched.png; sourceTree = "<group>"; };
+		0DBC48ED1543BF2F00E56EDF /* keyBG_touched.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = keyBG_touched.png; sourceTree = "<group>"; };
+		0DBC48EE1543BF2F00E56EDF /* keySE_BG_touched.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = keySE_BG_touched.png; sourceTree = "<group>"; };
+		0DBC48EF1543BF2F00E56EDF /* keySW_BG_touched.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = keySW_BG_touched.png; sourceTree = "<group>"; };
+		0DBC48F01543BF2F00E56EDF /* keySW_BG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = keySW_BG.png; sourceTree = "<group>"; };
+		0DBC48F11543BF2F00E56EDF /* keySE_BG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = keySE_BG.png; sourceTree = "<group>"; };
+		0DBC48F21543BF2F00E56EDF /* keyNE_BG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = keyNE_BG.png; sourceTree = "<group>"; };
+		0DBC48F31543BF2F00E56EDF /* keyNW_BG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = keyNW_BG.png; sourceTree = "<group>"; };
+		0DBC48F41543BF2F00E56EDF /* keyBG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = keyBG.png; sourceTree = "<group>"; };
+		0DBC48F51543BF2F00E56EDF /* keypad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = keypad.png; sourceTree = "<group>"; };
+		0DBC49191543BF3700E56EDF /* VSKeypadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VSKeypadView.h; path = ../../v1/KeyPad/Classes/VSKeypadView.h; sourceTree = "<group>"; };
+		0DBC491A1543BF3700E56EDF /* VSKeypadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VSKeypadView.m; path = ../../v1/KeyPad/Classes/VSKeypadView.m; sourceTree = "<group>"; };
+		0DF680251545B28500F5E784 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0D19E2C51541CCAE00C8671B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */,
+				0DAFD23C15478E930010459A /* libcrypto.a in Frameworks */,
+				0D7A8FF41542636400634A79 /* libZXingWidget.a in Frameworks */,
+				0D7A8FCB1542466300634A79 /* libqrencoder.a in Frameworks */,
+				0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */,
+				0D7A8F8B1542031C00634A79 /* libiconv.dylib in Frameworks */,
+				0D7A8F881542031400634A79 /* CoreMedia.framework in Frameworks */,
+				0D7A8F891542031400634A79 /* CoreVideo.framework in Frameworks */,
+				0D7A8F851542030100634A79 /* AVFoundation.framework in Frameworks */,
+				0D7A8F83154202F700634A79 /* AudioToolbox.framework in Frameworks */,
+				0D7A8F80154202EC00634A79 /* AddressBook.framework in Frameworks */,
+				0D7A8F81154202EC00634A79 /* AddressBookUI.framework in Frameworks */,
+				0D19E2CD1541CCAE00C8671B /* UIKit.framework in Frameworks */,
+				0D19E2CF1541CCAE00C8671B /* Foundation.framework in Frameworks */,
+				0D19E2D11541CCAE00C8671B /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0D19E2BD1541CCAE00C8671B = {
+			isa = PBXGroup;
+			children = (
+				0D19E2D21541CCAE00C8671B /* PushCoinApp */,
+				0DAFD22D15475A9E0010459A /* PushCoin */,
+				0DBC491C1543C58200E56EDF /* KeyPad */,
+				0D7A8F7A154202A800634A79 /* Dependencies */,
+				0DBC491D1543C59A00E56EDF /* Resources */,
+				0D19E2CB1541CCAE00C8671B /* Frameworks */,
+				0D19E2C91541CCAE00C8671B /* Products */,
+				0DF680251545B28500F5E784 /* README */,
+			);
+			sourceTree = "<group>";
+		};
+		0D19E2C91541CCAE00C8671B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0D19E2C81541CCAE00C8671B /* PushCoin.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0D19E2CB1541CCAE00C8671B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0D7A8F8A1542031C00634A79 /* libiconv.dylib */,
+				0DAFD24D1547ACBA0010459A /* Security.framework */,
+				0D7A8FBE154218B700634A79 /* QuartzCore.framework */,
+				0D7A8FBB154217CD00634A79 /* CoreAudio.framework */,
+				0D7A8F861542031400634A79 /* CoreMedia.framework */,
+				0D7A8F871542031400634A79 /* CoreVideo.framework */,
+				0D7A8F841542030100634A79 /* AVFoundation.framework */,
+				0D7A8F82154202F700634A79 /* AudioToolbox.framework */,
+				0D7A8F7E154202EC00634A79 /* AddressBook.framework */,
+				0D7A8F7F154202EC00634A79 /* AddressBookUI.framework */,
+				0D19E2CC1541CCAE00C8671B /* UIKit.framework */,
+				0D19E2CE1541CCAE00C8671B /* Foundation.framework */,
+				0D19E2D01541CCAE00C8671B /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0D19E2D21541CCAE00C8671B /* PushCoinApp */ = {
+			isa = PBXGroup;
+			children = (
+				0D19E2D31541CCAE00C8671B /* Supporting Files */,
+				0D19E2DB1541CCAE00C8671B /* AppDelegate.h */,
+				0D19E2DC1541CCAE00C8671B /* AppDelegate.m */,
+				0D19E2DE1541CCAE00C8671B /* MainStoryboard.storyboard */,
+				0D19E2E11541CCAE00C8671B /* PayController.h */,
+				0D19E2E21541CCAE00C8671B /* PayController.mm */,
+				0D19E2E81541CCAE00C8671B /* ReceiveController.h */,
+				0D19E2E91541CCAE00C8671B /* ReceiveController.mm */,
+				0D7A8FE31542609600634A79 /* SettingsController.h */,
+				0D7A8FE41542609600634A79 /* SettingsController.mm */,
+				0D7A8FF51543614000634A79 /* QRViewController.h */,
+				0D7A8FF61543614000634A79 /* QRViewController.mm */,
+				0D3EA63D154936C50088EFE1 /* ChallengeController.h */,
+				0D3EA63E154936C50088EFE1 /* ChallengeController.m */,
+			);
+			name = PushCoinApp;
+			path = PushCoin;
+			sourceTree = "<group>";
+		};
+		0D19E2D31541CCAE00C8671B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0D19E2D41541CCAE00C8671B /* PushCoin-Info.plist */,
+				0D19E2D51541CCAE00C8671B /* InfoPlist.strings */,
+				0D19E2D81541CCAE00C8671B /* main.m */,
+				0D19E2DA1541CCAE00C8671B /* PushCoin-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0D3EA6BD154F629F0088EFE1 /* Messaging */ = {
+			isa = PBXGroup;
+			children = (
+				0D20D8A515576E1700098838 /* PCOS-CPP.h */,
+				0D20D89615571ED300098838 /* PCOS.h */,
+				0D20D89715571ED300098838 /* PCOS.m */,
+				0D20D89A15571ED300098838 /* PCOSMessage.h */,
+				0D20D89B15571ED300098838 /* PCOSMessage.m */,
+				0D20D89E15571ED300098838 /* PCOSTypes.h */,
+				0D20D89F15571ED300098838 /* PCOSTypes.m */,
+				0DACCD721558A02A00A69DED /* PCOSParser.h */,
+				0DACCD731558A02A00A69DED /* PCOSParser.m */,
+			);
+			name = Messaging;
+			sourceTree = "<group>";
+		};
+		0D7A8F7A154202A800634A79 /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				0DAFD23115478E5E0010459A /* openssl.xcodeproj */,
+				0D7A8FE61542633100634A79 /* ZXingWidget.xcodeproj */,
+				0D7A8FC015421B7000634A79 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */,
+			);
+			name = Dependencies;
+			sourceTree = "<group>";
+		};
+		0D7A8FC115421B7000634A79 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0D7A8FC815421B7000634A79 /* libqrencoder.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0D7A8FE71542633100634A79 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0D7A8FEF1542633200634A79 /* libZXingWidget.a */,
+				0D7A8FF11542633200634A79 /* ZXingTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0DAFD22D15475A9E0010459A /* PushCoin */ = {
+			isa = PBXGroup;
+			children = (
+				0DAFD2491547A7ED0010459A /* Security */,
+				0D3EA6BD154F629F0088EFE1 /* Messaging */,
+				0D3EA61E1548783D0088EFE1 /* PushCoinConfig.h */,
+				0D3EA61F1548783D0088EFE1 /* PushCoinConfig.m */,
+				0D20D89C15571ED300098838 /* PushCoinMessages.h */,
+				0D20D89D15571ED300098838 /* PushCoinMessages.m */,
+				0D3EA6211548FB0A0088EFE1 /* PushCoinWebService.h */,
+				0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */,
+			);
+			path = PushCoin;
+			sourceTree = "<group>";
+		};
+		0DAFD23215478E5E0010459A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0DAFD23915478E5E0010459A /* libcrypto.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0DAFD2491547A7ED0010459A /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				0D3EA619154872FB0088EFE1 /* pushcoin_com.pub */,
+				0DAFD24A1547A8180010459A /* KeychainWrapper.h */,
+				0DAFD24B1547A8180010459A /* KeychainWrapper.m */,
+				0D3EA61B154877670088EFE1 /* OpenSSLWrapper.h */,
+				0D3EA61C154877670088EFE1 /* OpenSSLWrapper.m */,
+			);
+			name = Security;
+			sourceTree = "<group>";
+		};
+		0DBC48D21543BF2F00E56EDF /* KeyBGs */ = {
+			isa = PBXGroup;
+			children = (
+				0DBC48D31543BF2F00E56EDF /* numpad-bg_11_h.png */,
+				0DBC48D41543BF2F00E56EDF /* numpad-bg_10_h.png */,
+				0DBC48D51543BF2F00E56EDF /* numpad-bg_9_h.png */,
+				0DBC48D61543BF2F00E56EDF /* numpad-bg_8_h.png */,
+				0DBC48D71543BF2F00E56EDF /* numpad-bg_7_h.png */,
+				0DBC48D81543BF2F00E56EDF /* numpad-bg_6_h.png */,
+				0DBC48D91543BF2F00E56EDF /* numpad-bg_5_h.png */,
+				0DBC48DA1543BF2F00E56EDF /* numpad-bg_4_h.png */,
+				0DBC48DB1543BF2F00E56EDF /* numpad-bg_3_h.png */,
+				0DBC48DC1543BF2F00E56EDF /* numpad-bg_2_h.png */,
+				0DBC48DD1543BF2F00E56EDF /* numpad-bg_1_h.png */,
+				0DBC48DE1543BF2F00E56EDF /* numpad-bg_0_h.png */,
+				0DBC48DF1543BF2F00E56EDF /* numpad-bg_0.png */,
+				0DBC48E01543BF2F00E56EDF /* numpad-bg_1.png */,
+				0DBC48E11543BF2F00E56EDF /* numpad-bg_2.png */,
+				0DBC48E21543BF2F00E56EDF /* numpad-bg_3.png */,
+				0DBC48E31543BF2F00E56EDF /* numpad-bg_4.png */,
+				0DBC48E41543BF2F00E56EDF /* numpad-bg_5.png */,
+				0DBC48E51543BF2F00E56EDF /* numpad-bg_6.png */,
+				0DBC48E61543BF2F00E56EDF /* numpad-bg_7.png */,
+				0DBC48E71543BF2F00E56EDF /* numpad-bg_8.png */,
+				0DBC48E81543BF2F00E56EDF /* numpad-bg_9.png */,
+				0DBC48E91543BF2F00E56EDF /* numpad-bg_10.png */,
+				0DBC48EA1543BF2F00E56EDF /* numpad-bg_11.png */,
+				0DBC48EB1543BF2F00E56EDF /* keyNE_BG_touched.png */,
+				0DBC48EC1543BF2F00E56EDF /* keyNW_BG_touched.png */,
+				0DBC48ED1543BF2F00E56EDF /* keyBG_touched.png */,
+				0DBC48EE1543BF2F00E56EDF /* keySE_BG_touched.png */,
+				0DBC48EF1543BF2F00E56EDF /* keySW_BG_touched.png */,
+				0DBC48F01543BF2F00E56EDF /* keySW_BG.png */,
+				0DBC48F11543BF2F00E56EDF /* keySE_BG.png */,
+				0DBC48F21543BF2F00E56EDF /* keyNE_BG.png */,
+				0DBC48F31543BF2F00E56EDF /* keyNW_BG.png */,
+				0DBC48F41543BF2F00E56EDF /* keyBG.png */,
+				0DBC48F51543BF2F00E56EDF /* keypad.png */,
+			);
+			name = KeyBGs;
+			path = ../../v1/KeyPad;
+			sourceTree = "<group>";
+		};
+		0DBC491C1543C58200E56EDF /* KeyPad */ = {
+			isa = PBXGroup;
+			children = (
+				0DBC49191543BF3700E56EDF /* VSKeypadView.h */,
+				0DBC491A1543BF3700E56EDF /* VSKeypadView.m */,
+				0DBC48D21543BF2F00E56EDF /* KeyBGs */,
+			);
+			name = KeyPad;
+			sourceTree = "<group>";
+		};
+		0DBC491D1543C59A00E56EDF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0D19E2E41541CCAE00C8671B /* first.png */,
+				0D19E2E61541CCAE00C8671B /* first@2x.png */,
+				0D19E2EB1541CCAE00C8671B /* second.png */,
+				0D19E2ED1541CCAE00C8671B /* second@2x.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0D19E2C71541CCAE00C8671B /* PushCoin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D19E2F11541CCAE00C8671B /* Build configuration list for PBXNativeTarget "PushCoin" */;
+			buildPhases = (
+				0D19E2C41541CCAE00C8671B /* Sources */,
+				0D19E2C51541CCAE00C8671B /* Frameworks */,
+				0D19E2C61541CCAE00C8671B /* Resources */,
+			);
+			buildRules = (
+				0D3EA6681549CB070088EFE1 /* PBXBuildRule */,
+			);
+			dependencies = (
+				0DAFD23B15478E8C0010459A /* PBXTargetDependency */,
+				0D7A8FF31542635E00634A79 /* PBXTargetDependency */,
+				0D7A8FCA1542465F00634A79 /* PBXTargetDependency */,
+			);
+			name = PushCoin;
+			productName = PushCoin;
+			productReference = 0D19E2C81541CCAE00C8671B /* PushCoin.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0D19E2BF1541CCAE00C8671B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 0D19E2C21541CCAE00C8671B /* Build configuration list for PBXProject "PushCoin" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 0D19E2BD1541CCAE00C8671B;
+			productRefGroup = 0D19E2C91541CCAE00C8671B /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 0DAFD23215478E5E0010459A /* Products */;
+					ProjectRef = 0DAFD23115478E5E0010459A /* openssl.xcodeproj */;
+				},
+				{
+					ProductGroup = 0D7A8FC115421B7000634A79 /* Products */;
+					ProjectRef = 0D7A8FC015421B7000634A79 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */;
+				},
+				{
+					ProductGroup = 0D7A8FE71542633100634A79 /* Products */;
+					ProjectRef = 0D7A8FE61542633100634A79 /* ZXingWidget.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				0D19E2C71541CCAE00C8671B /* PushCoin */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		0D7A8FC815421B7000634A79 /* libqrencoder.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libqrencoder.a;
+			remoteRef = 0D7A8FC715421B7000634A79 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0D7A8FEF1542633200634A79 /* libZXingWidget.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libZXingWidget.a;
+			remoteRef = 0D7A8FEE1542633200634A79 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0D7A8FF11542633200634A79 /* ZXingTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ZXingTests.octest;
+			remoteRef = 0D7A8FF01542633200634A79 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0DAFD23915478E5E0010459A /* libcrypto.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libcrypto.a;
+			remoteRef = 0DAFD23815478E5E0010459A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0D19E2C61541CCAE00C8671B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D19E2D71541CCAE00C8671B /* InfoPlist.strings in Resources */,
+				0D19E2E01541CCAE00C8671B /* MainStoryboard.storyboard in Resources */,
+				0D19E2E51541CCAE00C8671B /* first.png in Resources */,
+				0D19E2E71541CCAE00C8671B /* first@2x.png in Resources */,
+				0D19E2EC1541CCAE00C8671B /* second.png in Resources */,
+				0D19E2EE1541CCAE00C8671B /* second@2x.png in Resources */,
+				0DBC48F61543BF2F00E56EDF /* numpad-bg_11_h.png in Resources */,
+				0DBC48F71543BF2F00E56EDF /* numpad-bg_10_h.png in Resources */,
+				0DBC48F81543BF2F00E56EDF /* numpad-bg_9_h.png in Resources */,
+				0DBC48F91543BF2F00E56EDF /* numpad-bg_8_h.png in Resources */,
+				0DBC48FA1543BF2F00E56EDF /* numpad-bg_7_h.png in Resources */,
+				0DBC48FB1543BF2F00E56EDF /* numpad-bg_6_h.png in Resources */,
+				0DBC48FC1543BF2F00E56EDF /* numpad-bg_5_h.png in Resources */,
+				0DBC48FD1543BF2F00E56EDF /* numpad-bg_4_h.png in Resources */,
+				0DBC48FE1543BF2F00E56EDF /* numpad-bg_3_h.png in Resources */,
+				0DBC48FF1543BF2F00E56EDF /* numpad-bg_2_h.png in Resources */,
+				0DBC49001543BF2F00E56EDF /* numpad-bg_1_h.png in Resources */,
+				0DBC49011543BF2F00E56EDF /* numpad-bg_0_h.png in Resources */,
+				0DBC49021543BF2F00E56EDF /* numpad-bg_0.png in Resources */,
+				0DBC49031543BF2F00E56EDF /* numpad-bg_1.png in Resources */,
+				0DBC49041543BF2F00E56EDF /* numpad-bg_2.png in Resources */,
+				0DBC49051543BF2F00E56EDF /* numpad-bg_3.png in Resources */,
+				0DBC49061543BF2F00E56EDF /* numpad-bg_4.png in Resources */,
+				0DBC49071543BF2F00E56EDF /* numpad-bg_5.png in Resources */,
+				0DBC49081543BF2F00E56EDF /* numpad-bg_6.png in Resources */,
+				0DBC49091543BF2F00E56EDF /* numpad-bg_7.png in Resources */,
+				0DBC490A1543BF2F00E56EDF /* numpad-bg_8.png in Resources */,
+				0DBC490B1543BF2F00E56EDF /* numpad-bg_9.png in Resources */,
+				0DBC490C1543BF2F00E56EDF /* numpad-bg_10.png in Resources */,
+				0DBC490D1543BF2F00E56EDF /* numpad-bg_11.png in Resources */,
+				0DBC490E1543BF2F00E56EDF /* keyNE_BG_touched.png in Resources */,
+				0DBC490F1543BF2F00E56EDF /* keyNW_BG_touched.png in Resources */,
+				0DBC49101543BF2F00E56EDF /* keyBG_touched.png in Resources */,
+				0DBC49111543BF2F00E56EDF /* keySE_BG_touched.png in Resources */,
+				0DBC49121543BF2F00E56EDF /* keySW_BG_touched.png in Resources */,
+				0DBC49131543BF2F00E56EDF /* keySW_BG.png in Resources */,
+				0DBC49141543BF2F00E56EDF /* keySE_BG.png in Resources */,
+				0DBC49151543BF2F00E56EDF /* keyNE_BG.png in Resources */,
+				0DBC49161543BF2F00E56EDF /* keyNW_BG.png in Resources */,
+				0DBC49171543BF2F00E56EDF /* keyBG.png in Resources */,
+				0DBC49181543BF2F00E56EDF /* keypad.png in Resources */,
+				0DF680261545B28500F5E784 /* README in Resources */,
+				0D3EA61A154872FB0088EFE1 /* pushcoin_com.pub in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0D19E2C41541CCAE00C8671B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0D19E2D91541CCAE00C8671B /* main.m in Sources */,
+				0D19E2DD1541CCAE00C8671B /* AppDelegate.m in Sources */,
+				0D19E2E31541CCAE00C8671B /* PayController.mm in Sources */,
+				0D19E2EA1541CCAE00C8671B /* ReceiveController.mm in Sources */,
+				0D7A8FE51542609600634A79 /* SettingsController.mm in Sources */,
+				0D7A8FF71543614000634A79 /* QRViewController.mm in Sources */,
+				0DBC491B1543BF3700E56EDF /* VSKeypadView.m in Sources */,
+				0DAFD24C1547A8180010459A /* KeychainWrapper.m in Sources */,
+				0D3EA61D154877670088EFE1 /* OpenSSLWrapper.m in Sources */,
+				0D3EA6201548783D0088EFE1 /* PushCoinConfig.m in Sources */,
+				0D3EA6231548FB0A0088EFE1 /* PushCoinWebService.m in Sources */,
+				0D3EA63F154936C50088EFE1 /* ChallengeController.m in Sources */,
+				0D20D8A015571ED300098838 /* PCOS.m in Sources */,
+				0D20D8A215571ED300098838 /* PCOSMessage.m in Sources */,
+				0D20D8A315571ED300098838 /* PushCoinMessages.m in Sources */,
+				0D20D8A415571ED300098838 /* PCOSTypes.m in Sources */,
+				0DACCD741558A02A00A69DED /* PCOSParser.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0D7A8FCA1542465F00634A79 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = qrencoder;
+			targetProxy = 0D7A8FC91542465F00634A79 /* PBXContainerItemProxy */;
+		};
+		0D7A8FF31542635E00634A79 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ZXingWidget;
+			targetProxy = 0D7A8FF21542635E00634A79 /* PBXContainerItemProxy */;
+		};
+		0DAFD23B15478E8C0010459A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = crypto;
+			targetProxy = 0DAFD23A15478E8C0010459A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		0D19E2D51541CCAE00C8671B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0D19E2D61541CCAE00C8671B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		0D19E2DE1541CCAE00C8671B /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0D19E2DF1541CCAE00C8671B /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		0D19E2EF1541CCAE00C8671B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/Users/gilbert/v1/zxing-2.0/iphone/ZXingWidget/Classes/**",
+					/Users/gilbert/v1/QRCodeEncoderObjectiveC/QRCodeEncoderObjectiveCAtGithub,
+					"/Users/gilbert/v1/zxing-2.0/cpp/core/src/",
+					"/Users/gilbert/v1/openssl-xcode/openssl/include",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		0D19E2F01541CCAE00C8671B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/Users/gilbert/v1/zxing-2.0/iphone/ZXingWidget/Classes/**",
+					/Users/gilbert/v1/QRCodeEncoderObjectiveC/QRCodeEncoderObjectiveCAtGithub,
+					"/Users/gilbert/v1/zxing-2.0/cpp/core/src/",
+					"/Users/gilbert/v1/openssl-xcode/openssl/include",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		0D19E2F21541CCAE00C8671B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PushCoin/PushCoin-Prefix.pch";
+				INFOPLIST_FILE = "PushCoin/PushCoin-Info.plist";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				"VALID_ARCHS[sdk=*]" = "armv6 armv7";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		0D19E2F31541CCAE00C8671B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PushCoin/PushCoin-Prefix.pch";
+				INFOPLIST_FILE = "PushCoin/PushCoin-Info.plist";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0D19E2C21541CCAE00C8671B /* Build configuration list for PBXProject "PushCoin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D19E2EF1541CCAE00C8671B /* Debug */,
+				0D19E2F01541CCAE00C8671B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0D19E2F11541CCAE00C8671B /* Build configuration list for PBXNativeTarget "PushCoin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D19E2F21541CCAE00C8671B /* Debug */,
+				0D19E2F31541CCAE00C8671B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0D19E2BF1541CCAE00C8671B /* Project object */;
+}

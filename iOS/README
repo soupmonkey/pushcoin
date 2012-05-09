@@ -1,0 +1,46 @@
+Requires Libraries:
+1) openssl 
+2) ZXingWidget
+3) QRCodeEncoderObjectiveCAtGitHub
+
+
+
+Google Protocol Buffer
+http://nserror.me/blog/2011/06/03/protocol-buffers-and-xcode/
+
+1) Download/install from google
+    
+    ./configure
+    make && make install
+    
+2) Download xcode plugin and installfrom 
+    (or https://github.com/regwez/protobuf-objc-iOS5.git)
+    
+    git clone https://github.com/booyah/protobuf-objc.git
+    cd protobuf-objc
+    ./autogen.sh
+    ./configure
+    make
+    make install
+
+3) Go into protobuf-objc/src/runtime in the protobuf-objc directory and open the Xcode project. 
+   Build the project. This will generate some headers in Build/Products/ProtocolBuffers.
+   
+4) Set "Header Search Paths" to protobuf-objc/src/runtime/Build/Products
+
+5) Add a custom build script for *.proto
+    /usr/local/bin/protoc --plugin=/usr/local/bin/protoc-gen-objc --proto_path=${INPUT_FILE_DIR} --objc_out=${DERIVED_SOURCES_DIR} ${INPUT_FILE_PATH}
+    
+6) Add to output files list:
+    ${DERIVED_SOURCES_DIR}/${INPUT_FILE_BASE}.pb.h
+    ${DERIVED_SOURCES_DIR}/${INPUT_FILE_BASE}.pb.m
+    
+7) Add [MESSAGE].proto to the project
+8) Add [MESSAGE].proto to the 'compile sources' under target settings/Build phrases
+    
+    
+Remarks:
+
+1) The bson-objc lib uses categories feature of objc, it requires the app that this lib is linked to uses a linker flag -ObjC.
+The flag can be set at Project Settings -> Target -> Other Linker Flags
+

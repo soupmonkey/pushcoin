@@ -16,6 +16,8 @@ extern NSString * const MID_PING;
 extern NSString * const MID_PONG;
 extern NSString * const MID_REGISTER;
 extern NSString * const MID_REGISTER_ACK;
+extern NSString * const MID_PAYMENT_TRANSFER_AUTHORIZATION;
+
 
 
 /* Error Message */
@@ -54,6 +56,30 @@ extern NSString * const MID_REGISTER_ACK;
 @property (nonatomic, strong) PCOSFixedArray * auth_token;
 @end
 
+
+/* Payment Transfer Authorization Message */
+@interface PaymentTransferAuthorizationPrivateBlock : PCOSBlock
+@property (nonatomic, strong) PCOSShortArray * mat;
+@property (nonatomic, strong) PCOSShortArray * sig;
+@property (nonatomic, strong) PCOSShortArray * ref;
+@end
+
+@interface PaymentTransferAuthorizationPublicBlock : PCOSBlock
+@property (nonatomic, strong) PCOSInt64 * ct;
+@property (nonatomic, strong) PCOSInt64 * ep;
+@property (nonatomic, strong) PCOSShortArray * amt;
+@property (nonatomic, strong) PCOSFixedArray * cur;
+@property (nonatomic, strong) PCOSShortArray * rcv;
+@property (nonatomic, strong) PCOSShortArray * note;
+@end
+
+
+@interface PaymentTransferAuthorizationMessage : PCOSMessage
+@property (nonatomic, strong) PCOSShortArray * keyid;
+@property (nonatomic, strong) PaymentTransferAuthorizationPrivateBlock * prv_block;
+@property (nonatomic, strong) PaymentTransferAuthorizationPublicBlock * pub_block;
+@end
+
 /* PushCoinMessageParser */
 @class PushCoinMessageParser;
 @protocol PushCoinMessageReceiver <NSObject>
@@ -63,6 +89,7 @@ extern NSString * const MID_REGISTER_ACK;
 -(void) didDecodePongMessage:(PongMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
 -(void) didDecodeRegisterMessage:(RegisterMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
 -(void) didDecodeRegisterAckMessage:(RegisterAckMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
+-(void) didDecodePaymentTransferAuthorizationMessage:(PaymentTransferAuthorizationMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
 -(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
 
 @end

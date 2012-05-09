@@ -10,23 +10,43 @@
 #import <AddressBookUI/AddressBookUI.h>
 #import "QRViewController.h"
 #import "VSKeypadView.h"
+#import "AQGridView.h"
+#import "SpringBoardIconCell.h"
+#import "PushCoinMessages.h"
+
 
 BOOL REVERSE_KEYPAD = YES;
 int KeyBackgroundStyle = 1;
 
-@interface PayController : UIViewController 
-    <UITextFieldDelegate,QRViewControllerDelegate,VSKeypadViewDelegate, ABPeoplePickerNavigationControllerDelegate>
+@class SpringBoardIconCell;
+
+@interface PayController : UIViewController <UITextFieldDelegate,QRViewControllerDelegate, VSKeypadViewDelegate, ABPeoplePickerNavigationControllerDelegate, AQGridViewDataSource, AQGridViewDelegate, UIGestureRecognizerDelegate, UIScrollViewDelegate>
 {
-    NSString *enteredAmountString;
+    NSString *enteredAmountString_;
+    
+    NSMutableArray * icons_;
+    AQGridView * gridView_;
+    
+    NSUInteger emptyCellIndex_;
+    
+    NSUInteger dragOriginIndex_;
+    CGPoint dragOriginCellOrigin_;
+    
+    SpringBoardIconCell * draggingCell_;
+    
+    VSKeypadView * keypadView_;
+    
+    BOOL pageControlUsed_;
+    
+    PushCoinMessageParser * parser_;
+    NSMutableData * buffer_;
 }
 
 @property (weak, nonatomic) IBOutlet UITextField *amountTextField;
-@property (nonatomic, retain) NSString *encodedData;
-@property (nonatomic, retain) VSKeypadView *keypadView;
 @property (weak, nonatomic) IBOutlet UILabel *receiverLabel;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
-
+@property (nonatomic) NSData * encodedData;
 
 - (IBAction)push:(id)sender;
 

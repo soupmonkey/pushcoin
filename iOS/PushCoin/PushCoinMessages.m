@@ -14,6 +14,7 @@ NSString * const MID_PING = @"Pi";
 NSString * const MID_PONG = @"Po";
 NSString * const MID_REGISTER = @"Re";
 NSString * const MID_REGISTER_ACK = @"Ac";
+NSString * const MID_PAYMENT_TRANSFER_AUTHORIZATION = @"Pa";
 
 
 /* Error Message */
@@ -116,6 +117,79 @@ NSString * const MID_REGISTER_ACK = @"Ac";
 @end
 
 
+/* Payment Transfer Authorization Message */
+@implementation PaymentTransferAuthorizationPrivateBlock
+@synthesize mat;
+@synthesize sig;
+@synthesize ref;
+
+-(id) init
+{
+    self = [super init];
+    if (self)
+    {
+        self.mat =[[PCOSShortArray alloc] initWithItemPrototype:protoByte]; 
+        self.sig =[[PCOSShortArray alloc] initWithItemPrototype:protoByte]; 
+        self.ref =[[PCOSShortArray alloc] initWithItemPrototype:protoByte]; 
+        
+        [self addField:self.mat withName:@"mat"];
+        [self addField:self.sig withName:@"sig"];
+        [self addField:self.ref withName:@"ref"];
+    }
+    return self;
+}
+@end
+
+@implementation PaymentTransferAuthorizationPublicBlock
+@synthesize ct;
+@synthesize ep;
+@synthesize amt;
+@synthesize cur;
+@synthesize rcv;
+@synthesize note;
+
+-(id) init
+{
+    self = [super init];
+    if (self)
+    {
+        self.ct =[[PCOSInt64 alloc] init]; 
+        self.ep =[[PCOSInt64 alloc] init]; 
+        self.amt =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.cur =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:3]; 
+        self.rcv =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.note =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        
+        [self addField:self.ct withName:@"ct"];
+        [self addField:self.ep withName:@"ep"];
+        [self addField:self.amt withName:@"amt"];
+        [self addField:self.cur withName:@"cur"];
+        [self addField:self.rcv withName:@"rcv"];
+        [self addField:self.note withName:@"note"];
+
+    }
+    return self;
+}
+@end
+
+@implementation PaymentTransferAuthorizationMessage
+@synthesize keyid;
+@synthesize prv_block;
+@synthesize pub_block;
+
++(NSString*) messageID { return MID_PAYMENT_TRANSFER_AUTHORIZATION; }
+-(id) init
+{
+    self = [super init];
+    if (self)
+    {   
+        [self addBlock:(keyid = [[PCOSShortArray alloc] initWithItemPrototype:protoByte]) withName:@"ki"];
+        [self addBlock:(prv_block = [[PaymentTransferAuthorizationPrivateBlock alloc] init]) withName:@"Pr"];
+        [self addBlock:(pub_block = [[PaymentTransferAuthorizationPublicBlock alloc] init]) withName:@"Pb"];
+    }
+    return self;
+}
+@end
 
 
 /* PushCoinMessageParser */
@@ -132,6 +206,7 @@ NSString * const MID_REGISTER_ACK = @"Ac";
         [super registerMessageClass:[PongMessage class]];
         [super registerMessageClass:[RegisterMessage class]];
         [super registerMessageClass:[RegisterAckMessage class]];
+        [super registerMessageClass:[PaymentTransferAuthorizationMessage class]];
         
         selectors = [NSDictionary dictionaryWithObjectsAndKeys:
                      NSStringFromSelector(@selector(didDecodeErrorMessage:withHeader:)), [ErrorMessage class],
@@ -139,6 +214,7 @@ NSString * const MID_REGISTER_ACK = @"Ac";
                      NSStringFromSelector(@selector(didDecodePongMessage:withHeader:)), [PongMessage class],
                      NSStringFromSelector(@selector(didDecodeRegisterMessage:withHeader:)), [RegisterMessage class],
                      NSStringFromSelector(@selector(didDecodeRegisterAckMessage:withHeader:)), [RegisterAckMessage class],
+                      NSStringFromSelector(@selector(didDecodePaymentTransferAuthorizationMessage:withHeader:)), [PaymentTransferAuthorizationMessage class],
                      nil];
     }
     return self;

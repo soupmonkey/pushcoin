@@ -7,7 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PushCoinWebService.h"
+#import "PushCoinMessages.h"
 
-@interface SettingsController : UIViewController
+#import "RegistrationController.h"
+
+@interface SettingsController : UIViewController<RegistrationControllerDelegate, PushCoinWebServiceDelegate, PushCoinMessageReceiver>
+{
+    PushCoinMessageParser * parser;
+    PushCoinWebService * webService;
+    NSMutableData * buffer;
+
+}
+@property (weak, nonatomic) IBOutlet UILabel *resultLabel;
+- (IBAction)register:(id)sender;
 
 @end

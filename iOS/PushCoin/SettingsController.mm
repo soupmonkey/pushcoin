@@ -16,6 +16,7 @@
 
 
 @implementation SettingsController
+@synthesize resultLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -49,6 +50,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    webService = [[PushCoinWebService alloc] initWithDelegate:self];
+    buffer =  [[NSMutableData alloc] init];
+    [buffer setLength:PushCoinWebServiceOutBufferSize];
+    
+    parser = [[PushCoinMessageParser alloc] init];
 }
 
 -(void) test_keyChain
@@ -209,6 +215,7 @@
 
 - (void)viewDidUnload
 {
+    [self setResultLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -219,5 +226,73 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+- (IBAction)register:(id)sender 
+{
+    [self performSegueWithIdentifier:@"SegueToRegistration"
+                              sender:self ];  
+}
+
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue 
+                 sender:(id)sender
+{
+	if ([segue.identifier isEqualToString:@"SegueToRegistration"])
+	{
+		UIViewController *viewController = segue.destinationViewController;
+		RegistrationController *controller = (RegistrationController *)viewController;
+		controller.delegate = self;
+	}
+}
+
+-(void)registrationControllerDidClose:(RegistrationController *)controller
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    RegisterMessage * registerOut = [[RegisterMessage alloc] init];
+    PCOSRawData * dataOut = [[PCOSRawData alloc] initWithData:buffer];
+    
+    registerOut.register_block.registration_id.string = controller.registrationIDTextBox.text;
+    registerOut.register_block.public_key.string = @"01234567890123456789012345";
+    registerOut.register_block.user_agent.string = @"PushCoin/1.0;iOS5.1;ObjC/XCode4";
+    
+    [parser encodeMessage:registerOut to:dataOut];
+    [webService sendMessage:dataOut.consumedData];
+}
+
+
+- (void)webService:(PushCoinWebService *)webService didReceiveMessage:(NSData *)data
+{
+    [parser decode:data toReceiver:self];
+}
+
+
+- (void)webService:(PushCoinWebService *)webService didFailWithStatusCode:(NSInteger)statusCode 
+    andDescription:(NSString *)description
+{
+    resultLabel.text = [NSString stringWithFormat:@"web service returns %d; %@", statusCode, description];
+}
+
+-(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    resultLabel.text = [NSString stringWithFormat:@"error message received with code:%d reason:%@",
+                        msg.error_block.error_code.val, msg.error_block.error_reason.string];
+}
+
+-(void) didDecodePongMessage:(PongMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    resultLabel.text = [NSString stringWithFormat:@"pong.tm=%lld", msg.tm.val];        
+}
+
+-(void) didDecodeRegisterAckMessage:(RegisterAckMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    resultLabel.text = @"Device successfully registered";        
+}
+
+-(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
+{
+    resultLabel.text = [NSString stringWithFormat:@"unexpected message received: [%@]", hdr.msg_id.string];
+}
+
 
 @end

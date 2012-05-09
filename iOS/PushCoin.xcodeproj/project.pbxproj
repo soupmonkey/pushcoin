@@ -80,6 +80,9 @@
 		0DAFD24C1547A8180010459A /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DAFD24B1547A8180010459A /* KeychainWrapper.m */; };
 		0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFD24D1547ACBA0010459A /* Security.framework */; };
 		0DBC491B1543BF3700E56EDF /* VSKeypadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DBC491A1543BF3700E56EDF /* VSKeypadView.m */; };
+		0DE9FA72155A1D4700FACDA7 /* RegistrationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */; };
+		0DE9FA7E155A278500FACDA7 /* libAQGridView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DE9FA7B155A277700FACDA7 /* libAQGridView.a */; };
+		0DE9FA82155A2B0100FACDA7 /* SpringBoardIconCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9FA81155A2B0100FACDA7 /* SpringBoardIconCell.m */; };
 		0DF680261545B28500F5E784 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 0DF680251545B28500F5E784 /* README */; };
 /* End PBXBuildFile section */
 
@@ -147,6 +150,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 9672D35613BD662F0002B0E2;
 			remoteInfo = qrencoder;
+		};
+		0DE9FA7A155A277700FACDA7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0DE9FA73155A277600FACDA7 /* AQGridView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = AQGridView;
+		};
+		0DE9FA7C155A278000FACDA7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0DE9FA73155A277600FACDA7 /* AQGridView.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+			remoteInfo = AQGridView;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -245,6 +262,11 @@
 		0DAFD24D1547ACBA0010459A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0DBC49191543BF3700E56EDF /* VSKeypadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VSKeypadView.h; sourceTree = "<group>"; };
 		0DBC491A1543BF3700E56EDF /* VSKeypadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VSKeypadView.m; sourceTree = "<group>"; };
+		0DE9FA70155A1D4700FACDA7 /* RegistrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationController.h; sourceTree = "<group>"; };
+		0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegistrationController.m; sourceTree = "<group>"; };
+		0DE9FA73155A277600FACDA7 /* AQGridView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AQGridView.xcodeproj; path = ../../../v1/AQGridView/AQGridView.xcodeproj; sourceTree = "<group>"; };
+		0DE9FA80155A2B0100FACDA7 /* SpringBoardIconCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpringBoardIconCell.h; sourceTree = "<group>"; };
+		0DE9FA81155A2B0100FACDA7 /* SpringBoardIconCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpringBoardIconCell.m; sourceTree = "<group>"; };
 		0DF680251545B28500F5E784 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -253,11 +275,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */,
+				0DE9FA7E155A278500FACDA7 /* libAQGridView.a in Frameworks */,
 				0D0B3831155A0D15002BF845 /* libcrypto.a in Frameworks */,
 				0D0B3832155A0D15002BF845 /* libqrencoder.a in Frameworks */,
 				0D0B3833155A0D15002BF845 /* libZXingWidget.a in Frameworks */,
 				0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */,
-				0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */,
 				0D7A8F8B1542031C00634A79 /* libiconv.dylib in Frameworks */,
 				0D7A8F881542031400634A79 /* CoreMedia.framework in Frameworks */,
 				0D7A8F891542031400634A79 /* CoreVideo.framework in Frameworks */,
@@ -358,6 +381,10 @@
 				0D7A8FF61543614000634A79 /* QRViewController.mm */,
 				0D3EA63D154936C50088EFE1 /* ChallengeController.h */,
 				0D3EA63E154936C50088EFE1 /* ChallengeController.m */,
+				0DE9FA70155A1D4700FACDA7 /* RegistrationController.h */,
+				0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */,
+				0DE9FA80155A2B0100FACDA7 /* SpringBoardIconCell.h */,
+				0DE9FA81155A2B0100FACDA7 /* SpringBoardIconCell.m */,
 			);
 			name = PushCoinApp;
 			path = PushCoin;
@@ -393,6 +420,7 @@
 		0D7A8F7A154202A800634A79 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
+				0DE9FA73155A277600FACDA7 /* AQGridView.xcodeproj */,
 				0DAFD23115478E5E0010459A /* openssl.xcodeproj */,
 				0D7A8FE61542633100634A79 /* ZXingWidget.xcodeproj */,
 				0D7A8FC015421B7000634A79 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */,
@@ -490,6 +518,14 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		0DE9FA74155A277600FACDA7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0DE9FA7B155A277700FACDA7 /* libAQGridView.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -505,6 +541,7 @@
 				0D3EA6681549CB070088EFE1 /* PBXBuildRule */,
 			);
 			dependencies = (
+				0DE9FA7D155A278000FACDA7 /* PBXTargetDependency */,
 				0D0B382A155A0D06002BF845 /* PBXTargetDependency */,
 				0D0B382E155A0D06002BF845 /* PBXTargetDependency */,
 				0D0B3830155A0D06002BF845 /* PBXTargetDependency */,
@@ -533,6 +570,10 @@
 			productRefGroup = 0D19E2C91541CCAE00C8671B /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = 0DE9FA74155A277600FACDA7 /* Products */;
+					ProjectRef = 0DE9FA73155A277600FACDA7 /* AQGridView.xcodeproj */;
+				},
 				{
 					ProductGroup = 0D0B37CD155A0B73002BF845 /* Products */;
 					ProjectRef = 0DAFD23115478E5E0010459A /* openssl.xcodeproj */;
@@ -580,6 +621,13 @@
 			fileType = archive.ar;
 			path = libqrencoder.a;
 			remoteRef = 0D0B37E3155A0B94002BF845 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0DE9FA7B155A277700FACDA7 /* libAQGridView.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAQGridView.a;
+			remoteRef = 0DE9FA7A155A277700FACDA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -658,6 +706,8 @@
 				0D20D8A315571ED300098838 /* PushCoinMessages.m in Sources */,
 				0D20D8A415571ED300098838 /* PCOSTypes.m in Sources */,
 				0DACCD741558A02A00A69DED /* PCOSParser.m in Sources */,
+				0DE9FA72155A1D4700FACDA7 /* RegistrationController.m in Sources */,
+				0DE9FA82155A2B0100FACDA7 /* SpringBoardIconCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -678,6 +728,11 @@
 			isa = PBXTargetDependency;
 			name = qrencoder;
 			targetProxy = 0D0B382F155A0D06002BF845 /* PBXContainerItemProxy */;
+		};
+		0DE9FA7D155A278000FACDA7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AQGridView;
+			targetProxy = 0DE9FA7C155A278000FACDA7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -726,6 +781,7 @@
 					/Users/gilbert/v1/QRCodeEncoderObjectiveC/QRCodeEncoderObjectiveCAtGithub,
 					"/Users/gilbert/v1/zxing-2.0/cpp/core/src/",
 					"/Users/gilbert/v1/openssl-xcode/openssl/include",
+					/Users/gilbert/v1/AQGridView/Classes,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = YES;
@@ -751,6 +807,7 @@
 					/Users/gilbert/v1/QRCodeEncoderObjectiveC/QRCodeEncoderObjectiveCAtGithub,
 					"/Users/gilbert/v1/zxing-2.0/cpp/core/src/",
 					"/Users/gilbert/v1/openssl-xcode/openssl/include",
+					/Users/gilbert/v1/AQGridView/Classes,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = YES;

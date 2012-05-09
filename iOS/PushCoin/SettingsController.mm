@@ -14,7 +14,6 @@
 #include <openssl/engine.h>
 #include <openssl/pem.h>
 
-#import "PushCoinMessages.pb.h"
 
 @implementation SettingsController
 

@@ -249,14 +249,14 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
     
-    RegisterMessage * registerOut = [[RegisterMessage alloc] init];
+    RegisterMessage * msgOut = [[RegisterMessage alloc] init];
     PCOSRawData * dataOut = [[PCOSRawData alloc] initWithData:buffer];
     
-    registerOut.register_block.registration_id.string = controller.registrationIDTextBox.text;
-    registerOut.register_block.public_key.string = @"01234567890123456789012345";
-    registerOut.register_block.user_agent.string = @"PushCoin/1.0;iOS5.1;ObjC/XCode4";
+    msgOut.register_block.registration_id.string = controller.registrationIDTextBox.text;
+    msgOut.register_block.public_key.string = @"01234567890123456789012345";
+    msgOut.register_block.user_agent.string = @"PushCoin/1.0;iOS5.1;ObjC/XCode4";
     
-    [parser encodeMessage:registerOut to:dataOut];
+    [parser encodeMessage:msgOut to:dataOut];
     [webService sendMessage:dataOut.consumedData];
 }
 
@@ -291,7 +291,7 @@
 
 -(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    resultLabel.text = [NSString stringWithFormat:@"unexpected message received: [%@]", hdr.msg_id.string];
+    resultLabel.text = [NSString stringWithFormat:@"unexpected message received: [%@]", hdr.message_id.string];
 }
 
 

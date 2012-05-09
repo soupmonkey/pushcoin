@@ -20,17 +20,18 @@ extern const PCOSDouble * protoDouble;
 
 @interface PCOSHeaderBlock : PCOSBlock
 @property (nonatomic, strong) PCOSFixedArray * magic;
-@property (nonatomic, strong) PCOSFixedArray * msg_id;
-@property (nonatomic, strong) PCOSInt16 * msg_len;
+@property (nonatomic, strong) PCOSInt32 * message_length;
+@property (nonatomic, strong) PCOSFixedArray * message_id;
+@property (nonatomic, strong) PCOSFixedArray * reserved;
 @end
 
 @interface PCOSBlockMetaBlock : PCOSBlock
-@property (nonatomic, strong) PCOSFixedArray * block_name;
-@property (nonatomic, strong) PCOSInt16 * block_len;
+@property (nonatomic, strong) PCOSFixedArray * block_id;
+@property (nonatomic, strong) PCOSInt16 * block_length;
 @end
 
 @interface PCOSMessage : NSObject<PCOSSerializable, NSCopying>
-@property (nonatomic, strong) PCOSLongArray * block_enum;
+@property (nonatomic, strong) PCOSLongArray * block_meta;
 @property (nonatomic, strong) NSMutableDictionary * blocks;
 
 +(NSString *) messageID;

@@ -36,8 +36,8 @@
     NSUInteger size = [msg encode:data];
     
     hdr.magic.string = @"PCOS";
-    hdr.msg_id.string = [[msg class] messageID];
-    hdr.msg_len.val = size;
+    hdr.message_id.string = [[msg class] messageID];
+    hdr.message_length.val = size;
     
     size += [hdr encode:copy];
     return size;
@@ -58,7 +58,7 @@
 {
     NSUInteger size = [self decodeHeader:hdr from:data];
     
-    *msg = [[[messageClasses valueForKey:(*hdr).msg_id.string] alloc] init];
+    *msg = [[[messageClasses valueForKey:(*hdr).message_id.string] alloc] init];
     if (*msg)
         size += [(*msg) decode:data];
     return size;

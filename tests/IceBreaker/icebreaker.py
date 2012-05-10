@@ -2,18 +2,100 @@
 # -*- coding: utf-8 -*-
 import sys, urllib2, time
 import logging as log
-import pcos
+import pcos, time, binascii
 from optparse import OptionParser,OptionError
 from pyparsing import *
 
+# The transaction key and the key-ID where obtained from:
+#   https://pushcoin.com/Pub/SDK/TransactionKeys
+#
+API_TRANSACTION_KEY_ID = 'ead13769'
+API_TRANSACTION_KEY_PEM = '''-----BEGIN PUBLIC KEY-----
+MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALCxeCUEY06dbOBqlnf7pKDv8bIyz7wp
+NtvPhjOcbovESqkjrR+fHawGccev96V4hLXB+0wPG6eTrfh4ryZBq0kCAwEAAQ==
+-----END PUBLIC KEY-----'''
+
+# Below, the DSA keys were generated as follows:
+#   1. generate param file
+#      openssl dsaparam 512 < /dev/random > dsa_param.pem
+#   
+#   2. generating DSA key, 512 bits
+#      openssl gendsa dsa_param.pem -out dsa_priv.pem
+#   
+#   2b. optionally encrypt the key
+#       openssl dsa -in dsa_priv.pem -des3 -out dsa_safe_priv.pem
+#   
+#   3. extract public key out of private, write in DER format
+#      openssl dsa -in dsa_priv.pem -outform DER -pubout -out dsa_pub.der
+
+TEST_DSA_KEY_PUB_PEM = '''-----BEGIN PUBLIC KEY-----
+MIHxMIGoBgcqhkjOOAQBMIGcAkEA6DCdaRYmSb4vQUAkaqsR+Ph2aprcMAlDkRGL
+Vc1N8Hi3sm97xR+b3IYTHRuYaSEyaWKvuByjbFnJRjyYBpTKqwIVAObFswWoV2wl
+LoUs3//+1kRFOHY/AkADEXixNnXLQp3dDapOb57uM+6/TH4mZJizpvCqpVaonIz2
+ZGzB+ws/EU7fmitScho04EJg+1xBbLsMbJ1lMxaoA0QAAkEAgnL2PItRT0fn8GJ4
+YygfEG1wUMaW9YrkRNWuNtOBtw3WERn8fa+6VeTKujSfDcnnpj6mnyqusPhA4Ek6
+iYVpxw==
+-----END PUBLIC KEY-----'''
+
+TEST_DSA_KEY_PRV_PEM = '''-----BEGIN DSA PRIVATE KEY-----
+MIH3AgEAAkEAjfeT35NuNNXa9J6WFRGkbLFPbMjTvfBwBmlIBxkn5C7P7tbrSKX2
+v4kkNOxaSoL1IbAcIsRfLAQONhu5OypILwIVAKPptYe+gRwRHTd47lSliZcv6HXx
+AkASAkNvUTHAAayp1ozyEa42u/9el+r5ffTGK1VH9VYgCc3dcUHOxGl3gXl2KQfN
+Pt6owQKKsZnrpgO1v1N+ciLWAkA9jERRrih0tMqrqBq3iRmpqQXFQhsy+oyPST9v
++KiP+POtARwoOToKJw8Ub8o3EdjoXWobCvDbxTMPP447uJkTAhR5+vvpezohpW2r
+WBKhBPOqvJ8X+w==
+-----END DSA PRIVATE KEY-----'''
+
 class RmoteCall:
 
+	# CMD: `payment'
+	def payment(self):
+		'''This command generates the Payment Transaction Authorization, or PTA. It does not communicate with the server, only produces a file.'''
+
+		#------------------
+		# PTA public-block
+		#------------------
+		p1 = pcos.Block( 'P1', 512, 'O' )
+		now = long( time.time() + 0.5 )
+		p1.write_int64( now ) # certificate create-time
+		p1.write_int64( now + 24 * 3600 ) # certificate expiry (in 24 hrs)
+
+		p1.write_int64( long( self.args['scaled-payment'] ) ) # payment
+		p1.write_byte( int( self.args['scale'] ) ) # scale
+
+		p1.write_fixed_string( "USD" ) # currency
+		p1.write_fixed_string( binascii.unhexlify( API_TRANSACTION_KEY_ID ) ) # key-ID
+
+		p1.write_short_string( '' ) # receiver
+		p1.write_short_string( '' ) # note
+
+		#-------------------
+		# PTA private-block
+		#-------------------
+		s1 = pcos.Block( 'S1', 512, 'O' )
+
+		# member authentication token
+		mat = self.args['mat'] 
+		if len( mat ) != 40:
+			raise RuntimeError("MAT must be 40-characters long" % self.cmd)
+		s1.write_fixed_string( binascii.unhexlify( self.args['mat'] ) )
+		
+		# signature of the public-block
+		#   -checksum the public-block
+		#   -sign the checksum
+
+		p1.write_short_string( '' ) # empty user data, max=20
+		p1.write_short_string( '' ) # empty reserved field, max 26
+	
+	def check_payment(self):
+		'''Verifies if the PTA is valid. In particular, it checks if the account is valid and if the balance can cover the payment limit in the PTA.'''
+		
 	# CMD: `register'
 	def register(self):
 		req = pcos.Doc( name="Re" )
 		bo = pcos.Block( 'Bo', 512, 'O' )
 		bo.write_short_string( self.args['registration_id'] )
-		bo.write_long_string( '>> PUBLIC-KEY GOES HERE <<' )
+		bo.write_long_string( TEST_DSA_KEY_PUB )
 		bo.write_short_string( ';'.join( ('IceBreaker/1.0', sys.platform, sys.byteorder, sys.version) ) )
 		req.add( bo )
 

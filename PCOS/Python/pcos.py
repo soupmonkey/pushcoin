@@ -280,7 +280,8 @@ class Block:
 		length = len( val )
 		assert length < 256
 		self.write_byte( length )
-		self.write_data(str(length)+'s', length, val )
+		if length:
+			self.write_data(str(length)+'s', length, val )
 
 	def read_long_string( self ):
 		length = self.read_int16()
@@ -289,7 +290,8 @@ class Block:
 	def write_long_string( self, val ):
 		length = len( val )
 		self.write_int16( length )
-		self.write_data(str(length)+'s', length, val )
+		if length:
+			self.write_data(str(length)+'s', length, val )
 
 	def read_fixed_string( self, length ):
 		return self.read_data(str(length)+'s', length)

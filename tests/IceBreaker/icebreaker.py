@@ -165,7 +165,7 @@ class RmoteCall:
 		req = pcos.Doc( name="Re" )
 		bo = pcos.Block( 'Bo', 512, 'O' )
 		bo.write_short_string( self.args['registration_id'], max=64 ) # registration ID
-		bo.write_long_string( base64.decode(TEST_DSA_KEY_PUB_PEM))
+		bo.write_long_string( base64.b64decode(TEST_DSA_KEY_PUB_PEM) )
 		bo.write_short_string( ';'.join( ('IceBreaker/1.0', sys.platform, sys.byteorder, sys.version) ), max=128 )
 		req.add( bo )
 

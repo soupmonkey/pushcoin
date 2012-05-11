@@ -2,10 +2,17 @@
 # -*- coding: utf-8 -*-
 import sys, urllib2, time
 import logging as log
-import pcos, time, binascii, base64, hashlib, qrcode, Image
+import pcos, time, binascii, base64, hashlib, Image
 from optparse import OptionParser,OptionError
 from pyparsing import *
 from M2Crypto import DSA, BIO, RSA
+
+def load_qrcode():
+	try:
+		import qrcode
+		return True
+	except ImportError:
+		return False
 
 # The transaction key and the key-ID where obtained from:
 #   https://pushcoin.com/Pub/SDK/TransactionKeys
@@ -137,13 +144,15 @@ class RmoteCall:
 		reqf.close()
 		print ("Saved PTA object to 'pta.pcos'")
 
-		qr = qrcode.QRCode(version=None, error_correction=qrcode.constants.ERROR_CORRECT_L)
-		qr.add_data( encoded )
-		qr.make(fit=True)
-		img = qr.make_image()
-		img.save('pta.png')
-		print ("PTA-QR: pta.png, version %s" % (qr.version))
-
+		if load_qrcode():
+			qr = qrcode.QRCode(version=None, error_correction=qrcode.constants.ERROR_CORRECT_L)
+			qr.add_data( encoded )
+			qr.make(fit=True)
+			img = qr.make_image()
+			img.save('pta.png')
+			print ("PTA-QR: pta.png, version %s" % (qr.version))
+		else:
+			print ("QR-Code not written -- qrcode module not found")
 	
 	def check_payment(self):
 		'''Verifies if the PTA is valid. In particular, it checks if the account is valid and if the balance can cover the payment limit in the PTA.'''

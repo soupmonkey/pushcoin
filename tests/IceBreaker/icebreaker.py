@@ -144,14 +144,16 @@ class RmoteCall:
 		reqf.close()
 		print ("Saved PTA object to 'pta.pcos'")
 
-		if load_qrcode():
+		# optionally generate qr-code
+		try:
+			import qrcode
 			qr = qrcode.QRCode(version=None, error_correction=qrcode.constants.ERROR_CORRECT_L)
 			qr.add_data( encoded )
 			qr.make(fit=True)
 			img = qr.make_image()
 			img.save('pta.png')
 			print ("PTA-QR: pta.png, version %s" % (qr.version))
-		else:
+		except ImportError:
 			print ("QR-Code not written -- qrcode module not found")
 	
 	def check_payment(self):

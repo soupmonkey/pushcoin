@@ -49,8 +49,4 @@ public class ViewBarcodeActivity extends Activity {
 		}
 
 	}
-
-	/*
-	 * private float getPixels(int dp) { return ((dp * density) + 0.5f); }
-	 */
 }

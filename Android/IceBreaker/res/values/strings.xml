@@ -3,5 +3,13 @@
 
     <string name="app_name">IceBreaker</string>
     <string name="configure_title">Choose amount to create shortcut</string>
-
+	<string name="user_name">Username</string>
+	<string name="passwd">Password</string>
+	<string name="btn_ok">OK</string>
+	<string name="btn_cancel">Cancel</string>
+	<string name="usr_pass_title">Username/Password Configuration</string>
+	<string name="usr_pass_summary">Set your Username/password</string>
+	<string name="set_amount_summary">Set amount to generate barcode</string>
+	<string name="set_amount_title">Set Amount</string>
+	<string name="setting_title">Settings</string>
 </resources>

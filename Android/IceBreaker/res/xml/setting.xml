@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <Preference
+        android:key="edit_usr_pass"
+        android:summary="@string/usr_pass_summary"
+        android:title="@string/usr_pass_title" >
+        <intent android:action="com.minta.ACTION_LAUNCH_USERDIALOG" />
+    </Preference>
+    <Preference
+        android:key="set_amount"
+        android:summary="@string/set_amount_summary"
+        android:title="@string/set_amount_title" >
+        <intent android:action="com.minta.ACTION_LAUNCH_AMOUNTCONFIGDIALOG" />
+    </Preference>
+
+</PreferenceScreen>

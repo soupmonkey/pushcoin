@@ -1,4 +1,4 @@
-# Copyright (c) 2012 Minta, LLC.
+# Copyright (c) 2012 Minta, Inc.
 #
 # GNU General Public Licence (GPL)
 # 
@@ -193,6 +193,10 @@ class Block:
 		# current cursor position
 		self.offset = 0 # current reading cursor position
 
+
+	def __str__( self ):
+		'''Returns a Python string from the character array.'''
+		return ctypes.string_at( self.data, self.meta.length)
 
 	def size( self ):
 		return self.meta.length

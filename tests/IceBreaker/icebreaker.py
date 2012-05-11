@@ -87,11 +87,11 @@ class RmoteCall:
 		p1.write_int64( long( self.args['scaled_payment'] ) ) # payment
 		p1.write_int16( int( self.args['scale'] ) ) # scale
 
-		p1.write_fixed_string( "USD" ) # currency
-		p1.write_fixed_string( binascii.unhexlify( API_TRANSACTION_KEY_ID ) ) # key-ID
+		p1.write_fixed_string( "USD", size=3 ) # currency
+		p1.write_fixed_string( binascii.unhexlify( API_TRANSACTION_KEY_ID ), size=4 ) # key-ID
 
-		p1.write_short_string( '' ) # receiver
-		p1.write_short_string( '' ) # note
+		p1.write_short_string( '', max=127 ) # receiver
+		p1.write_short_string( '', max=127 ) # note
 
 		#-------------------
 		# PTA private-block
@@ -102,7 +102,7 @@ class RmoteCall:
 		mat = self.args['mat'] 
 		if len( mat ) != 40:
 			raise RuntimeError("MAT must be 40-characters long" % self.cmd)
-		priv.write_fixed_string( binascii.unhexlify( self.args['mat'] ) )
+		priv.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 )
 		
 		# sign the public-block
 		#   * first, produce the checksum
@@ -113,10 +113,10 @@ class RmoteCall:
 		dsa_priv_key = BIO.MemoryBuffer( TEST_DSA_KEY_PRV_PEM )
 		signer = DSA.load_key_bio( dsa_priv_key )
 		signature = signer.sign_asn1( digest )
-		priv.write_short_string( signature )
+		priv.write_short_string( signature, max=48 )
 
-		priv.write_short_string( '' ) # empty user data, max=20
-		priv.write_short_string( '' ) # empty reserved field, max 26
+		priv.write_short_string( '', max=20 ) # empty user data
+		priv.write_short_string( '', max=26 ) # empty reserved field
 
 		# encrypt the private-block
 		txn_pub_key = BIO.MemoryBuffer( API_TRANSACTION_KEY_PEM )
@@ -127,7 +127,7 @@ class RmoteCall:
 		# At this point we no longer need the 'priv' object. We only attach the
 		# encrypted instance.
 		s1 = pcos.Block( 'S1', 512, 'O' )
-		s1.write_fixed_string( encrypted )
+		s1.write_fixed_string( encrypted, size=128 )
 
 		#-------------------
 		# PTA envelope
@@ -164,9 +164,9 @@ class RmoteCall:
 	def register(self):
 		req = pcos.Doc( name="Re" )
 		bo = pcos.Block( 'Bo', 512, 'O' )
-		bo.write_short_string( self.args['registration_id'] )
+		bo.write_short_string( self.args['registration_id'], max=64 ) # registration ID
 		bo.write_long_string( base64.decode(TEST_DSA_KEY_PUB_PEM))
-		bo.write_short_string( ';'.join( ('IceBreaker/1.0', sys.platform, sys.byteorder, sys.version) ) )
+		bo.write_short_string( ';'.join( ('IceBreaker/1.0', sys.platform, sys.byteorder, sys.version) ), max=128 )
 		req.add( bo )
 
 		res = self.send( req )

@@ -280,9 +280,11 @@ class Block:
 		length = self.read_byte()
 		return self.read_data(str(length)+'s', length)
 
-	def write_short_string( self, val ):
+	def write_short_string( self, val, max):
 		length = len( val )
-		assert length < 256
+		assert max < 256
+		if length > max:
+			raise PcosError( ERR_MALFORMED_MESSAGE, 'short array-field exeeds specified maximum length: %s > max(%s)' % (length, max) )
 		self.write_byte( length )
 		if length:
 			self.write_data(str(length)+'s', length, val )
@@ -300,8 +302,10 @@ class Block:
 	def read_fixed_string( self, length ):
 		return self.read_data(str(length)+'s', length)
 
-	def write_fixed_string( self, val ):
+	def write_fixed_string( self, val, size ):
 		length = len( val )
+		if length != size:
+			raise PcosError( ERR_MALFORMED_MESSAGE, 'fixed array-field size not met: %s != size(%s)' % (length, size) )
 		self.write_data(str(length)+'s', length, val )
 
 

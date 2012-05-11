@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <RelativeLayout
+        android:id="@+id/title_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="50dip"
+        android:layout_alignParentTop="true"
+        android:background="#464646" >
+
+        <TextView
+            android:id="@+id/text_titlebar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/usr_pass_title"
+            android:textAppearance="@android:style/TextAppearance.DialogWindowTitle" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/text_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_bar"
+        android:layout_marginLeft="10dip"
+        android:layout_marginTop="15dip"
+        android:text="@string/user_name" />
+
+    <EditText
+        android:id="@+id/edit_username"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/text_username"
+        android:layout_below="@id/text_username"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="5dip" >
+    </EditText>
+
+    <TextView
+        android:id="@+id/text_passwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_username"
+        android:layout_marginLeft="10dip"
+        android:layout_marginTop="5dip"
+        android:text="@string/passwd" />
+
+    <EditText
+        android:id="@+id/edit_passwd"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/text_passwd"
+        android:layout_below="@id/text_passwd"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="5dip"
+        android:password="true" >
+    </EditText>
+
+    <LinearLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_passwd"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="20dip"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/btn_ok" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_weight="0.5"
+            android:text="@string/btn_cancel" />
+    </LinearLayout>
+
+</RelativeLayout>

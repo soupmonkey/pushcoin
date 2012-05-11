@@ -6,13 +6,14 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 public class UpdateService extends IntentService {
 	private static final String TAG = "UpdateService";
-
+	
 	public UpdateService() {
 		super("UpdateService");
 	}
@@ -34,28 +35,43 @@ public class UpdateService extends IntentService {
 			Log.d(TAG, "appWidgetId: " + appWidgetId);
 		}
 
-		updateAppWidget(this, mgr, me, appWidgetId, 0);
+		updateAppWidget(this, mgr, me, 0, appWidgetId);
 	}
 
 	static void updateAppWidget(Context context,
-			AppWidgetManager appWidgetManager, ComponentName comp,
-			int appWidgetId, int value) {
+			AppWidgetManager appWidgetManager, ComponentName comp, int configValue, int configWidgetId) {
+		
+		SharedPreferences prefs = context.getSharedPreferences("minta_hswidget", MODE_PRIVATE);
+		
+		int[] appWidgetIds = appWidgetManager.getAppWidgetIds(comp);
+    	int length = appWidgetIds.length;
+    	
+    	for(int j=0; j<length; j++){
+		
+    		int appWidgetId = appWidgetIds[j];
+    		int value = prefs.getInt("widget"+appWidgetId, -1);
+    		
+    		if(value<0){
+    			value = configValue;
+    			appWidgetId = configWidgetId;
+    		}
+		
+    		Log.d(TAG, "updateAppWidget");
 
-		Log.d(TAG, "updateAppWidget");
-
-		RemoteViews views = new RemoteViews(context.getPackageName(),
+    		RemoteViews views = new RemoteViews(context.getPackageName(),
 				R.layout.widget_one);
-		views.setTextViewText(R.id.text, "$" + value);
+    		views.setTextViewText(R.id.text, "$" + value);
 
-		Intent i = new Intent(context, ViewBarcodeActivity.class);
-		i.putExtra("value", value);
-		PendingIntent pi = PendingIntent.getActivity(context,
+    		Intent i = new Intent(context, ViewBarcodeActivity.class);
+    		i.putExtra("value", value);
+    		PendingIntent pi = PendingIntent.getActivity(context,
 				(int) System.currentTimeMillis(), i,
 				PendingIntent.FLAG_UPDATE_CURRENT);
 
-		views.setOnClickPendingIntent(R.id.text, pi);
+    		views.setOnClickPendingIntent(R.id.text, pi);
 
-		appWidgetManager.updateAppWidget(appWidgetId, views);
+    		appWidgetManager.updateAppWidget(appWidgetId, views);
+    	}
 
 	}
 }

@@ -179,7 +179,7 @@ class RmoteCall:
 		req = pcos.Doc( name="Pi" )
 		res = self.send( req )
 		# jump to the block of interest
-		tm = res.block( 'Tm' )
+		tm = res.block( 'Bo' )
 
 		# read block field(s)
 		tm_epoch = tm.read_int64();

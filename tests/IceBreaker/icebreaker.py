@@ -211,6 +211,21 @@ class RmoteCall:
 		server_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(tm_epoch))
 		log.info('RETN %s', server_time )
 
+
+	# CMD: `transaction key'
+	def transaction_key(self):
+
+		req = pcos.Doc( name="Tk" )
+		res = self.send( req )
+		# jump to the block of interest
+		body = res.block( 'Bo' )
+
+		# read block field(s)
+		keyid = body.read_fixed_string(4);
+		key_info = body.read_short_string();
+		key_data = body.read_long_string();
+		log.info('RETN gotten key %s, len %s bytes', key_info, len(key_data) )
+
 	def __init__(self, options, cmd, args):
 		# store the cmd and args for the command-handler
 		self.options = options
@@ -223,6 +238,7 @@ class RmoteCall:
 			"register": self.register,
 			"payment": self.payment,
 			"preauth": self.preauth,
+			"transaction_key": self.transaction_key,
 		}		
 
 	# invoked if user asks for an unknown command

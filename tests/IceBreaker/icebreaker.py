@@ -72,6 +72,32 @@ WBKhBPOqvJ8X+w==
 
 class RmoteCall:
 
+	# CMD: `preauth'
+	def preauth(self):
+		'''Generates the PTA and submits to server for validation.'''
+		pta_encoded = self.payment()
+
+		# package PTA into a block
+		pta = pcos.Block( 'Pa', 512, 'O' )
+		pta.write_fixed_string(pta_encoded, size=len(pta_encoded))
+
+		# create preauth block
+		preauth = pcos.Block( 'Pr', 512, 'O' )
+		preauth.write_fixed_string( binascii.unhexlify( self.args['preauth_mat'] ), size=20 )
+		preauth.write_int64( long( self.args['preauth_scaled_payment'] ) ) # payment
+		preauth.write_int16( int( self.args['preauth_scale'] ) ) # scale
+		preauth.write_fixed_string( "USD", size=3 ) # currency
+		preauth.write_short_string( '', max=20 ) # user data
+
+		# package everything and ship out
+		req = pcos.Doc( name="Pr" )
+		req.add( pta )
+		req.add( preauth )
+
+		res = self.send( req )
+		if res.message_id == "Ok":
+			log.info('RETN Preauthorization Success' )
+
 	# CMD: `payment'
 	def payment(self):
 		'''This command generates the Payment Transaction Authorization, or PTA. It does not communicate with the server, only produces a file.'''
@@ -154,12 +180,11 @@ class RmoteCall:
 			img.save('pta.png')
 			print ("PTA-QR: pta.png, version %s" % (qr.version))
 		except ImportError:
-			print ("QR-Code not written -- qrcode module not found")
+			log.warn("QR-Code not written -- qrcode module not found")
+
+		return encoded
+
 	
-	def check_payment(self):
-		'''Verifies if the PTA is valid. In particular, it checks if the account is valid and if the balance can cover the payment limit in the PTA.'''
-		pass
-		
 	# CMD: `register'
 	def register(self):
 		req = pcos.Doc( name="Re" )
@@ -197,6 +222,7 @@ class RmoteCall:
 			"ping": self.ping,
 			"register": self.register,
 			"payment": self.payment,
+			"preauth": self.preauth,
 		}		
 
 	# invoked if user asks for an unknown command

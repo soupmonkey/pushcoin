@@ -221,10 +221,11 @@ class RmoteCall:
 		body = res.block( 'Bo' )
 
 		# read block field(s)
-		keyid = body.read_fixed_string(4);
-		key_info = body.read_short_string();
-		key_data = body.read_long_string();
-		log.info('RETN gotten key %s, len %s bytes', key_info, len(key_data) )
+		keyid = body.read_fixed_string(4)
+		key_info = body.read_short_string()
+		key_expiry = body.read_int64()
+		key_data = body.read_long_string()
+		log.info('RETN gotten key %s, len %s bytes, expires on %s', key_info, len(key_data), time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(key_expiry)))
 
 	def __init__(self, options, cmd, args):
 		# store the cmd and args for the command-handler

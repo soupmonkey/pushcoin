@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,11 +18,16 @@ public class ConfigureWidgetActivity extends Activity implements
 	private static final String TAG = "ConfigureWidgetActivity";
 	private int mAppWidgetId = 0;
 	private NumberPicker mNumberPicker;
+	private SharedPreferences prefs;
+	private SharedPreferences.Editor editor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
+		
+		prefs = getSharedPreferences("minta_hswidget", MODE_PRIVATE);
+		editor = prefs.edit();
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
@@ -42,6 +48,14 @@ public class ConfigureWidgetActivity extends Activity implements
 	public void onClick(View v) {
 
 		Log.d(TAG, "Current value: " + mNumberPicker.getCurrent());
+		
+		int value = prefs.getInt("widget"+mAppWidgetId, -1);
+		
+		if(value<0){
+			value = mNumberPicker.getCurrent();
+			editor.putInt("widget"+mAppWidgetId, value);
+			editor.commit();
+		}
 
 		Intent resultValue = new Intent();
 		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
@@ -51,7 +65,7 @@ public class ConfigureWidgetActivity extends Activity implements
 		ComponentName comp = new ComponentName(getPackageName(),
 				HSWidgetProvider.class.getName());
 		UpdateService.updateAppWidget(this, appWidgetManager, comp,
-				mAppWidgetId, mNumberPicker.getCurrent());
+				value, mAppWidgetId);
 
 		finish();
 	}

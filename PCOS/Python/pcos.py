@@ -1,4 +1,4 @@
-# Copyright (c) 2012 Minta, LLC.
+# Copyright (c) 2012 Minta, Inc.
 #
 # GNU General Public Licence (GPL)
 # 
@@ -18,14 +18,19 @@ __author__  = '''Slawomir Lisznianski <sl@minta.com>'''
 
 import binascii, struct, ctypes
 
-# This is an absolute minimum length (in bytes) for a PCOS serialized object.
-MIN_MESSAGE_LENGTH = 10
+# This is an absolute minimum length (in bytes) for a PCOS serialized object:
+#
+#   min_size = sizeof_header(16) + sizeof_empty_unbounded_array(2)
+#
+# Note: the empty unbounded array implies no block enumerations.
+MIN_MESSAGE_LENGTH = 18
 
 # Block-meta record has a fixed size of 4 bytes
 BLOCK_META_LENGTH = 4
 
 # A four-byte identifier for PCOS protocol.
 PROTOCOL_MAGIC = 'PCOS'
+RESERVED_HDR_FIELD = b'\0\0\0\0\0\0'
 
 # PCOS parser error codes
 ERR_INTERNAL_ERROR = 100
@@ -50,7 +55,7 @@ class Doc:
 	"""Parses binary data, presumably PCOS-encoded, and constructs a lightweight document."""
 
 	# private PCOS header and block-meta parsers
-	_HEADER_PARSER = struct.Struct('<4s2shh')
+	_HEADER_PARSER = struct.Struct('<4si2s6sh')
 	_BLOCK_META = struct.Struct('<2sh')
 
 
@@ -71,7 +76,7 @@ class Doc:
 				raise PcosError( ERR_MALFORMED_MESSAGE )
 
 			# parse the message header
-			self.magic, self.message_id, self.length, self.block_count = Doc._HEADER_PARSER.unpack_from( data )
+			self.magic, self.length, self.message_id, reserved, self.block_count = Doc._HEADER_PARSER.unpack_from( data )
 
 			# check if magic matches our encoding tag
 			if self.magic != PROTOCOL_MAGIC:
@@ -132,7 +137,7 @@ class Doc:
 		write_offset = 0
 		total_length = MIN_MESSAGE_LENGTH + BLOCK_META_LENGTH * len(self.blocks) + self._data_segment_size()
 		payload = ctypes.create_string_buffer( total_length )
-		Doc._HEADER_PARSER.pack_into( payload, write_offset, PROTOCOL_MAGIC, self.message_id, total_length, len(self.blocks) );
+		Doc._HEADER_PARSER.pack_into( payload, write_offset, PROTOCOL_MAGIC, total_length, self.message_id, RESERVED_HDR_FIELD, len(self.blocks) );
 		write_offset += MIN_MESSAGE_LENGTH
 
 		# write block enumeration
@@ -188,6 +193,10 @@ class Block:
 		# current cursor position
 		self.offset = 0 # current reading cursor position
 
+
+	def __str__( self ):
+		'''Returns a Python string from the character array.'''
+		return ctypes.string_at( self.data, self.meta.length)
 
 	def size( self ):
 		return self.meta.length
@@ -271,11 +280,14 @@ class Block:
 		length = self.read_byte()
 		return self.read_data(str(length)+'s', length)
 
-	def write_short_string( self, val ):
+	def write_short_string( self, val, max):
 		length = len( val )
-		assert length < 256
+		assert max < 256
+		if length > max:
+			raise PcosError( ERR_MALFORMED_MESSAGE, 'short array-field exeeds specified maximum length: %s > max(%s)' % (length, max) )
 		self.write_byte( length )
-		self.write_data(str(length)+'s', length, val )
+		if length:
+			self.write_data(str(length)+'s', length, val )
 
 	def read_long_string( self ):
 		length = self.read_int16()
@@ -284,13 +296,16 @@ class Block:
 	def write_long_string( self, val ):
 		length = len( val )
 		self.write_int16( length )
-		self.write_data(str(length)+'s', length, val )
+		if length:
+			self.write_data(str(length)+'s', length, val )
 
 	def read_fixed_string( self, length ):
 		return self.read_data(str(length)+'s', length)
 
-	def write_fixed_string( self, val ):
+	def write_fixed_string( self, val, size ):
 		length = len( val )
+		if length != size:
+			raise PcosError( ERR_MALFORMED_MESSAGE, 'fixed array-field size not met: %s != size(%s)' % (length, size) )
 		self.write_data(str(length)+'s', length, val )
 
 

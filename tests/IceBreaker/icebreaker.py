@@ -2,19 +2,171 @@
 # -*- coding: utf-8 -*-
 import sys, urllib2, time
 import logging as log
-import pcos
+import pcos, time, binascii, base64, hashlib, Image
 from optparse import OptionParser,OptionError
 from pyparsing import *
+from M2Crypto import DSA, BIO, RSA
+
+def load_qrcode():
+	try:
+		import qrcode
+		return True
+	except ImportError:
+		return False
+
+# The transaction key and the key-ID where obtained from:
+#   https://pushcoin.com/Pub/SDK/TransactionKeys
+#
+API_TRANSACTION_KEY_ID = '652fce08'
+
+#
+# Please note:
+#
+#   The PEM format is base64-encoded DER data with additional header and footer lines:
+#     -----BEGIN PUBLIC KEY-----
+#        <base64-encded DER>
+#     -----END PUBLIC KEY-----
+# 
+
+API_TRANSACTION_KEY_PEM = '''-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC7BAaOZNk3dNMKQCmom5qem41w
+sS8yIWUnOUgYIOT7FE0SVTFj1qXVc5WBpUQuAiYepmyTH8QGUBU4FtNJyQED56LN
+Pgm8rTg45kqFjXuJF9IGKb89e7mx8qP0JevT8eVoIpiiwGb3xDuIkjrD5QUpcwes
+bYi8AscPo+oDz+jQ5QIDAQAB
+-----END PUBLIC KEY-----'''
+
+# Below, the DSA keys were generated as follows:
+#   1. generate param file
+#      openssl dsaparam 512 < /dev/random > dsa_param.pem
+#   
+#   2. generating DSA key, 512 bits
+#      openssl gendsa dsa_param.pem -out dsa_priv.pem
+#   
+#   2b. optionally encrypt the key
+#       openssl dsa -in dsa_priv.pem -des3 -out dsa_safe_priv.pem
+#   
+#   3. extract public key out of private, write in DER format
+#      openssl dsa -in dsa_priv.pem -outform DER -pubout -out dsa_pub.der
+
+# The public DSA key is sent to the server in the "Register" message.
+#
+#-----BEGIN PUBLIC KEY-----
+TEST_DSA_KEY_PUB_PEM = '''MIHxMIGoBgcqhkjOOAQBMIGcAkEA6DCdaRYmSb4vQUAkaqsR+Ph2aprcMAlDkRGL
+Vc1N8Hi3sm97xR+b3IYTHRuYaSEyaWKvuByjbFnJRjyYBpTKqwIVAObFswWoV2wl
+LoUs3//+1kRFOHY/AkADEXixNnXLQp3dDapOb57uM+6/TH4mZJizpvCqpVaonIz2
+ZGzB+ws/EU7fmitScho04EJg+1xBbLsMbJ1lMxaoA0QAAkEAgnL2PItRT0fn8GJ4
+YygfEG1wUMaW9YrkRNWuNtOBtw3WERn8fa+6VeTKujSfDcnnpj6mnyqusPhA4Ek6
+iYVpxw=='''
+# -----END PUBLIC KEY-----
+
+# The private key is "secretly" kept on the device.
+#
+TEST_DSA_KEY_PRV_PEM = '''-----BEGIN DSA PRIVATE KEY-----
+MIH3AgEAAkEAjfeT35NuNNXa9J6WFRGkbLFPbMjTvfBwBmlIBxkn5C7P7tbrSKX2
+v4kkNOxaSoL1IbAcIsRfLAQONhu5OypILwIVAKPptYe+gRwRHTd47lSliZcv6HXx
+AkASAkNvUTHAAayp1ozyEa42u/9el+r5ffTGK1VH9VYgCc3dcUHOxGl3gXl2KQfN
+Pt6owQKKsZnrpgO1v1N+ciLWAkA9jERRrih0tMqrqBq3iRmpqQXFQhsy+oyPST9v
++KiP+POtARwoOToKJw8Ub8o3EdjoXWobCvDbxTMPP447uJkTAhR5+vvpezohpW2r
+WBKhBPOqvJ8X+w==
+-----END DSA PRIVATE KEY-----'''
 
 class RmoteCall:
 
+	# CMD: `payment'
+	def payment(self):
+		'''This command generates the Payment Transaction Authorization, or PTA. It does not communicate with the server, only produces a file.'''
+
+		#------------------
+		# PTA public-block
+		#------------------
+		p1 = pcos.Block( 'P1', 512, 'O' )
+		now = long( time.time() + 0.5 )
+		p1.write_int64( now ) # certificate create-time
+		p1.write_int64( now + 24 * 3600 ) # certificate expiry (in 24 hrs)
+
+		p1.write_int64( long( self.args['scaled_payment'] ) ) # payment
+		p1.write_int16( int( self.args['scale'] ) ) # scale
+
+		p1.write_fixed_string( "USD", size=3 ) # currency
+		p1.write_fixed_string( binascii.unhexlify( API_TRANSACTION_KEY_ID ), size=4 ) # key-ID
+
+		p1.write_short_string( '', max=127 ) # receiver
+		p1.write_short_string( '', max=127 ) # note
+
+		#-------------------
+		# PTA private-block
+		#-------------------
+		priv = pcos.Block( 'S1', 512, 'O' )
+
+		# member authentication token
+		mat = self.args['mat'] 
+		if len( mat ) != 40:
+			raise RuntimeError("MAT must be 40-characters long" % self.cmd)
+		priv.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 )
+		
+		# sign the public-block
+		#   * first, produce the checksum
+		sha1 = hashlib.sha1()
+		sha1.update( str(p1) )
+		digest = sha1.digest()
+		#   * then sign the checksum
+		dsa_priv_key = BIO.MemoryBuffer( TEST_DSA_KEY_PRV_PEM )
+		signer = DSA.load_key_bio( dsa_priv_key )
+		signature = signer.sign_asn1( digest )
+		priv.write_short_string( signature, max=48 )
+
+		priv.write_short_string( '', max=20 ) # empty user data
+		priv.write_short_string( '', max=26 ) # empty reserved field
+
+		# encrypt the private-block
+		txn_pub_key = BIO.MemoryBuffer( API_TRANSACTION_KEY_PEM )
+		encrypter = RSA.load_pub_key_bio( txn_pub_key )
+		# RSA Encryption Scheme w/ Optimal Asymmetric Encryption Padding
+		encrypted = encrypter.public_encrypt( str(priv), RSA.pkcs1_oaep_padding )
+
+		# At this point we no longer need the 'priv' object. We only attach the
+		# encrypted instance.
+		s1 = pcos.Block( 'S1', 512, 'O' )
+		s1.write_fixed_string( encrypted, size=128 )
+
+		#-------------------
+		# PTA envelope
+		#-------------------
+		env = pcos.Doc( name="Pa" )
+		# order in which we add blocks doesn't matter
+		env.add( p1 )
+		env.add( s1 )
+
+		# write serialized data as binary and qr-code
+		encoded = env.encoded()
+		reqf = open('pta.pcos', 'w')
+		reqf.write( encoded )
+		reqf.close()
+		print ("Saved PTA object to 'pta.pcos'")
+
+		# optionally generate qr-code
+		try:
+			import qrcode
+			qr = qrcode.QRCode(version=None, error_correction=qrcode.constants.ERROR_CORRECT_L)
+			qr.add_data( encoded )
+			qr.make(fit=True)
+			img = qr.make_image()
+			img.save('pta.png')
+			print ("PTA-QR: pta.png, version %s" % (qr.version))
+		except ImportError:
+			print ("QR-Code not written -- qrcode module not found")
+	
+	def check_payment(self):
+		'''Verifies if the PTA is valid. In particular, it checks if the account is valid and if the balance can cover the payment limit in the PTA.'''
+		pass
+		
 	# CMD: `register'
 	def register(self):
 		req = pcos.Doc( name="Re" )
 		bo = pcos.Block( 'Bo', 512, 'O' )
-		bo.write_short_string( self.args['registration_id'] )
-		bo.write_long_string( '>> PUBLIC-KEY GOES HERE <<' )
-		bo.write_short_string( ';'.join( ('IceBreaker/1.0', sys.platform, sys.byteorder, sys.version) ) )
+		bo.write_short_string( self.args['registration_id'], max=64 ) # registration ID
+		bo.write_long_string( base64.b64decode(TEST_DSA_KEY_PUB_PEM) )
+		bo.write_short_string( ';'.join( ('IceBreaker/1.0', sys.platform, sys.byteorder, sys.version) ), max=128 )
 		req.add( bo )
 
 		res = self.send( req )
@@ -42,9 +194,9 @@ class RmoteCall:
 
 		# list of commands (PushCoin requests) we are supporting:
 		self.lookup = {
-#		"register": self.register,
 			"ping": self.ping,
 			"register": self.register,
+			"payment": self.payment,
 		}		
 
 	# invoked if user asks for an unknown command
@@ -69,7 +221,7 @@ class RmoteCall:
 			reqf.write( encoded )
 			reqf.close()
 
-		log.info('CALL %s%s', self.cmd, str(self.args) )
+		log.info('CALL %s %s', self.cmd, str(self.args) )
 		remote_call = urllib2.urlopen(self.options.url, encoded )
 		response = remote_call.read()
 

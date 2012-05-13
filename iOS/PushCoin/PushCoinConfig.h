@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString * const PEM_RSA_PublicKeyFile;
-extern NSString * const PEM_DSA_PrivateKey;
-
+extern NSString * const PushCoinRSAPublicKeyFile;
 extern NSString * const PushCoinWebServicePath;
-
+extern NSString * const PushCoinKeychainId;
+extern NSString * const PushCoinAppUserAgent;
 extern NSUInteger const PushCoinWebServiceOutBufferSize;

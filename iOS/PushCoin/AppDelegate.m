@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "OpenSSLWrapper.h"
+#import "KeychainItemWrapper.h"
 
 @implementation AppDelegate
 
@@ -14,7 +16,33 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    KeychainItemWrapper * keychain = [[KeychainItemWrapper alloc] initWithIdentifier:PushCoinKeychainId accessGroup:nil];
+    
+    [self prepareDSAWithKeychain:keychain];
+    [self prepareRSAWithKeychain:keychain];
+
+    return YES;
+}
+
+- (BOOL) prepareDSAWithKeychain:(KeychainItemWrapper *)keychain
+{
+    NSString * dsaPrivateKey = [keychain objectForKey:(__bridge id)kSecValueData];
+    if (dsaPrivateKey.length == 0)
+    {
+        return NO;
+    }
+    else 
+    {
+        OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
+        [ssl prepareDsaWithPrivateKey:dsaPrivateKey];
+        return YES;
+    }
+}
+
+- (BOOL) prepareRSAWithKeychain:(KeychainItemWrapper *)keychain
+{
+    OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
+    [ssl prepareRsaWithKeyFile:PushCoinRSAPublicKeyFile];
     return YES;
 }
 							

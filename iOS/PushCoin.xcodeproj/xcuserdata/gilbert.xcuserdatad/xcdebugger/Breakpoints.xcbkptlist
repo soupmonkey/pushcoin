@@ -55,5 +55,44 @@
          landmarkName = "-writeBytes:length:"
          landmarkType = "5">
       </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "PushCoin/SettingsController.mm"
+         timestampString = "358583974.611334"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "113"
+         endingLineNumber = "113"
+         landmarkName = "-registrationControllerDidClose:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "PushCoin/OpenSSLWrapper.m"
+         timestampString = "358583117.417113"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "163"
+         endingLineNumber = "163"
+         landmarkName = "-generateDsaPrivateKey:andPublicKey:withBits:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "PushCoin/OpenSSLWrapper.m"
+         timestampString = "358583166.323519"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "63"
+         endingLineNumber = "63"
+         landmarkName = "-setDsa:"
+         landmarkType = "5">
+      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

@@ -77,7 +77,7 @@
 		0D7A8FE51542609600634A79 /* SettingsController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D7A8FE41542609600634A79 /* SettingsController.mm */; };
 		0D7A8FF71543614000634A79 /* QRViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D7A8FF61543614000634A79 /* QRViewController.mm */; };
 		0DACCD741558A02A00A69DED /* PCOSParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DACCD731558A02A00A69DED /* PCOSParser.m */; };
-		0DAFD24C1547A8180010459A /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DAFD24B1547A8180010459A /* KeychainWrapper.m */; };
+		0DAFD24C1547A8180010459A /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFD24D1547ACBA0010459A /* Security.framework */; };
 		0DBC491B1543BF3700E56EDF /* VSKeypadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DBC491A1543BF3700E56EDF /* VSKeypadView.m */; };
 		0DE9FA72155A1D4700FACDA7 /* RegistrationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */; };
@@ -257,8 +257,8 @@
 		0DACCD721558A02A00A69DED /* PCOSParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSParser.h; sourceTree = "<group>"; };
 		0DACCD731558A02A00A69DED /* PCOSParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSParser.m; sourceTree = "<group>"; };
 		0DAFD23115478E5E0010459A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "../../../v1/openssl-xcode/openssl.xcodeproj"; sourceTree = "<group>"; };
-		0DAFD24A1547A8180010459A /* KeychainWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainWrapper.h; sourceTree = "<group>"; };
-		0DAFD24B1547A8180010459A /* KeychainWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainWrapper.m; sourceTree = "<group>"; };
+		0DAFD24A1547A8180010459A /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
+		0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		0DAFD24D1547ACBA0010459A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0DBC49191543BF3700E56EDF /* VSKeypadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VSKeypadView.h; sourceTree = "<group>"; };
 		0DBC491A1543BF3700E56EDF /* VSKeypadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VSKeypadView.m; sourceTree = "<group>"; };
@@ -447,8 +447,8 @@
 			isa = PBXGroup;
 			children = (
 				0D3EA619154872FB0088EFE1 /* pushcoin_com.pub */,
-				0DAFD24A1547A8180010459A /* KeychainWrapper.h */,
-				0DAFD24B1547A8180010459A /* KeychainWrapper.m */,
+				0DAFD24A1547A8180010459A /* KeychainItemWrapper.h */,
+				0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */,
 				0D3EA61B154877670088EFE1 /* OpenSSLWrapper.h */,
 				0D3EA61C154877670088EFE1 /* OpenSSLWrapper.m */,
 			);
@@ -696,7 +696,7 @@
 				0D7A8FE51542609600634A79 /* SettingsController.mm in Sources */,
 				0D7A8FF71543614000634A79 /* QRViewController.mm in Sources */,
 				0DBC491B1543BF3700E56EDF /* VSKeypadView.m in Sources */,
-				0DAFD24C1547A8180010459A /* KeychainWrapper.m in Sources */,
+				0DAFD24C1547A8180010459A /* KeychainItemWrapper.m in Sources */,
 				0D3EA61D154877670088EFE1 /* OpenSSLWrapper.m in Sources */,
 				0D3EA6201548783D0088EFE1 /* PushCoinConfig.m in Sources */,
 				0D3EA6231548FB0A0088EFE1 /* PushCoinWebService.m in Sources */,

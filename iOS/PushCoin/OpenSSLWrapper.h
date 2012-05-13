@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "PushCoinConfig.h"
-#import "KeychainWrapper.h"
+#import "KeychainItemWrapper.h"
 
 #include <openssl/md5.h>
 #include <openssl/dsa.h>
@@ -20,16 +20,32 @@
 
 @interface OpenSSLWrapper : NSObject
 {
-    RSA * rsa;
-    DSA * dsa;
+    RSA * rsa_;
+    DSA * dsa_;
+    bool hasRSA_;
+    bool hasDSA_;
 }
+@property (nonatomic, assign) RSA * rsa;
+@property (nonatomic, assign) DSA * dsa;
+
 
 +(void) initialize;
 +(OpenSSLWrapper *) instance;
 
--(NSData *) rsa_encrypt: (NSData *) data;
--(NSData *) sha1_hash: (NSData *) data;
--(NSData *) md5_hash: (NSData *) data;
--(NSData *) dsa_sign: (NSData *) data;
 
+-(BOOL) generateRsaPrivateKey:(NSString **)privateKey andPublicKey:(NSString **) publicKey withBits:(NSInteger) bits andExp:(NSInteger) exp;
+-(BOOL) prepareRsaWithKeyFile:(NSString*) keyFile;
+-(BOOL) prepareRsaWithPublicKey:(NSString *)publicKey;
+-(BOOL) prepareRsaWithPrivateKey:(NSString *)privateKey;
+-(NSData *) rsa_encryptData: (NSData*) data toBytes:(NSData **)bytes;
+-(NSData *) rsa_decryptData: (NSData *) data;
+
+-(BOOL) generateDsaPrivateKey:(NSString **)privateKey andPublicKey:(NSString**)publicKey withBits:(NSInteger)bits;
+-(BOOL) prepareDsaWithPublicKey:(NSString *)publicKey;
+-(BOOL) prepareDsaWithPrivateKey:(NSString *)privateKey;
+-(NSData *) dsa_signData: (NSData *) data;
+-(BOOL) dsa_verifyData: (NSData *) data withSignature:(NSData *)signature;
+
+-(NSData *) sha1_hashData: (NSData*) data;
+-(NSData *) md5_hashData: (NSData *) data;
 @end

@@ -120,6 +120,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Settings" image="first" id="4DL-zK-FkJ"/>
                     <connections>
+                        <outlet property="registerButton" destination="31U-cZ-Gfc" id="W3b-EO-MMj"/>
                         <outlet property="resultLabel" destination="g1I-U7-8Si" id="qPm-OW-kvV"/>
                         <segue destination="hUT-TZ-Mgm" kind="modal" identifier="SegueToRegistration" modalTransitionStyle="coverVertical" id="9fm-2r-GVn"/>
                     </connections>
@@ -312,44 +313,6 @@
         <image name="first" width="16" height="16"/>
         <image name="second" width="16" height="16"/>
     </resources>
-    <classes>
-        <class className="ChallengeController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ChallengeController.h"/>
-        </class>
-        <class className="PayController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PayController.h"/>
-            <relationships>
-                <relationship kind="action" name="push:"/>
-                <relationship kind="outlet" name="amountTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="pageControl" candidateClass="UIPageControl"/>
-                <relationship kind="outlet" name="receiverLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
-            </relationships>
-        </class>
-        <class className="QRViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/QRViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="summaryLabel" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="ReceiveController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ReceiveController.h"/>
-        </class>
-        <class className="RegistrationController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RegistrationController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="registrationIDTextBox" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="SettingsController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsController.h"/>
-            <relationships>
-                <relationship kind="action" name="register:"/>
-                <relationship kind="outlet" name="resultLabel" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

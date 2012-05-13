@@ -8,9 +8,8 @@
 
 #import "PushCoinConfig.h"
 
-NSString * const PEM_RSA_PublicKeyFile = @"pushcoin_com.pub";
-NSString * const PEM_DSA_PrivateKey = @"";
-
+NSString * const PushCoinRSAPublicKeyFile = @"pushcoin_com.pub";
 NSString * const PushCoinWebServicePath = @"https://api.pushcoin.com:20001/pcos/";
-
+NSString * const PushCoinKeychainId = @"PushCoin.com";
+NSString * const PushCoinAppUserAgent = @"PushCoin/1.0;iOS5.1;ObjC/XCode4";
 NSUInteger const PushCoinWebServiceOutBufferSize = 3000;

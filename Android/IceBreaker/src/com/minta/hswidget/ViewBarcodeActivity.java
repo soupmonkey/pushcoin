@@ -15,7 +15,7 @@ public class ViewBarcodeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.view_barcode);
+			setContentView(R.layout.view_barcode);
 
 		valueTitle = (TextView) findViewById(R.id.value_title);
 
@@ -46,7 +46,13 @@ public class ViewBarcodeActivity extends Activity {
 			barcodeView.invalidate();
 
 			parent.addView(barcodeView);
-		}
-
+		}		
+		
+	}
+	
+	@Override
+	protected void onPause() {
+		finish();
+		super.onPause();
 	}
 }

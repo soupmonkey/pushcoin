@@ -59,7 +59,6 @@ class Doc:
 	_HEADER_PARSER = struct.Struct('<4si2s6sh')
 	_BLOCK_META = struct.Struct('<2sh')
 
-
 	def __init__( self, data = None, name = None ): 
 		"""Constructs PCOS from binary data."""
 
@@ -311,6 +310,22 @@ class Block:
 		if length != size:
 			raise PcosError( ERR_MALFORMED_MESSAGE, 'fixed array-field size not met: %s != size(%s)' % (length, size) )
 		self.write_data(str(length)+'s', length, val )
+
+
+def parse_block(data, message_id, block_name):
+	'''Returns a Block instance from raw block data'''
+	blk = BlockMeta()
+	blk.name = block_name
+	blk.length = len(data)
+	blk.start = 0
+
+	doc = Doc( data = None, name = message_id )
+	doc.data = data
+	doc.blocks[block_name] = blk
+	doc.magic = PROTOCOL_MAGIC
+	doc.length = blk.length
+	doc.block_count = 1
+	return doc.block(block_name)
 
 
 def _reading_test_pong():

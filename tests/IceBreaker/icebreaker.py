@@ -51,12 +51,12 @@ bYi8AscPo+oDz+jQ5QIDAQAB
 # The public DSA key is sent to the server in the "Register" message.
 #
 #-----BEGIN PUBLIC KEY-----
-TEST_DSA_KEY_PUB_PEM = '''MIHxMIGoBgcqhkjOOAQBMIGcAkEA6DCdaRYmSb4vQUAkaqsR+Ph2aprcMAlDkRGL
-Vc1N8Hi3sm97xR+b3IYTHRuYaSEyaWKvuByjbFnJRjyYBpTKqwIVAObFswWoV2wl
-LoUs3//+1kRFOHY/AkADEXixNnXLQp3dDapOb57uM+6/TH4mZJizpvCqpVaonIz2
-ZGzB+ws/EU7fmitScho04EJg+1xBbLsMbJ1lMxaoA0QAAkEAgnL2PItRT0fn8GJ4
-YygfEG1wUMaW9YrkRNWuNtOBtw3WERn8fa+6VeTKujSfDcnnpj6mnyqusPhA4Ek6
-iYVpxw=='''
+TEST_DSA_KEY_PUB_PEM = '''MIHwMIGoBgcqhkjOOAQBMIGcAkEAjfeT35NuNNXa9J6WFRGkbLFPbMjTvfBwBmlI
+Bxkn5C7P7tbrSKX2v4kkNOxaSoL1IbAcIsRfLAQONhu5OypILwIVAKPptYe+gRwR
+HTd47lSliZcv6HXxAkASAkNvUTHAAayp1ozyEa42u/9el+r5ffTGK1VH9VYgCc3d
+cUHOxGl3gXl2KQfNPt6owQKKsZnrpgO1v1N+ciLWA0MAAkA9jERRrih0tMqrqBq3
+iRmpqQXFQhsy+oyPST9v+KiP+POtARwoOToKJw8Ub8o3EdjoXWobCvDbxTMPP447
+uJkT'''
 # -----END PUBLIC KEY-----
 
 # The private key is "secretly" kept on the device.
@@ -132,17 +132,14 @@ class RmoteCall:
 		
 		# sign the public-block
 		#   * first, produce the checksum
-		sha1 = hashlib.sha1()
-		sha1.update( str(p1) )
-		digest = sha1.digest()
+		digest = hashlib.sha1(str(p1)).digest()
+		
 		#   * then sign the checksum
 		dsa_priv_key = BIO.MemoryBuffer( TEST_DSA_KEY_PRV_PEM )
 		signer = DSA.load_key_bio( dsa_priv_key )
 		signature = signer.sign_asn1( digest )
-		priv.write_short_string( signature, max=48 )
-
+		priv.write_short_string( signature, max=48 ) # signature of the pub block
 		priv.write_short_string( '', max=20 ) # empty user data
-		priv.write_short_string( '', max=26 ) # empty reserved field
 
 		# encrypt the private-block
 		txn_pub_key = BIO.MemoryBuffer( API_TRANSACTION_KEY_PEM )

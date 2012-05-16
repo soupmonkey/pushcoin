@@ -122,6 +122,11 @@ const PCOSDouble * protoDouble;
                     forKey:name];
 }
 
+-(void) block:(NSObject<PCOSSerializable> *)block withKey:(NSString *)key encodedToBytes:(void const *)bytes withLength:(NSUInteger)len
+{
+    
+}
+
 -(NSUInteger) encode:(PCOSRawData *)data
 {
     // Skip block meta for now.
@@ -132,11 +137,19 @@ const PCOSDouble * protoDouble;
     // Encode Blocks
     NSUInteger total = hdr_len;
     NSUInteger len = 0;
+    NSObject<PCOSSerializable> * block;
+    NSString * key;
+    void const * writeBytes;
     for(int i = 0; i < self.block_meta.val.count; ++i)
     {
-        NSString * key = [[self.block_meta.val objectAtIndex:i] block_id].string;
-        total += (len = [[blocks valueForKey:key] encode:data]);
+        key = [[self.block_meta.val objectAtIndex:i] block_id].string;
+        block = [blocks valueForKey:key];
+        writeBytes = data.data.bytes;
+        
+        total += (len = [block encode:data]);
         [[self.block_meta.val objectAtIndex:i] block_length].val = len;
+        
+        [self block:block withKey:key encodedToBytes:writeBytes withLength:len];
     }
     
     // Encode block meta
@@ -159,11 +172,42 @@ const PCOSDouble * protoDouble;
         PCOSBlock * block = [self.block_enum.val objectAtIndex:i];
         NSString * key = [[block.lookup valueForKey:@"block_id"] string];
 #endif
-        
-        PCOSBaseType * type = [blocks valueForKey:key];
+        PCOSRawData * raw = [[PCOSRawData alloc] initWithData:
+                             [NSMutableData dataWithBytes:(void *)data.data.bytes + total length:block.size]];
+                                                            
+        NSObject<PCOSSerializable> * type = [blocks valueForKey:key];
         if (type != nil)
-            total += [type decode:data];
+            total += [(PCOSBaseType *)type decode:raw];
+        else
+            total += block.size;
     }
     return total;
 }
+@end
+
+@implementation PCOSDataBlock
+@synthesize data;
+
+-(id) initWithData:(NSMutableData *)d
+{
+    self = [super self];
+    if (self)
+    {
+        data = [d copy];
+    }
+    return self;
+}
+
+-(NSUInteger) encode:(PCOSRawData *)raw
+{
+    [raw writeBytes:self.data.bytes length:self.data.length];
+    return self.data.length;
+}
+
+-(NSUInteger) decode:(PCOSRawData *)raw
+{
+    data = [self.data initWithBytes:(raw.data.bytes+raw.offset) length:raw.data.length];
+    return raw.data.length;
+}
+
 @end

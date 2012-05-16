@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "KeychainItemWrapper.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
-
+@property (strong, nonatomic) KeychainItemWrapper * keychain;
 @property (strong, nonatomic) UIWindow *window;
-
+@property (readonly) BOOL registered;
+@property (getter = authToken, setter = setAuthToken:) NSString * authToken;
+@property (getter = dsaPrivateKey, setter = setDsaPrivateKey:) NSString * dsaPrivateKey;
 @end

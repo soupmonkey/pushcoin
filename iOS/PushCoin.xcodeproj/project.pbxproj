@@ -62,7 +62,7 @@
 		0D20D8A315571ED300098838 /* PushCoinMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89D15571ED300098838 /* PushCoinMessages.m */; };
 		0D20D8A415571ED300098838 /* PCOSTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89F15571ED300098838 /* PCOSTypes.m */; };
 		0D3EA61A154872FB0088EFE1 /* pushcoin_com.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0D3EA619154872FB0088EFE1 /* pushcoin_com.pub */; };
-		0D3EA61D154877670088EFE1 /* OpenSSLWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA61C154877670088EFE1 /* OpenSSLWrapper.m */; };
+		0D3EA61D154877670088EFE1 /* OpenSSLWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA61C154877670088EFE1 /* OpenSSLWrapper.mm */; };
 		0D3EA6201548783D0088EFE1 /* PushCoinConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA61F1548783D0088EFE1 /* PushCoinConfig.m */; };
 		0D3EA6231548FB0A0088EFE1 /* PushCoinWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */; };
 		0D3EA63F154936C50088EFE1 /* ChallengeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA63E154936C50088EFE1 /* ChallengeController.m */; };
@@ -76,6 +76,8 @@
 		0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8FBE154218B700634A79 /* QuartzCore.framework */; };
 		0D7A8FE51542609600634A79 /* SettingsController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D7A8FE41542609600634A79 /* SettingsController.mm */; };
 		0D7A8FF71543614000634A79 /* QRViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D7A8FF61543614000634A79 /* QRViewController.mm */; };
+		0D7E10B9155FF82800429C9A /* NSData+BytesToHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */; };
+		0D7E10BC155FF8E200429C9A /* NSString+HexStringToBytes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */; };
 		0DACCD741558A02A00A69DED /* PCOSParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DACCD731558A02A00A69DED /* PCOSParser.m */; };
 		0DAFD24C1547A8180010459A /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFD24D1547ACBA0010459A /* Security.framework */; };
@@ -84,6 +86,9 @@
 		0DE9FA7E155A278500FACDA7 /* libAQGridView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DE9FA7B155A277700FACDA7 /* libAQGridView.a */; };
 		0DE9FA82155A2B0100FACDA7 /* SpringBoardIconCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9FA81155A2B0100FACDA7 /* SpringBoardIconCell.m */; };
 		0DF680261545B28500F5E784 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 0DF680251545B28500F5E784 /* README */; };
+		0DF6C5C81563446600E28B99 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DF6C5C71563446600E28B99 /* MainTabBarController.m */; };
+		0DF6C5D115636C9400E28B99 /* PushCoinLogo-Large.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DF6C5CF15636C9400E28B99 /* PushCoinLogo-Large.png */; };
+		0DF6C5D215636C9400E28B99 /* PushCoinLogo-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DF6C5D015636C9400E28B99 /* PushCoinLogo-Small.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -232,7 +237,7 @@
 		0D20D8A515576E1700098838 /* PCOS-CPP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PCOS-CPP.h"; sourceTree = "<group>"; };
 		0D3EA619154872FB0088EFE1 /* pushcoin_com.pub */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = pushcoin_com.pub; sourceTree = "<group>"; };
 		0D3EA61B154877670088EFE1 /* OpenSSLWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenSSLWrapper.h; sourceTree = "<group>"; };
-		0D3EA61C154877670088EFE1 /* OpenSSLWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenSSLWrapper.m; sourceTree = "<group>"; };
+		0D3EA61C154877670088EFE1 /* OpenSSLWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenSSLWrapper.mm; sourceTree = "<group>"; };
 		0D3EA61E1548783D0088EFE1 /* PushCoinConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushCoinConfig.h; sourceTree = "<group>"; };
 		0D3EA61F1548783D0088EFE1 /* PushCoinConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushCoinConfig.m; sourceTree = "<group>"; };
 		0D3EA6211548FB0A0088EFE1 /* PushCoinWebService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushCoinWebService.h; sourceTree = "<group>"; };
@@ -254,6 +259,10 @@
 		0D7A8FE61542633100634A79 /* ZXingWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZXingWidget.xcodeproj; path = "../../../v1/zxing-2.0/iphone/ZXingWidget/ZXingWidget.xcodeproj"; sourceTree = "<group>"; };
 		0D7A8FF51543614000634A79 /* QRViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRViewController.h; sourceTree = "<group>"; };
 		0D7A8FF61543614000634A79 /* QRViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QRViewController.mm; sourceTree = "<group>"; };
+		0D7E10B7155FF82800429C9A /* NSData+BytesToHexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+BytesToHexString.h"; sourceTree = "<group>"; };
+		0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+BytesToHexString.m"; sourceTree = "<group>"; };
+		0D7E10BA155FF8E200429C9A /* NSString+HexStringToBytes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HexStringToBytes.h"; sourceTree = "<group>"; };
+		0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HexStringToBytes.m"; sourceTree = "<group>"; };
 		0DACCD721558A02A00A69DED /* PCOSParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSParser.h; sourceTree = "<group>"; };
 		0DACCD731558A02A00A69DED /* PCOSParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSParser.m; sourceTree = "<group>"; };
 		0DAFD23115478E5E0010459A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "../../../v1/openssl-xcode/openssl.xcodeproj"; sourceTree = "<group>"; };
@@ -268,6 +277,10 @@
 		0DE9FA80155A2B0100FACDA7 /* SpringBoardIconCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpringBoardIconCell.h; sourceTree = "<group>"; };
 		0DE9FA81155A2B0100FACDA7 /* SpringBoardIconCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpringBoardIconCell.m; sourceTree = "<group>"; };
 		0DF680251545B28500F5E784 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		0DF6C5C61563446500E28B99 /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
+		0DF6C5C71563446600E28B99 /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
+		0DF6C5CF15636C9400E28B99 /* PushCoinLogo-Large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PushCoinLogo-Large.png"; sourceTree = "<group>"; };
+		0DF6C5D015636C9400E28B99 /* PushCoinLogo-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PushCoinLogo-Small.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -325,7 +338,7 @@
 		0D19E2BD1541CCAE00C8671B = {
 			isa = PBXGroup;
 			children = (
-				0D19E2D21541CCAE00C8671B /* PushCoinApp */,
+				0D19E2D21541CCAE00C8671B /* PushCoin.App */,
 				0DAFD22D15475A9E0010459A /* PushCoin */,
 				0DBC491C1543C58200E56EDF /* KeyPad */,
 				0D7A8F7A154202A800634A79 /* Dependencies */,
@@ -364,7 +377,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		0D19E2D21541CCAE00C8671B /* PushCoinApp */ = {
+		0D19E2D21541CCAE00C8671B /* PushCoin.App */ = {
 			isa = PBXGroup;
 			children = (
 				0D19E2D31541CCAE00C8671B /* Supporting Files */,
@@ -385,8 +398,10 @@
 				0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */,
 				0DE9FA80155A2B0100FACDA7 /* SpringBoardIconCell.h */,
 				0DE9FA81155A2B0100FACDA7 /* SpringBoardIconCell.m */,
+				0DF6C5C61563446500E28B99 /* MainTabBarController.h */,
+				0DF6C5C71563446600E28B99 /* MainTabBarController.m */,
 			);
-			name = PushCoinApp;
+			name = PushCoin.App;
 			path = PushCoin;
 			sourceTree = "<group>";
 		};
@@ -428,9 +443,21 @@
 			name = Dependencies;
 			sourceTree = "<group>";
 		};
+		0D7E10B6155FF44700429C9A /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				0D7E10B7155FF82800429C9A /* NSData+BytesToHexString.h */,
+				0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */,
+				0D7E10BA155FF8E200429C9A /* NSString+HexStringToBytes.h */,
+				0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
 		0DAFD22D15475A9E0010459A /* PushCoin */ = {
 			isa = PBXGroup;
 			children = (
+				0D7E10B6155FF44700429C9A /* Utilities */,
 				0DAFD2491547A7ED0010459A /* Security */,
 				0D3EA6BD154F629F0088EFE1 /* Messaging */,
 				0D3EA61E1548783D0088EFE1 /* PushCoinConfig.h */,
@@ -450,7 +477,7 @@
 				0DAFD24A1547A8180010459A /* KeychainItemWrapper.h */,
 				0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */,
 				0D3EA61B154877670088EFE1 /* OpenSSLWrapper.h */,
-				0D3EA61C154877670088EFE1 /* OpenSSLWrapper.m */,
+				0D3EA61C154877670088EFE1 /* OpenSSLWrapper.mm */,
 			);
 			name = Security;
 			sourceTree = "<group>";
@@ -510,6 +537,8 @@
 		0DBC491D1543C59A00E56EDF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0DF6C5CF15636C9400E28B99 /* PushCoinLogo-Large.png */,
+				0DF6C5D015636C9400E28B99 /* PushCoinLogo-Small.png */,
 				0D19E2E41541CCAE00C8671B /* first.png */,
 				0D19E2E61541CCAE00C8671B /* first@2x.png */,
 				0D19E2EB1541CCAE00C8671B /* second.png */,
@@ -679,6 +708,8 @@
 				0D0B3826155A0CCB002BF845 /* numpad-bg_10.png in Resources */,
 				0D0B3827155A0CCB002BF845 /* numpad-bg_11_h.png in Resources */,
 				0D0B3828155A0CCB002BF845 /* numpad-bg_11.png in Resources */,
+				0DF6C5D115636C9400E28B99 /* PushCoinLogo-Large.png in Resources */,
+				0DF6C5D215636C9400E28B99 /* PushCoinLogo-Small.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -697,7 +728,7 @@
 				0D7A8FF71543614000634A79 /* QRViewController.mm in Sources */,
 				0DBC491B1543BF3700E56EDF /* VSKeypadView.m in Sources */,
 				0DAFD24C1547A8180010459A /* KeychainItemWrapper.m in Sources */,
-				0D3EA61D154877670088EFE1 /* OpenSSLWrapper.m in Sources */,
+				0D3EA61D154877670088EFE1 /* OpenSSLWrapper.mm in Sources */,
 				0D3EA6201548783D0088EFE1 /* PushCoinConfig.m in Sources */,
 				0D3EA6231548FB0A0088EFE1 /* PushCoinWebService.m in Sources */,
 				0D3EA63F154936C50088EFE1 /* ChallengeController.m in Sources */,
@@ -708,6 +739,9 @@
 				0DACCD741558A02A00A69DED /* PCOSParser.m in Sources */,
 				0DE9FA72155A1D4700FACDA7 /* RegistrationController.m in Sources */,
 				0DE9FA82155A2B0100FACDA7 /* SpringBoardIconCell.m in Sources */,
+				0D7E10B9155FF82800429C9A /* NSData+BytesToHexString.m in Sources */,
+				0D7E10BC155FF8E200429C9A /* NSString+HexStringToBytes.m in Sources */,
+				0DF6C5C81563446600E28B99 /* MainTabBarController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -762,7 +796,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gilbert Cheung (R3MUU845UN)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -777,7 +811,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"/Users/gilbert/v1/zxing-2.0/iphone/ZXingWidget/Classes/**",
+					"/Users/gilbert/v1/zxing-2.0/iphone/ZXingWidget/Classes",
 					/Users/gilbert/v1/QRCodeEncoderObjectiveC/QRCodeEncoderObjectiveCAtGithub,
 					"/Users/gilbert/v1/zxing-2.0/cpp/core/src/",
 					"/Users/gilbert/v1/openssl-xcode/openssl/include",
@@ -785,6 +819,7 @@
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = YES;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "AA5B10D4-9607-45E1-8E1E-7C03E15F0525";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -795,7 +830,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Gilbert Cheung (R3MUU845UN)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -803,7 +838,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					"/Users/gilbert/v1/zxing-2.0/iphone/ZXingWidget/Classes/**",
+					"/Users/gilbert/v1/zxing-2.0/iphone/ZXingWidget/Classes",
 					/Users/gilbert/v1/QRCodeEncoderObjectiveC/QRCodeEncoderObjectiveCAtGithub,
 					"/Users/gilbert/v1/zxing-2.0/cpp/core/src/",
 					"/Users/gilbert/v1/openssl-xcode/openssl/include",
@@ -812,6 +847,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "AA5B10D4-9607-45E1-8E1E-7C03E15F0525";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

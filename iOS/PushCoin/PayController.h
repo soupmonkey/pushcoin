@@ -13,6 +13,7 @@
 #import "AQGridView.h"
 #import "SpringBoardIconCell.h"
 #import "PushCoinMessages.h"
+#import "KeychainItemWrapper.h"
 
 
 BOOL REVERSE_KEYPAD = YES;
@@ -40,6 +41,8 @@ int KeyBackgroundStyle = 1;
     
     PushCoinMessageParser * parser_;
     NSMutableData * buffer_;
+    
+    KeychainItemWrapper * keychain_;
 }
 
 @property (weak, nonatomic) IBOutlet UITextField *amountTextField;

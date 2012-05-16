@@ -7,6 +7,7 @@
 //
 
 #import "PCOSTypes.h"
+#import "OpenSSLWrapper.h"
 
 @implementation PCOSBaseType
 -(NSUInteger) size { return 0; }
@@ -259,8 +260,14 @@
 -(NSUInteger) encode:(PCOSRawData *)data
 {
     NSUInteger total = 0;
+    NSUInteger len = 0;
+    PCOSBaseType * type;
+    
     for (int i = 0; i < self.val.count; ++i)
-        total += [[self.val objectAtIndex:i] encode:data];
+    {
+        type = [self.val objectAtIndex:i];
+        total += (len = [type encode:data]);
+    }
     return total;
 }
 
@@ -552,6 +559,36 @@
 @end
 
 
+@implementation PCOSEncryptedBlock
 
+-(NSUInteger) size
+{
+    [NSException raise:@"operation not supported" format:@"size of and encrypted block is not supported"];
+    return 0;
+}
+
+
+-(NSUInteger) encode:(PCOSRawData *)data
+{
+    OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
+    
+    PCOSRawData * copy = [data copy];
+    NSUInteger total = [super encode:data];
+    
+    NSData * encrypted = [ssl rsa_encryptData: [NSData dataWithBytes:data.data.bytes - total length:total]];
+    [copy writeBytes:encrypted.bytes length:encrypted.length];
+    
+    data = copy;
+    return encrypted.length;
+}
+
+-(NSUInteger) decode:(PCOSRawData *)data
+{
+    [NSException raise:@"operation not supported" format:@"decoding encrypted block is not supported"];
+    return 0;
+}
+
+
+@end
 
 

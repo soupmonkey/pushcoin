@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
+#import <ZXingWidgetController.h>
+#import <QRCodeReader.h>
 
-
-@interface ReceiveController : UIViewController 
+@interface ReceiveController : UIViewController<ZXingDelegate>
+- (IBAction)scan:(id)sender;
 @end

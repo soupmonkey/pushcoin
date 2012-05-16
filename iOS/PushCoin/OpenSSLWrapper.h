@@ -35,13 +35,9 @@
 
 -(BOOL) generateRsaPrivateKey:(NSString **)privateKey andPublicKey:(NSString **) publicKey withBits:(NSInteger) bits andExp:(NSInteger) exp;
 -(BOOL) prepareRsaWithKeyFile:(NSString*) keyFile;
--(BOOL) prepareRsaWithPublicKey:(NSString *)publicKey;
--(BOOL) prepareRsaWithPrivateKey:(NSString *)privateKey;
--(NSData *) rsa_encryptData: (NSData*) data toBytes:(NSData **)bytes;
--(NSData *) rsa_decryptData: (NSData *) data;
+-(NSData *) rsa_encryptData: (NSData*) data;
 
 -(BOOL) generateDsaPrivateKey:(NSString **)privateKey andPublicKey:(NSString**)publicKey withBits:(NSInteger)bits;
--(BOOL) prepareDsaWithPublicKey:(NSString *)publicKey;
 -(BOOL) prepareDsaWithPrivateKey:(NSString *)privateKey;
 -(NSData *) dsa_signData: (NSData *) data;
 -(BOOL) dsa_verifyData: (NSData *) data withSignature:(NSData *)signature;

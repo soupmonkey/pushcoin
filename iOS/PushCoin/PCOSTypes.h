@@ -104,3 +104,10 @@
 -(id) copyWithZone:(NSZone *)zone;
 -(void) addField:(PCOSBaseType *)field withName:(NSString*) name;
 @end
+
+@interface PCOSEncryptedBlock : PCOSBlock
+-(NSUInteger) encode:(PCOSRawData *)data;
+-(NSUInteger) decode:(PCOSRawData *)data;
+@end
+
+

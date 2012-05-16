@@ -26,11 +26,3 @@
 -(NSUInteger) encode:(PCOSRawData *)data;
 -(NSUInteger) decode:(PCOSRawData *)data;
 @end
-
-@interface PCOSDataBlock : NSObject<PCOSSerializable>
-@property (nonatomic, strong) NSMutableData * data;
--(id) initWithData:(NSMutableData *)data;
--(NSUInteger) encode:(PCOSRawData *)data;
--(NSUInteger) decode:(PCOSRawData *)data;
-@end
-

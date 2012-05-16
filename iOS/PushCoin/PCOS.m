@@ -91,31 +91,3 @@
 }
 
 @end
-
-
-@implementation PCOSDataBlock
-@synthesize data;
-
--(id) initWithData:(NSMutableData *)d
-{
-    self = [super self];
-    if (self)
-    {
-        data = d;
-    }
-    return self;
-}
-
--(NSUInteger) encode:(PCOSRawData *)raw
-{
-    [raw.data appendData:data];
-    return raw.data.length;
-}
-
--(NSUInteger) decode:(PCOSRawData *)raw
-{
-    data = [data initWithBytes:(raw.data.bytes+raw.offset) length:raw.data.length];
-    return raw.data.length;
-}
-
-@end

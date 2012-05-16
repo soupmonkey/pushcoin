@@ -8,25 +8,25 @@
 
 #import "AppDelegate.h"
 #import "OpenSSLWrapper.h"
-#import "KeychainItemWrapper.h"
 
 @implementation AppDelegate
 
 @synthesize window = _window;
+@synthesize keychain = _keychain;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    KeychainItemWrapper * keychain = [[KeychainItemWrapper alloc] initWithIdentifier:PushCoinKeychainId accessGroup:nil];
+    self.keychain = [[KeychainItemWrapper alloc] initWithIdentifier:PushCoinKeychainId accessGroup:nil];
     
-    [self prepareDSAWithKeychain:keychain];
-    [self prepareRSAWithKeychain:keychain];
-
+    [self prepareDSA];
+    [self prepareRSA];
+    
     return YES;
 }
 
-- (BOOL) prepareDSAWithKeychain:(KeychainItemWrapper *)keychain
+- (BOOL) prepareDSA
 {
-    NSString * dsaPrivateKey = [keychain objectForKey:(__bridge id)kSecValueData];
+    NSString * dsaPrivateKey = self.dsaPrivateKey;
     if (dsaPrivateKey.length == 0)
     {
         return NO;
@@ -39,13 +39,39 @@
     }
 }
 
-- (BOOL) prepareRSAWithKeychain:(KeychainItemWrapper *)keychain
+- (BOOL) prepareRSA
 {
     OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
     [ssl prepareRsaWithKeyFile:PushCoinRSAPublicKeyFile];
     return YES;
 }
-							
+
+- (BOOL) registered
+{
+    OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
+    return ssl.dsa && ssl.rsa && self.authToken.length;
+}
+
+- (NSString *) authToken
+{
+    return [self.keychain objectForKey:(__bridge id)kSecAttrAccount];
+}
+
+- (void) setAuthToken:(NSString *)authToken
+{
+    [self.keychain setObject:authToken forKey:(__bridge id)kSecAttrAccount];
+}
+
+- (NSString *) dsaPrivateKey
+{
+    return [self.keychain objectForKey:(__bridge id)kSecValueData];
+}
+
+- (void) setDsaPrivateKey:(NSString *)dsaPrivateKey
+{
+    [self.keychain setObject:dsaPrivateKey forKey:(__bridge id)kSecValueData];
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     /*

@@ -12,32 +12,46 @@
 #import "PushCoinConfig.h"
 
 extern NSString * const MID_ERROR;
+extern NSString * const MID_SUCCESS;
 extern NSString * const MID_PING;
 extern NSString * const MID_PONG;
 extern NSString * const MID_REGISTER;
 extern NSString * const MID_REGISTER_ACK;
 extern NSString * const MID_PAYMENT_TRANSFER_AUTHORIZATION;
-
+extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 
 
 /* Error Message */
 @interface ErrorMessageBlock : PCOSBlock
 @property (nonatomic, strong) PCOSInt32 * error_code;
-@property (nonatomic, strong) PCOSShortArray * error_reason;
+@property (nonatomic, strong) PCOSShortArray * reason;
+@property (nonatomic, strong) PCOSShortArray * user_data;
 @end
 
 @interface ErrorMessage : PCOSMessage
 @property (nonatomic, strong) ErrorMessageBlock * error_block;
 @end
 
+/* Success Message */
+@interface SuccessMessageBlock : PCOSBlock
+@property (nonatomic, strong) PCOSShortArray * user_data;
+@end
+
+@interface SuccessMessage : PCOSMessage
+@property (nonatomic, strong) SuccessMessageBlock * success_block;
+@end
 
 /* Ping Message */
 @interface PingMessage : PCOSMessage
 @end
 
 /* Pong Message */
-@interface PongMessage : PCOSMessage
+@interface PongMessageBlock : PCOSBlock
 @property (nonatomic, strong) PCOSInt64 * tm;
+@end
+
+@interface PongMessage : PCOSMessage
+@property (nonatomic, strong) PongMessageBlock * pong_block;
 @end
 
 /* Register Message */
@@ -52,44 +66,76 @@ extern NSString * const MID_PAYMENT_TRANSFER_AUTHORIZATION;
 @end
 
 /* Register Ack Message */
+@interface RegisterAckMessageBlock : PCOSBlock
+@property (nonatomic, strong) PCOSFixedArray * mat;
+@end
+
 @interface RegisterAckMessage : PCOSMessage
-@property (nonatomic, strong) PCOSFixedArray * auth_token;
+@property (nonatomic, strong) RegisterAckMessageBlock * register_ack_block;
 @end
 
 
 /* Payment Transfer Authorization Message */
-@interface PaymentTransferAuthorizationPrivateBlock : PCOSBlock
-@property (nonatomic, strong) PCOSShortArray * mat;
-@property (nonatomic, strong) PCOSShortArray * sig;
-@property (nonatomic, strong) PCOSShortArray * ref;
+@interface PaymentTransferAuthorizationPrivateBlockV1 : PCOSEncryptedBlock
+@property (nonatomic, strong) PCOSFixedArray * mat;
+@property (nonatomic, strong) PCOSShortArray * signature;
+@property (nonatomic, strong) PCOSShortArray * user_data;
+@property (nonatomic, strong) PCOSShortArray * reserved;
 @end
 
-@interface PaymentTransferAuthorizationPublicBlock : PCOSBlock
-@property (nonatomic, strong) PCOSInt64 * ct;
-@property (nonatomic, strong) PCOSInt64 * ep;
-@property (nonatomic, strong) PCOSShortArray * amt;
-@property (nonatomic, strong) PCOSFixedArray * cur;
-@property (nonatomic, strong) PCOSShortArray * rcv;
+@interface PaymentTransferAuthorizationPublicBlockV1Amount : PCOSBlock
+@property (nonatomic, strong) PCOSInt64 * payment_limit;
+@property (nonatomic, strong) PCOSInt16 * scale;
+@end
+
+@interface PaymentTransferAuthorizationPublicBlockV1 : PCOSBlock
+@property (nonatomic, strong) PCOSInt64 * utc_ctime;
+@property (nonatomic, strong) PCOSInt64 * utc_etime;
+@property (nonatomic, strong) PaymentTransferAuthorizationPublicBlockV1Amount * payment_limit;
+@property (nonatomic, strong) PCOSFixedArray * currency;
+@property (nonatomic, strong) PCOSFixedArray * keyid;
+@property (nonatomic, strong) PCOSShortArray * receiver;
 @property (nonatomic, strong) PCOSShortArray * note;
 @end
 
 
 @interface PaymentTransferAuthorizationMessage : PCOSMessage
-@property (nonatomic, strong) PCOSShortArray * keyid;
-@property (nonatomic, strong) PaymentTransferAuthorizationPrivateBlock * prv_block;
-@property (nonatomic, strong) PaymentTransferAuthorizationPublicBlock * pub_block;
+@property (nonatomic, strong) PaymentTransferAuthorizationPrivateBlockV1 * prv_block;
+@property (nonatomic, strong) PaymentTransferAuthorizationPublicBlockV1 * pub_block;
 @end
+
+
+/* Preauthorization Request Message */
+@interface PreauthorizationRequestMessageBlockAmount : PCOSBlock
+@property (nonatomic, strong) PCOSInt64 * payment_limit;
+@property (nonatomic, strong) PCOSInt16 * scale;
+@end
+
+@interface PreauthorizationRequestMessageBlock : PCOSBlock
+@property (nonatomic, strong) PCOSFixedArray * mat;
+@property (nonatomic, strong) PreauthorizationRequestMessageBlockAmount * payment_limit;
+@property (nonatomic, strong) PCOSFixedArray * currency;
+@property (nonatomic, strong) PCOSShortArray * user_data;
+@end
+
+@interface PreauthorizationRequestMessage : PCOSMessage
+@property (nonatomic, strong) PreauthorizationRequestMessageBlock * preauthorization_block;
+@property (nonatomic, strong) PCOSDataBlock * payment_transfer_authorization_block;
+@end
+
 
 /* PushCoinMessageParser */
 @class PushCoinMessageParser;
 @protocol PushCoinMessageReceiver <NSObject>
 
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
+-(void) didDecodeSuccessMessage:(SuccessMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
 -(void) didDecodePingMessage:(PingMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
 -(void) didDecodePongMessage:(PongMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
 -(void) didDecodeRegisterMessage:(RegisterMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
 -(void) didDecodeRegisterAckMessage:(RegisterAckMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
 -(void) didDecodePaymentTransferAuthorizationMessage:(PaymentTransferAuthorizationMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
+-(void) didDecodePreauthorizationRequestMessage:(PreauthorizationRequestMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
 -(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr;
 
 @end

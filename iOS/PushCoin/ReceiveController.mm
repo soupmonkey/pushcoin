@@ -57,6 +57,32 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+- (IBAction)scan:(id)sender 
+{
+    ZXingWidgetController *widController = [[ZXingWidgetController alloc] initWithDelegate:self showCancel:YES OneDMode:NO];
+    
+    QRCodeReader* qrcodeReader = [[QRCodeReader alloc] init];
+    widController.readers = [[NSSet alloc] initWithObjects:qrcodeReader, nil];
+    widController.title = @"TEST";
+    
+    [self presentModalViewController:widController animated:YES];
+}
+
+
+#pragma mark -
+#pragma mark ZXingDelegateMethods
+
+- (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)result
+{
+    [self dismissModalViewControllerAnimated:NO];
+}
+
+- (void)zxingControllerDidCancel:(ZXingWidgetController*)controller 
+{
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+
 @end
 
 

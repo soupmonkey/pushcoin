@@ -30,6 +30,9 @@ extern const PCOSDouble * protoDouble;
 @property (nonatomic, strong) PCOSInt16 * block_length;
 @end
 
+
+
+
 @interface PCOSMessage : NSObject<PCOSSerializable, NSCopying>
 @property (nonatomic, strong) PCOSLongArray * block_meta;
 @property (nonatomic, strong) NSMutableDictionary * blocks;
@@ -38,4 +41,13 @@ extern const PCOSDouble * protoDouble;
 
 -(id) copyWithZone:(NSZone *)zone;
 -(void) addBlock:(NSObject<PCOSSerializable> *)block withName:(NSString *)name;
+-(void) block:(NSObject<PCOSSerializable> *)block withKey:(NSString *)key encodedToBytes:(void const *)bytes withLength:(NSUInteger)len;
+
+@end
+
+@interface PCOSDataBlock : NSObject<PCOSSerializable>
+@property (nonatomic, strong) NSData * data;
+-(id) initWithData:(NSData *)data;
+-(NSUInteger) encode:(PCOSRawData *)data;
+-(NSUInteger) decode:(PCOSRawData *)data;
 @end

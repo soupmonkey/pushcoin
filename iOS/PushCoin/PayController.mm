@@ -9,6 +9,9 @@
 #import "PayController.h"
 #import "VSKeypadView.h"
 #import "PushCoinConfig.h"
+#import "KeychainItemWrapper.h"
+#import "AppDelegate.h"
+#import "NSString+HexStringToBytes.h"
 
 @implementation PayController
 @synthesize amountTextField;
@@ -161,6 +164,11 @@
     return NO;
 }
 
+- (AppDelegate *)appDelegate
+{
+    return (AppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
 #pragma mark -
 #pragma mark QRController
 
@@ -185,20 +193,27 @@
 
 - (IBAction)push:(id)sender
 {
+    NSDate * now = [NSDate date];
+    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+    NSNumber *number = [f numberFromString:enteredAmountString_];
+    
     //set data
     PaymentTransferAuthorizationMessage * msgOut = [[PaymentTransferAuthorizationMessage alloc] init];
     PCOSRawData * dataOut = [[PCOSRawData alloc] initWithData:buffer_];
     
-    msgOut.keyid.string = @"01234567890123456789";
-    msgOut.prv_block.mat.string=@"01234567890123456789";
-    msgOut.prv_block.sig.string=@"012345678901234567890123456";
-    msgOut.prv_block.ref.string=@"";
+    msgOut.prv_block.mat.string=self.appDelegate.authToken;
+    msgOut.prv_block.user_data.string=@"";
+    msgOut.prv_block.reserved.string=@"";
     
-    msgOut.pub_block.ct.val = 1000000;
-    msgOut.pub_block.ep.val = 1000000;
-    msgOut.pub_block.amt.string = self.amountTextField.text;
-    msgOut.pub_block.cur.string = @"USD";
-    msgOut.pub_block.rcv.string = @"";
+    msgOut.pub_block.utc_ctime.val = [now timeIntervalSince1970];
+    msgOut.pub_block.utc_etime.val = [now timeIntervalSince1970] + 60; /* exp in 1 min */
+    
+    msgOut.pub_block.payment_limit.payment_limit.val = number.intValue;
+    msgOut.pub_block.payment_limit.scale.val = -2;
+    
+    msgOut.pub_block.currency.string = @"USD";
+    msgOut.pub_block.keyid.data = [PushCoinRSAPublicKeyID hexStringToBytes];
+    msgOut.pub_block.receiver.string = @"";
     msgOut.pub_block.note.string = @"";
     
     [parser_ encodeMessage:msgOut to:dataOut];

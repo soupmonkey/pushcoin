@@ -72,6 +72,32 @@ WBKhBPOqvJ8X+w==
 
 class RmoteCall:
 
+	# CMD: `preauth'
+	def preauth(self):
+		'''Generates the PTA and submits to server for validation.'''
+		pta_encoded = self.payment()
+
+		# package PTA into a block
+		pta = pcos.Block( 'Pa', 512, 'O' )
+		pta.write_fixed_string(pta_encoded, size=len(pta_encoded))
+
+		# create preauth block
+		preauth = pcos.Block( 'Pr', 512, 'O' )
+		preauth.write_fixed_string( binascii.unhexlify( self.args['preauth_mat'] ), size=20 )
+		preauth.write_int64( long( self.args['preauth_scaled_payment'] ) ) # payment
+		preauth.write_int16( int( self.args['preauth_scale'] ) ) # scale
+		preauth.write_fixed_string( "USD", size=3 ) # currency
+		preauth.write_short_string( '', max=20 ) # user data
+
+		# package everything and ship out
+		req = pcos.Doc( name="Pr" )
+		req.add( pta )
+		req.add( preauth )
+
+		res = self.send( req )
+		if res.message_id == "Ok":
+			log.info('RETN Preauthorization Success' )
+
 	# CMD: `payment'
 	def payment(self):
 		'''This command generates the Payment Transaction Authorization, or PTA. It does not communicate with the server, only produces a file.'''
@@ -154,12 +180,11 @@ class RmoteCall:
 			img.save('pta.png')
 			print ("PTA-QR: pta.png, version %s" % (qr.version))
 		except ImportError:
-			print ("QR-Code not written -- qrcode module not found")
+			log.warn("QR-Code not written -- qrcode module not found")
+
+		return encoded
+
 	
-	def check_payment(self):
-		'''Verifies if the PTA is valid. In particular, it checks if the account is valid and if the balance can cover the payment limit in the PTA.'''
-		pass
-		
 	# CMD: `register'
 	def register(self):
 		req = pcos.Doc( name="Re" )
@@ -179,12 +204,28 @@ class RmoteCall:
 		req = pcos.Doc( name="Pi" )
 		res = self.send( req )
 		# jump to the block of interest
-		tm = res.block( 'Tm' )
+		tm = res.block( 'Bo' )
 
 		# read block field(s)
 		tm_epoch = tm.read_int64();
 		server_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(tm_epoch))
 		log.info('RETN %s', server_time )
+
+
+	# CMD: `transaction key'
+	def transaction_key(self):
+
+		req = pcos.Doc( name="Tk" )
+		res = self.send( req )
+		# jump to the block of interest
+		body = res.block( 'Bo' )
+
+		# read block field(s)
+		keyid = body.read_fixed_string(4)
+		key_info = body.read_short_string()
+		key_expiry = body.read_int64()
+		key_data = body.read_long_string()
+		log.info('RETN gotten key %s, len %s bytes, expires on %s', key_info, len(key_data), time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(key_expiry)))
 
 	def __init__(self, options, cmd, args):
 		# store the cmd and args for the command-handler
@@ -197,6 +238,8 @@ class RmoteCall:
 			"ping": self.ping,
 			"register": self.register,
 			"payment": self.payment,
+			"preauth": self.preauth,
+			"transaction_key": self.transaction_key,
 		}		
 
 	# invoked if user asks for an unknown command

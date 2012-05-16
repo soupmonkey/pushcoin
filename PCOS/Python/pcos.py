@@ -40,12 +40,13 @@ ERR_INCOMPATIBLE_REQUEST = 102
 class PcosError( Exception ):
 	""" Basis for all exceptions thrown from the PCOS codec."""
 
-	def __init__(self, code, what = ''):
+	def __init__(self, code, what = '', in_reference_to = ''):
 		self.code = code
 		self.what = what
+		self.in_reference_to = in_reference_to
 
 	def __str__(self):
-		return repr("(%s): %s" % (self.code, self. what) )
+		return repr("code=%s;what=%s" % (self.code, self. what) )
 
 class BlockMeta:
 	"""Stores meta information about a block found in the data-segment"""
@@ -196,7 +197,10 @@ class Block:
 
 	def __str__( self ):
 		'''Returns a Python string from the character array.'''
-		return ctypes.string_at( self.data, self.meta.length)
+		if self.mode == 'I':
+			return self.doc.data[self.meta.start : self.meta.start + self.meta.length]
+		else:
+			return ctypes.string_at( self.data, self.meta.length)
 
 	def size( self ):
 		return self.meta.length

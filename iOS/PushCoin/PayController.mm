@@ -201,14 +201,13 @@
     PaymentTransferAuthorizationMessage * msgOut = [[PaymentTransferAuthorizationMessage alloc] init];
     PCOSRawData * dataOut = [[PCOSRawData alloc] initWithData:buffer_];
     
-    msgOut.prv_block.mat.string=self.appDelegate.authToken;
+    msgOut.prv_block.mat.data = self.appDelegate.authToken.hexStringToBytes;
     msgOut.prv_block.user_data.string=@"";
-    msgOut.prv_block.reserved.string=@"";
     
-    msgOut.pub_block.utc_ctime.val = [now timeIntervalSince1970];
-    msgOut.pub_block.utc_etime.val = [now timeIntervalSince1970] + 60; /* exp in 1 min */
+    msgOut.pub_block.utc_ctime.val = (SInt64)[now timeIntervalSince1970];
+    msgOut.pub_block.utc_etime.val = (SInt64)[now timeIntervalSince1970] + 60; /* exp in 1 min */
     
-    msgOut.pub_block.payment_limit.payment_limit.val = number.intValue;
+    msgOut.pub_block.payment_limit.value.val = number.intValue;
     msgOut.pub_block.payment_limit.scale.val = -2;
     
     msgOut.pub_block.currency.string = @"USD";

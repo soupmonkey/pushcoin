@@ -12,7 +12,9 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 @property (strong, nonatomic) KeychainItemWrapper * keychain;
 @property (strong, nonatomic) UIWindow *window;
-@property (readonly) BOOL registered;
-@property (getter = authToken, setter = setAuthToken:) NSString * authToken;
-@property (getter = dsaPrivateKey, setter = setDsaPrivateKey:) NSString * dsaPrivateKey;
+@property (nonatomic, readonly) BOOL registered;
+@property (nonatomic, getter = authToken, setter = setAuthToken:) NSString * authToken;
+@property (nonatomic, getter = dsaPrivateKey, setter = setDsaPrivateKey:) NSString * dsaPrivateKey;
+@property (nonatomic, readonly, getter = pemDsaPublicKey) NSString * pemDsaPublicKey;
+@property (nonatomic, readonly, getter = keyFilePath) NSString * keyFilePath;
 @end

@@ -33,11 +33,15 @@
 +(OpenSSLWrapper *) instance;
 
 
--(BOOL) generateRsaPrivateKey:(NSString **)privateKey andPublicKey:(NSString **) publicKey withBits:(NSInteger) bits andExp:(NSInteger) exp;
 -(BOOL) prepareRsaWithKeyFile:(NSString*) keyFile;
 -(NSData *) rsa_encryptData: (NSData*) data;
 
--(BOOL) generateDsaPrivateKey:(NSString **)privateKey andPublicKey:(NSString**)publicKey withBits:(NSInteger)bits;
+-(BOOL) generateDsaPrivateKey:(NSString **)privateKey 
+                 andPublicKey:(NSString**)publicKey 
+                     withBits:(NSInteger)bits 
+                    toPEMFile:(NSString *)pemFile;
+
+-(BOOL) prepareDsaWithKeyFile:(NSString*) keyFile;
 -(BOOL) prepareDsaWithPrivateKey:(NSString *)privateKey;
 -(NSData *) dsa_signData: (NSData *) data;
 -(BOOL) dsa_verifyData: (NSData *) data withSignature:(NSData *)signature;

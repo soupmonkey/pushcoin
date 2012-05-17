@@ -44,10 +44,3 @@ extern const PCOSDouble * protoDouble;
 -(void) block:(NSObject<PCOSSerializable> *)block withKey:(NSString *)key encodedToBytes:(void const *)bytes withLength:(NSUInteger)len;
 
 @end
-
-@interface PCOSDataBlock : NSObject<PCOSSerializable>
-@property (nonatomic, strong) NSData * data;
--(id) initWithData:(NSData *)data;
--(NSUInteger) encode:(PCOSRawData *)data;
--(NSUInteger) decode:(PCOSRawData *)data;
-@end

@@ -7,7 +7,6 @@
 //
 
 #import "PCOSMessage.h"
-#define METABLOCK_IS_NSCOPYING
 
 const PCOSByte   * protoByte;
 const PCOSBool   * protoBool;
@@ -47,12 +46,10 @@ const PCOSDouble * protoDouble;
 @synthesize block_id;
 @synthesize block_length;
 
-#ifdef METABLOCK_IS_NSCOPYING
 -(id) copyWithZone:(NSZone *)zone
 {
     return [[PCOSBlockMetaBlock alloc] init];
 }
-#endif
 
 -(id) init
 {
@@ -139,17 +136,17 @@ const PCOSDouble * protoDouble;
     NSUInteger len = 0;
     NSObject<PCOSSerializable> * block;
     NSString * key;
-    void const * writeBytes;
+    NSUInteger offset;
     for(int i = 0; i < self.block_meta.val.count; ++i)
     {
         key = [[self.block_meta.val objectAtIndex:i] block_id].string;
         block = [blocks valueForKey:key];
-        writeBytes = data.data.bytes;
+        offset = data.offset;
         
         total += (len = [block encode:data]);
         [[self.block_meta.val objectAtIndex:i] block_length].val = len;
         
-        [self block:block withKey:key encodedToBytes:writeBytes withLength:len];
+        [self block:block withKey:key encodedToBytes:((char *) data.data.bytes + offset) withLength:len];
     }
     
     // Encode block meta
@@ -161,53 +158,26 @@ const PCOSDouble * protoDouble;
 -(NSUInteger) decode:(PCOSRawData *)data
 {
     NSUInteger total = 0;
-    total += [self.block_meta decode:data];
+    total = [self.block_meta decode:data];
     
     for (int i = 0; i < self.block_meta.itemCount; ++i)
     {
-#ifdef METABLOCK_IS_NSCOPYING
         PCOSBlockMetaBlock * block = [self.block_meta.val objectAtIndex:i];
-        NSString * key = [[block block_id] string];
-#else
-        PCOSBlock * block = [self.block_enum.val objectAtIndex:i];
-        NSString * key = [[block.lookup valueForKey:@"block_id"] string];
-#endif
-        PCOSRawData * raw = [[PCOSRawData alloc] initWithData:
-                             [NSMutableData dataWithBytes:(void *)data.data.bytes + total length:block.size]];
+        NSString * key = block.block_id.string;
                                                             
         NSObject<PCOSSerializable> * type = [blocks valueForKey:key];
+        NSMutableData * block_data = [[NSMutableData alloc] init];
         if (type != nil)
-            total += [(PCOSBaseType *)type decode:raw];
-        else
-            total += block.size;
+        {
+            // Prepare block_data
+            [block_data setLength:block.block_length.val];
+            [data readData:block_data length:block.block_length.val];
+            
+            PCOSRawData * raw = [[PCOSRawData alloc] initWithData:block_data offset:0];
+            [type decode:raw];
+        }
+        total += block.block_length.val;
     }
     return total;
 }
-@end
-
-@implementation PCOSDataBlock
-@synthesize data;
-
--(id) initWithData:(NSMutableData *)d
-{
-    self = [super self];
-    if (self)
-    {
-        data = [d copy];
-    }
-    return self;
-}
-
--(NSUInteger) encode:(PCOSRawData *)raw
-{
-    [raw writeBytes:self.data.bytes length:self.data.length];
-    return self.data.length;
-}
-
--(NSUInteger) decode:(PCOSRawData *)raw
-{
-    data = [self.data initWithBytes:(raw.data.bytes+raw.offset) length:raw.data.length];
-    return raw.data.length;
-}
-
 @end

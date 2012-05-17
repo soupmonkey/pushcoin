@@ -13,14 +13,38 @@
 
 @synthesize window = _window;
 @synthesize keychain = _keychain;
+@synthesize pemDsaPublicKey;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.keychain = [[KeychainItemWrapper alloc] initWithIdentifier:PushCoinKeychainId accessGroup:nil];
-    
+    [self prepareKeyFiles];
+    [self prepareKeyChain];
     [self prepareDSA];
     [self prepareRSA];
     
+    return YES;
+}
+
+-(BOOL) prepareKeyFiles
+{
+    NSError * error;
+    NSFileManager * fileManager = [NSFileManager defaultManager];
+    NSArray * files = [NSArray arrayWithObjects:PushCoinRSAPublicKeyFile, nil];
+    NSString * fromPath = [[NSBundle mainBundle] bundlePath];
+    NSString * toPath = [self keyFilePath];
+    BOOL ret = YES;
+    for (id file in files)
+    {
+        ret &= [fileManager copyItemAtPath:[fromPath stringByAppendingPathComponent:file]
+                                    toPath:[toPath stringByAppendingPathComponent:file]
+                                     error:&error];
+    }
+    return ret;
+}
+
+-(BOOL) prepareKeyChain
+{
+    self.keychain = [[KeychainItemWrapper alloc] initWithIdentifier:PushCoinKeychainId accessGroup:nil];
     return YES;
 }
 
@@ -42,7 +66,7 @@
 - (BOOL) prepareRSA
 {
     OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
-    [ssl prepareRsaWithKeyFile:PushCoinRSAPublicKeyFile];
+    [ssl prepareRsaWithKeyFile:[NSString stringWithFormat:@"%@/%@", self.keyFilePath, PushCoinRSAPublicKeyFile]];
     return YES;
 }
 
@@ -67,9 +91,28 @@
     return [self.keychain objectForKey:(__bridge id)kSecValueData];
 }
 
+-(NSString *) pemDsaPublicKey
+{
+    NSString * pemPublicKey = [NSString stringWithContentsOfFile:[self.keyFilePath stringByAppendingPathComponent: PushCoinDSAPublicKeyFile] encoding:NSASCIIStringEncoding error:nil];
+    
+    NSRange headerRange = [pemPublicKey rangeOfString:@"---\n"];
+    pemPublicKey = [pemPublicKey substringFromIndex:headerRange.location + headerRange.length];
+    
+    NSRange footerRange = [pemPublicKey rangeOfString:@"\n---"];
+    pemPublicKey = [pemPublicKey substringToIndex:footerRange.location];
+    
+    return pemPublicKey;
+}
+
 - (void) setDsaPrivateKey:(NSString *)dsaPrivateKey
 {
     [self.keychain setObject:dsaPrivateKey forKey:(__bridge id)kSecValueData];
+}
+
+- (NSString *)keyFilePath
+{
+	NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+	return dir;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

@@ -9,7 +9,8 @@
 #import "PushCoinConfig.h"
 
 NSString * const PushCoinRSAPublicKeyID = @"652fce08";
-NSString * const PushCoinRSAPublicKeyFile = @"pushcoin_com.pub";
+NSString * const PushCoinRSAPublicKeyFile = @"pushcoin_rsa.pub";
+NSString * const PushCoinDSAPublicKeyFile = @"pushcoin_dsa.pub";
 NSString * const PushCoinWebServicePath = @"https://api.pushcoin.com:20001/pcos/";
 NSString * const PushCoinKeychainId = @"PushCoin.com";
 NSString * const PushCoinAppUserAgent = @"PushCoin/1.0;iOS5.1;ObjC/XCode4";

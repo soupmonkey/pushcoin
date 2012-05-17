@@ -61,7 +61,7 @@
 		0D20D8A215571ED300098838 /* PCOSMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89B15571ED300098838 /* PCOSMessage.m */; };
 		0D20D8A315571ED300098838 /* PushCoinMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89D15571ED300098838 /* PushCoinMessages.m */; };
 		0D20D8A415571ED300098838 /* PCOSTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89F15571ED300098838 /* PCOSTypes.m */; };
-		0D3EA61A154872FB0088EFE1 /* pushcoin_com.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0D3EA619154872FB0088EFE1 /* pushcoin_com.pub */; };
+		0D3EA61A154872FB0088EFE1 /* pushcoin_rsa.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0D3EA619154872FB0088EFE1 /* pushcoin_rsa.pub */; };
 		0D3EA61D154877670088EFE1 /* OpenSSLWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA61C154877670088EFE1 /* OpenSSLWrapper.mm */; };
 		0D3EA6201548783D0088EFE1 /* PushCoinConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA61F1548783D0088EFE1 /* PushCoinConfig.m */; };
 		0D3EA6231548FB0A0088EFE1 /* PushCoinWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */; };
@@ -81,7 +81,9 @@
 		0DACCD741558A02A00A69DED /* PCOSParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DACCD731558A02A00A69DED /* PCOSParser.m */; };
 		0DAFD24C1547A8180010459A /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFD24D1547ACBA0010459A /* Security.framework */; };
+		0DB67A5D1564C8C200CA997C /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DB67A5C1564C8C200CA997C /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0DBC491B1543BF3700E56EDF /* VSKeypadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DBC491A1543BF3700E56EDF /* VSKeypadView.m */; };
+		0DCCD2271564E221006C9526 /* pushcoin_dsa.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0DCCD2261564E221006C9526 /* pushcoin_dsa.pub */; };
 		0DE9FA72155A1D4700FACDA7 /* RegistrationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */; };
 		0DE9FA7E155A278500FACDA7 /* libAQGridView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DE9FA7B155A277700FACDA7 /* libAQGridView.a */; };
 		0DE9FA82155A2B0100FACDA7 /* SpringBoardIconCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9FA81155A2B0100FACDA7 /* SpringBoardIconCell.m */; };
@@ -235,7 +237,7 @@
 		0D20D89E15571ED300098838 /* PCOSTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSTypes.h; sourceTree = "<group>"; };
 		0D20D89F15571ED300098838 /* PCOSTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSTypes.m; sourceTree = "<group>"; };
 		0D20D8A515576E1700098838 /* PCOS-CPP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PCOS-CPP.h"; sourceTree = "<group>"; };
-		0D3EA619154872FB0088EFE1 /* pushcoin_com.pub */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = pushcoin_com.pub; sourceTree = "<group>"; };
+		0D3EA619154872FB0088EFE1 /* pushcoin_rsa.pub */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = pushcoin_rsa.pub; sourceTree = "<group>"; };
 		0D3EA61B154877670088EFE1 /* OpenSSLWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenSSLWrapper.h; sourceTree = "<group>"; };
 		0D3EA61C154877670088EFE1 /* OpenSSLWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenSSLWrapper.mm; sourceTree = "<group>"; };
 		0D3EA61E1548783D0088EFE1 /* PushCoinConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushCoinConfig.h; sourceTree = "<group>"; };
@@ -269,8 +271,11 @@
 		0DAFD24A1547A8180010459A /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		0DAFD24D1547ACBA0010459A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		0DB67A5B1564C8C200CA997C /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		0DB67A5C1564C8C200CA997C /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		0DBC49191543BF3700E56EDF /* VSKeypadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VSKeypadView.h; sourceTree = "<group>"; };
 		0DBC491A1543BF3700E56EDF /* VSKeypadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VSKeypadView.m; sourceTree = "<group>"; };
+		0DCCD2261564E221006C9526 /* pushcoin_dsa.pub */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = pushcoin_dsa.pub; sourceTree = "<group>"; };
 		0DE9FA70155A1D4700FACDA7 /* RegistrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationController.h; sourceTree = "<group>"; };
 		0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegistrationController.m; sourceTree = "<group>"; };
 		0DE9FA73155A277600FACDA7 /* AQGridView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AQGridView.xcodeproj; path = ../../../v1/AQGridView/AQGridView.xcodeproj; sourceTree = "<group>"; };
@@ -446,6 +451,8 @@
 		0D7E10B6155FF44700429C9A /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				0DB67A5B1564C8C200CA997C /* NSData+Base64.h */,
+				0DB67A5C1564C8C200CA997C /* NSData+Base64.m */,
 				0D7E10B7155FF82800429C9A /* NSData+BytesToHexString.h */,
 				0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */,
 				0D7E10BA155FF8E200429C9A /* NSString+HexStringToBytes.h */,
@@ -473,7 +480,8 @@
 		0DAFD2491547A7ED0010459A /* Security */ = {
 			isa = PBXGroup;
 			children = (
-				0D3EA619154872FB0088EFE1 /* pushcoin_com.pub */,
+				0D3EA619154872FB0088EFE1 /* pushcoin_rsa.pub */,
+				0DCCD2261564E221006C9526 /* pushcoin_dsa.pub */,
 				0DAFD24A1547A8180010459A /* KeychainItemWrapper.h */,
 				0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */,
 				0D3EA61B154877670088EFE1 /* OpenSSLWrapper.h */,
@@ -673,7 +681,7 @@
 				0D19E2EC1541CCAE00C8671B /* second.png in Resources */,
 				0D19E2EE1541CCAE00C8671B /* second@2x.png in Resources */,
 				0DF680261545B28500F5E784 /* README in Resources */,
-				0D3EA61A154872FB0088EFE1 /* pushcoin_com.pub in Resources */,
+				0D3EA61A154872FB0088EFE1 /* pushcoin_rsa.pub in Resources */,
 				0D0B3807155A0CCB002BF845 /* keyBG_touched.png in Resources */,
 				0D0B3808155A0CCB002BF845 /* keyBG.png in Resources */,
 				0D0B3809155A0CCB002BF845 /* keyNE_BG_touched.png in Resources */,
@@ -710,6 +718,7 @@
 				0D0B3828155A0CCB002BF845 /* numpad-bg_11.png in Resources */,
 				0DF6C5D115636C9400E28B99 /* PushCoinLogo-Large.png in Resources */,
 				0DF6C5D215636C9400E28B99 /* PushCoinLogo-Small.png in Resources */,
+				0DCCD2271564E221006C9526 /* pushcoin_dsa.pub in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -742,6 +751,7 @@
 				0D7E10B9155FF82800429C9A /* NSData+BytesToHexString.m in Sources */,
 				0D7E10BC155FF8E200429C9A /* NSString+HexStringToBytes.m in Sources */,
 				0DF6C5C81563446600E28B99 /* MainTabBarController.m in Sources */,
+				0DB67A5D1564C8C200CA997C /* NSData+Base64.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

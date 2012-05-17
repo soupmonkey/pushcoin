@@ -18,6 +18,25 @@ NSString * const MID_REGISTER_ACK = @"Ac";
 NSString * const MID_PAYMENT_TRANSFER_AUTHORIZATION = @"Pa";
 NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 
+/* Common Types */
+@implementation Amount
+@synthesize value;
+@synthesize scale;
+
+-(id) init
+{
+    self = [super init];
+    if (self)
+    {
+        self.value =[[PCOSInt64 alloc] init]; 
+        self.scale =[[PCOSInt16 alloc] init]; 
+        
+        [self addField:self.value withName:@"value"];
+        [self addField:self.scale withName:@"scale"];
+    }
+    return self;
+}
+@end
 
 
 /* Error Message */
@@ -186,7 +205,6 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 @synthesize mat;
 @synthesize signature;
 @synthesize user_data;
-@synthesize reserved;
 
 -(id) init
 {
@@ -196,31 +214,10 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         self.mat =[[PCOSFixedArray alloc] initWithItemPrototype:protoByte andCount:20]; 
         self.signature =[[PCOSShortArray alloc] initWithItemPrototype:protoByte]; 
         self.user_data =[[PCOSShortArray alloc] initWithItemPrototype:protoByte]; 
-        self.reserved =[[PCOSShortArray alloc] initWithItemPrototype:protoByte]; 
         
         [self addField:self.mat withName:@"mat"];
         [self addField:self.signature withName:@"signature"];
         [self addField:self.user_data withName:@"user_data"];
-        [self addField:self.reserved withName:@"reserved"];
-    }
-    return self;
-}
-@end
-
-@implementation PaymentTransferAuthorizationPublicBlockV1Amount
-@synthesize payment_limit;
-@synthesize scale;
-
--(id) init
-{
-    self = [super init];
-    if (self)
-    {
-        self.payment_limit =[[PCOSInt64 alloc] init]; 
-        self.scale =[[PCOSInt16 alloc] init]; 
-       
-        [self addField:self.payment_limit withName:@"payment_limit"];
-        [self addField:self.scale withName:@"scale"];
     }
     return self;
 }
@@ -242,7 +239,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     {
         self.utc_ctime =[[PCOSInt64 alloc] init]; 
         self.utc_etime =[[PCOSInt64 alloc] init]; 
-        self.payment_limit =[[PaymentTransferAuthorizationPublicBlockV1Amount alloc] init]; 
+        self.payment_limit =[[Amount alloc] init]; 
         self.currency =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:3]; 
         self.keyid =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:4]; 
         self.receiver =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
@@ -282,35 +279,20 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     if ([key isEqualToString:@"P1"])
     {
         OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
-        prv_block.signature.data = [ssl dsa_signData:[ssl sha1_hashData:[NSData dataWithBytes:bytes length:len]]];
+        NSData * block_data = [NSData dataWithBytes:bytes length:len];
+        NSData * block_hash = [ssl sha1_hashData:block_data];
+        prv_block.signature.data = [ssl dsa_signData:block_hash];
     }
 }
 @end
 
 
 /* Preauthorization Request Message */
-@implementation PreauthorizationRequestMessageBlockAmount
-@synthesize payment_limit;
-@synthesize scale;
 
--(id) init
-{
-    self = [super init];
-    if (self)
-    {
-        self.payment_limit =[[PCOSInt64 alloc] init]; 
-        self.scale =[[PCOSInt16 alloc] init]; 
-        
-        [self addField:self.payment_limit withName:@"payment_limit"];
-        [self addField:self.scale withName:@"scale"];
-    }
-    return self;
-}
-@end
 
 @implementation PreauthorizationRequestMessageBlock
 @synthesize mat;
-@synthesize payment_limit;
+@synthesize preauthorization_amount;
 @synthesize currency;
 @synthesize user_data;
 
@@ -320,12 +302,12 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     if (self)
     {
         self.mat =[[PCOSFixedArray alloc] initWithItemPrototype:protoByte andCount:20]; 
-        self.payment_limit =[[PreauthorizationRequestMessageBlockAmount alloc] init]; 
+        self.preauthorization_amount =[[Amount alloc] init]; 
         self.currency =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:3]; 
         self.user_data =[[PCOSShortArray alloc] initWithItemPrototype:protoByte]; 
         
         [self addField:self.mat withName:@"mat"];
-        [self addField:self.payment_limit withName:@"payment_limit"];
+        [self addField:self.preauthorization_amount withName:@"preauthorization_amount"];
         [self addField:self.currency withName:@"currency"];
         [self addField:self.user_data withName:@"user_data"];
     }
@@ -343,7 +325,6 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     self = [super init];
     if (self)
     {  
-        // Public first, handle the callback, and then Private
         [self addBlock:(preauthorization_block = [[PreauthorizationRequestMessageBlock alloc] init]) withName:@"Pr"];
         [self addBlock:(payment_transfer_authorization_block = [[PCOSDataBlock alloc] init]) withName:@"Pa"];
     }
@@ -379,7 +360,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
                      NSStringFromSelector(@selector(didDecodePongMessage:withHeader:)), [PongMessage class],
                      NSStringFromSelector(@selector(didDecodeRegisterMessage:withHeader:)), [RegisterMessage class],
                      NSStringFromSelector(@selector(didDecodeRegisterAckMessage:withHeader:)), [RegisterAckMessage class],
-                      NSStringFromSelector(@selector(didDecodePaymentTransferAuthorizationMessage:withHeader:)), [PaymentTransferAuthorizationMessage class],
+                     NSStringFromSelector(@selector(didDecodePaymentTransferAuthorizationMessage:withHeader:)), [PaymentTransferAuthorizationMessage class],
                      NSStringFromSelector(@selector(didDecodePreauthorizationRequestMessage:withHeader:)), [PreauthorizationRequestMessage class],
                      nil];
     }
@@ -393,7 +374,11 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     PCOSMessage * msgIn;
     PCOSHeaderBlock *hdrIn;
     
-        size += [super decodeMessage:&msgIn andHeader:&hdrIn from:dataIn];
+    while (size < data.length)
+    {
+        [super decodeMessage:&msgIn andHeader:&hdrIn from:dataIn];
+        size += hdrIn.message_length.val;
+        
         NSString * selectorString = [selectors objectForKey:[msgIn class]];
         SEL selector = @selector(didDecodeUnknownMessage:withHeader:);
     
@@ -410,6 +395,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
             [invocation setArgument:&hdrIn atIndex:3];
             [invocation invoke];
         }
+    }
     return size;
 }
 

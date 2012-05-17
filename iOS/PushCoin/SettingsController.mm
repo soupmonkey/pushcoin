@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "NSString+HexStringToBytes.h"
 #import "NSData+BytesToHexString.h"
+#import "NSData+Base64.h"
 
 #include <openssl/rsa.h>
 #include <openssl/engine.h>
@@ -120,14 +121,15 @@
     NSString * publicKey;
 
     OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
-    [ssl generateDsaPrivateKey:&privateKey andPublicKey:&publicKey withBits:512];
+    [ssl generateDsaPrivateKey:&privateKey andPublicKey:&publicKey withBits:512 toPEMFile:
+        [self.appDelegate.keyFilePath stringByAppendingPathComponent:PushCoinDSAPublicKeyFile]];
     self.appDelegate.dsaPrivateKey = privateKey;
     
     RegisterMessage * msgOut = [[RegisterMessage alloc] init];
     PCOSRawData * dataOut = [[PCOSRawData alloc] initWithData:buffer];
     
     msgOut.register_block.registration_id.string = controller.registrationIDTextBox.text;
-    msgOut.register_block.public_key.data = publicKey.hexStringToBytes;
+    msgOut.register_block.public_key.data = [NSData dataFromBase64String:self.appDelegate.pemDsaPublicKey];
     msgOut.register_block.user_agent.string = PushCoinAppUserAgent;
     
     [parser encodeMessage:msgOut to:dataOut];
@@ -136,7 +138,11 @@
 
 - (IBAction)unregister:(id)sender 
 {
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Unregistering device" message:@"Are you sure?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Unregistering device"
+                                                     message:@"Are you sure?"
+                                                    delegate:self 
+                                           cancelButtonTitle:@"No" 
+                                           otherButtonTitles:@"Yes", nil];
     [alert show];
 }
 
@@ -203,14 +209,13 @@
     PaymentTransferAuthorizationMessage * msgOut = [[PaymentTransferAuthorizationMessage alloc] init];
     PCOSRawData * dataOut = [[PCOSRawData alloc] initWithData:buffer];
     
-    msgOut.prv_block.mat.string=self.appDelegate.authToken;
+    msgOut.prv_block.mat.data = self.appDelegate.authToken.hexStringToBytes;
     msgOut.prv_block.user_data.string=@"";
-    msgOut.prv_block.reserved.string=@"";
     
-    msgOut.pub_block.utc_ctime.val = [now timeIntervalSince1970];
-    msgOut.pub_block.utc_etime.val = [now timeIntervalSince1970] + 60; /* exp in 1 min */
+    msgOut.pub_block.utc_ctime.val = (SInt64)[now timeIntervalSince1970];
+    msgOut.pub_block.utc_etime.val = (SInt64)[now timeIntervalSince1970] + 60; /* exp in 1 min */
     
-    msgOut.pub_block.payment_limit.payment_limit.val = 100;
+    msgOut.pub_block.payment_limit.value.val = 399;
     msgOut.pub_block.payment_limit.scale.val = -2;
     
     msgOut.pub_block.currency.string = @"USD";
@@ -226,13 +231,13 @@
     PreauthorizationRequestMessage * msgOut2 = [[PreauthorizationRequestMessage alloc] init];
     PCOSRawData * dataOut2 = [[PCOSRawData alloc] initWithData:buffer];
     
-    msgOut2.preauthorization_block.mat.string = self.appDelegate.authToken;
-    msgOut2.preauthorization_block.payment_limit.payment_limit.val = 100;
-    msgOut2.preauthorization_block.payment_limit.scale.val = -2;
+    msgOut2.preauthorization_block.mat.data = self.appDelegate.authToken.hexStringToBytes;
+    msgOut2.preauthorization_block.preauthorization_amount.value.val = 200;
+    msgOut2.preauthorization_block.preauthorization_amount.scale.val = -2;
     msgOut2.preauthorization_block.currency.string = @"USD";
     msgOut2.preauthorization_block.user_data.string=@"";
 
-    msgOut2.payment_transfer_authorization_block.data =encodedData;
+    msgOut2.payment_transfer_authorization_block.data = encodedData;
     
     [parser encodeMessage:msgOut2 to:dataOut2];
     [webService sendMessage:dataOut2.consumedData];

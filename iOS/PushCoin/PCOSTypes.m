@@ -381,7 +381,8 @@
         NSRange range;
         range.length = MIN(data.length, bytes_.length);
         range.location = 0;
-    
+        
+        [bytes_ setLength:range.length];
         [bytes_ replaceBytesInRange:range withBytes:data.bytes length:range.length];
     }
 }
@@ -575,10 +576,10 @@
     PCOSRawData * copy = [data copy];
     NSUInteger total = [super encode:data];
     
-    NSData * encrypted = [ssl rsa_encryptData: [NSData dataWithBytes:data.data.bytes - total length:total]];
+    NSData * encrypted = [ssl rsa_encryptData: [NSData dataWithBytes:(void *)((char *)copy.data.bytes + copy.offset) length:total]];
     [copy writeBytes:encrypted.bytes length:encrypted.length];
     
-    data = copy;
+    data.offset = copy.offset;
     return encrypted.length;
 }
 
@@ -590,5 +591,39 @@
 
 
 @end
+
+
+@implementation PCOSDataBlock
+@synthesize data;
+
+-(id) initWithData:(NSMutableData *)d
+{
+    self = [super self];
+    if (self)
+    {
+        data = [d copy];
+    }
+    return self;
+}
+
+-(NSUInteger) size
+{
+    return [data length];
+}
+
+-(NSUInteger) encode:(PCOSRawData *)raw
+{
+    [raw writeBytes:self.data.bytes length:self.data.length];
+    return self.data.length;
+}
+
+-(NSUInteger) decode:(PCOSRawData *)raw
+{
+    data = [self.data initWithBytes:(raw.data.bytes+raw.offset) length:raw.data.length];
+    return raw.data.length;
+}
+
+@end
+
 
 

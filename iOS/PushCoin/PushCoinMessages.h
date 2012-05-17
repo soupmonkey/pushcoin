@@ -20,6 +20,12 @@ extern NSString * const MID_REGISTER_ACK;
 extern NSString * const MID_PAYMENT_TRANSFER_AUTHORIZATION;
 extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 
+/* Common Types */
+@interface Amount : PCOSBlock
+@property (nonatomic, strong) PCOSInt64 * value;
+@property (nonatomic, strong) PCOSInt16 * scale;
+@end
+
 
 /* Error Message */
 @interface ErrorMessageBlock : PCOSBlock
@@ -80,18 +86,13 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 @property (nonatomic, strong) PCOSFixedArray * mat;
 @property (nonatomic, strong) PCOSShortArray * signature;
 @property (nonatomic, strong) PCOSShortArray * user_data;
-@property (nonatomic, strong) PCOSShortArray * reserved;
 @end
 
-@interface PaymentTransferAuthorizationPublicBlockV1Amount : PCOSBlock
-@property (nonatomic, strong) PCOSInt64 * payment_limit;
-@property (nonatomic, strong) PCOSInt16 * scale;
-@end
 
 @interface PaymentTransferAuthorizationPublicBlockV1 : PCOSBlock
 @property (nonatomic, strong) PCOSInt64 * utc_ctime;
 @property (nonatomic, strong) PCOSInt64 * utc_etime;
-@property (nonatomic, strong) PaymentTransferAuthorizationPublicBlockV1Amount * payment_limit;
+@property (nonatomic, strong) Amount * payment_limit;
 @property (nonatomic, strong) PCOSFixedArray * currency;
 @property (nonatomic, strong) PCOSFixedArray * keyid;
 @property (nonatomic, strong) PCOSShortArray * receiver;
@@ -106,14 +107,9 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 
 
 /* Preauthorization Request Message */
-@interface PreauthorizationRequestMessageBlockAmount : PCOSBlock
-@property (nonatomic, strong) PCOSInt64 * payment_limit;
-@property (nonatomic, strong) PCOSInt16 * scale;
-@end
-
 @interface PreauthorizationRequestMessageBlock : PCOSBlock
 @property (nonatomic, strong) PCOSFixedArray * mat;
-@property (nonatomic, strong) PreauthorizationRequestMessageBlockAmount * payment_limit;
+@property (nonatomic, strong) Amount * preauthorization_amount;
 @property (nonatomic, strong) PCOSFixedArray * currency;
 @property (nonatomic, strong) PCOSShortArray * user_data;
 @end

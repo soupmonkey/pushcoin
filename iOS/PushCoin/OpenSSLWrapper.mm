@@ -68,9 +68,10 @@ static OpenSSLWrapper * singleton;
 }
 
 
+
 -(BOOL) prepareRsaWithKeyFile:(NSString*) keyFile
 {
-    NSString * path = [NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] bundlePath], keyFile];
+    NSString * path = keyFile;
     FILE * publicKeyFile = fopen(path.UTF8String, "r");
     if (publicKeyFile == NULL)
         return NO;
@@ -81,6 +82,21 @@ static OpenSSLWrapper * singleton;
     return self.rsa != NULL;
 }
 
+-(BOOL) prepareDsaWithKeyFile:(NSString*) keyFile
+{
+    NSString * path = keyFile;
+    FILE * privateKeyFile = fopen(path.UTF8String, "r");
+    if (privateKeyFile == NULL)
+        return NO;
+    
+    self.dsa = ::PEM_read_DSAPrivateKey(privateKeyFile, 0, 0, 0);
+    fclose(privateKeyFile);
+    
+    return self.dsa != NULL;
+}
+
+
+
 -(BOOL) prepareDsaWithPrivateKey:(NSString *)privateKey
 {
     NSData * bytes = privateKey.hexStringToBytes;
@@ -89,7 +105,10 @@ static OpenSSLWrapper * singleton;
     return self.dsa != NULL;
 }
 
--(BOOL) generateDsaPrivateKey:(NSString **)privateKey andPublicKey:(NSString**)publicKey withBits:(NSInteger)bits
+-(BOOL) generateDsaPrivateKey:(NSString **)privateKey 
+                 andPublicKey:(NSString**)publicKey 
+                     withBits:(NSInteger)bits 
+                    toPEMFile:(NSString *)pemFile
 {
     self.dsa = DSA_generate_parameters(bits,NULL,0,NULL,NULL,NULL,NULL);
     if (!self.dsa)
@@ -100,6 +119,9 @@ static OpenSSLWrapper * singleton;
         self.dsa = NULL;
         return NO;
     }
+
+    
+     
     int len;
     unsigned char * buf = NULL;
     
@@ -117,6 +139,11 @@ static OpenSSLWrapper * singleton;
     free(buf);
     buf = NULL;
     
+    NSString * path = pemFile;
+    FILE * fp = fopen(path.UTF8String, "w+");
+    PEM_write_DSA_PUBKEY(fp, self.dsa);
+    fclose(fp);
+    
     return self.dsa != NULL;
 }
 
@@ -131,7 +158,7 @@ static OpenSSLWrapper * singleton;
     unsigned char * outbuf = (unsigned char *) calloc(RSA_size(self.rsa), 1);
     bzero(outbuf, RSA_size(self.rsa));
     
-    int len = ::RSA_public_encrypt(data.length, (const unsigned char *) data.bytes, outbuf, self.rsa, RSA_PKCS1_PADDING);
+    int len = ::RSA_public_encrypt(data.length, (const unsigned char *) data.bytes, outbuf, self.rsa, RSA_PKCS1_OAEP_PADDING);
 
     NSData * res = [NSData dataWithBytes:outbuf length:len];
     free(outbuf);
@@ -165,7 +192,7 @@ static OpenSSLWrapper * singleton;
     unsigned int sig_len;
     
     bzero(sig, DSA_size(self.dsa));
-    
+
     if (::DSA_sign(0, (const unsigned char *) data.bytes, data.length, sig, &sig_len, self.dsa) != 1)
     {
         free(sig);

@@ -111,3 +111,10 @@
 @end
 
 
+@interface PCOSDataBlock : PCOSBaseType
+@property (nonatomic, strong) NSData * data;
+-(id) initWithData:(NSData *)data;
+-(NSUInteger) encode:(PCOSRawData *)data;
+-(NSUInteger) decode:(PCOSRawData *)data;
+@end
+

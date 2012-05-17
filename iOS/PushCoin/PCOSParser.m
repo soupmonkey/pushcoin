@@ -37,7 +37,7 @@
     
     hdr.magic.string = @"PCOS";
     hdr.message_id.string = [[msg class] messageID];
-    hdr.message_length.val = size;
+    hdr.message_length.val = size + hdr.size;
     
     size += [hdr encode:copy];
     return size;

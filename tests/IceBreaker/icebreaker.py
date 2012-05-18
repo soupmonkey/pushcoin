@@ -3,6 +3,7 @@
 import sys, urllib2, time
 import logging as log
 import pcos, time, binascii, base64, hashlib, Image
+from decimal import Decimal
 from optparse import OptionParser,OptionError
 from pyparsing import *
 from M2Crypto import DSA, BIO, RSA
@@ -83,9 +84,14 @@ class RmoteCall:
 
 		# create preauth block
 		preauth = pcos.Block( 'Pr', 512, 'O' )
+		# mat
 		preauth.write_fixed_string( binascii.unhexlify( self.args['preauth_mat'] ), size=20 )
-		preauth.write_int64( long( self.args['preauth_scaled_payment'] ) ) # payment
-		preauth.write_int16( int( self.args['preauth_scale'] ) ) # scale
+		# preauth amount
+		charge = Decimal(self.args['charge']).normalize()
+		charge_scale = int(charge.as_tuple()[2])
+		charge_int = long(charge.shift(abs(charge_scale)))
+		preauth.write_int64( charge_int ) # value
+		preauth.write_int16( charge_scale ) # scale
 		preauth.write_fixed_string( "USD", size=3 ) # currency
 		preauth.write_short_string( '', max=20 ) # user data
 
@@ -110,8 +116,33 @@ class RmoteCall:
 		p1.write_int64( now ) # certificate create-time
 		p1.write_int64( now + 24 * 3600 ) # certificate expiry (in 24 hrs)
 
-		p1.write_int64( long( self.args['scaled_payment'] ) ) # payment
-		p1.write_int16( int( self.args['scale'] ) ) # scale
+		# payment-limit
+		payment = Decimal(self.args['payment']).normalize()
+		payment_scale = int(payment.as_tuple()[2])
+		payment_int = long(payment.shift(abs(payment_scale)))
+		p1.write_int64( payment_int ) # value
+		p1.write_int16( payment_scale ) # scale
+
+		# gratuity
+		tip = tip_type = None
+		tipv = self.args.get('tip_pct', None)
+		if tipv:
+			tip_type = 'P'
+		else:
+			tipv = self.args.get('tip_abs', None)
+			if tipv:
+				tip_type = 'A'
+
+		if tipv:
+			tip = Decimal(tipv).normalize()
+			tip_scale = int(tip.as_tuple()[2])
+			tip_int = long(tip.shift(abs(tip_scale)))
+			p1.write_byte(1) # optional indicator
+			p1.write_fixed_string(tip_type, size=1) # tip type (P or A)
+			p1.write_int64( tip_int ) # value
+			p1.write_int16( tip_scale ) # scale
+		else:
+			p1.write_byte(0) # optional indicator -- no tip
 
 		p1.write_fixed_string( "USD", size=3 ) # currency
 		p1.write_fixed_string( binascii.unhexlify( API_TRANSACTION_KEY_ID ), size=4 ) # key-ID

@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RegistrationController.h"
 
-@interface MainTabBarController : UITabBarController
+
+@interface MainTabBarController : UITabBarController<RegistrationControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITabBar *tabBar;
     
 

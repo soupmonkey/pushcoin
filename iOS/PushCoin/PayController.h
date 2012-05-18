@@ -50,6 +50,7 @@ int KeyBackgroundStyle = 1;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 @property (nonatomic) NSData * encodedData;
+- (IBAction)amountTextFieldTouched:(id)sender;
 
 - (IBAction)push:(id)sender;
 

@@ -380,13 +380,17 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         size += hdrIn.message_length.val;
         
         NSString * selectorString = [selectors objectForKey:[msgIn class]];
-        SEL selector = @selector(didDecodeUnknownMessage:withHeader:);
+        SEL unknownSelector = @selector(didDecodeUnknownMessage:withHeader:);
+        SEL selector = unknownSelector;
     
         if (selectorString != nil)
             selector = NSSelectorFromString(selectorString);
     
         if (recv != nil)
         {
+            if (![recv respondsToSelector:selector])
+                selector = unknownSelector;
+            
             NSMethodSignature *signature = [[recv class] instanceMethodSignatureForSelector:selector];
             NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
             [invocation setSelector:selector];

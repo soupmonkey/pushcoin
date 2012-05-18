@@ -18,7 +18,7 @@
     if ( self == nil )
         return ( nil );
     
-    _iconView = [[UIImageView alloc] initWithFrame: CGRectMake(0.0, 0.0, 72.0, 72.0)];
+    _iconView = [[UIImageView alloc] initWithFrame: CGRectMake(0.0, 0.0, 57.0, 57.0)];
     _iconView.backgroundColor = [UIColor clearColor];
     _iconView.opaque = NO;
 //  _iconView.layer.shadowPath = path.CGPath;

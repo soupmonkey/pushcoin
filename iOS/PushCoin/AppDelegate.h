@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "KeychainItemWrapper.h"
+#import "RegistrationController.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 @property (strong, nonatomic) KeychainItemWrapper * keychain;
@@ -17,4 +18,7 @@
 @property (nonatomic, getter = dsaPrivateKey, setter = setDsaPrivateKey:) NSString * dsaPrivateKey;
 @property (nonatomic, readonly, getter = pemDsaPublicKey) NSString * pemDsaPublicKey;
 @property (nonatomic, readonly, getter = keyFilePath) NSString * keyFilePath;
+
+-(void)registerFromController:(UIViewController<RegistrationControllerDelegate> *)viewController;
+
 @end

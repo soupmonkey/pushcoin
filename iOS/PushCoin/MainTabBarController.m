@@ -7,6 +7,7 @@
 //
 
 #import "MainTabBarController.h"
+#import "AppDelegate.h"
 
 @interface MainTabBarController ()
 
@@ -28,8 +29,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
-    
 }
 
 - (void)viewDidUnload
@@ -39,9 +38,28 @@
     // Release any retained subviews of the main view.
 }
 
+-(void) viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:(BOOL)animated];
+    [self.appDelegate registerFromController:self];
+}
+
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+        
+- (AppDelegate *)appDelegate
+{
+    return (AppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
+
+-(void) registrationControllerDidClose:(RegistrationController *)controller
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 

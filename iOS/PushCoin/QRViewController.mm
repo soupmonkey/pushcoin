@@ -46,10 +46,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UITapGestureRecognizer *singleFingerTap = 
-    [[UITapGestureRecognizer alloc] initWithTarget:self 
-                                            action:@selector(handleSingleTap:)];
+    UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self 
+                                                                                      action:@selector(handleSingleTap:)];
     [self.view addGestureRecognizer:singleFingerTap];
+    
+    UISwipeGestureRecognizer * swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self 
+                                                                                           action:@selector(handleSwipe:)];
+    swipeRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.view addGestureRecognizer:swipeRecognizer];
+
     
     int qrcodeImageDimension = self.imageView.frame.size.width;    
     
@@ -62,9 +67,16 @@
     
     self.imageView.image = qrcodeImage;
     self.summaryLabel.text = summary;
+    
 }
 
-- (void)handleSingleTap:(UITapGestureRecognizer *)recognizer 
+
+- (IBAction) handleSwipe:(UISwipeGestureRecognizer *) recognizer
+{
+    [self.delegate qrViewControllerDidCloseQR:self];
+}
+
+- (IBAction)handleSingleTap:(UITapGestureRecognizer *)recognizer 
 {
     [self.delegate qrViewControllerDidCloseQR:self];
 }

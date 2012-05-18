@@ -13,16 +13,14 @@
 #import "OpenSSLWrapper.h"
 #import "RegistrationController.h"
 
-@interface SettingsController : UIViewController<RegistrationControllerDelegate, PushCoinWebServiceDelegate, PushCoinMessageReceiver,
-    UIAlertViewDelegate>
+@interface SettingsController : UIViewController< PushCoinWebServiceDelegate, PushCoinMessageReceiver,
+    UIAlertViewDelegate, RegistrationControllerDelegate>
 {
     PushCoinMessageParser * parser;
     PushCoinWebService * webService;
     NSMutableData * buffer;
 }
 @property (weak, nonatomic) IBOutlet UILabel *resultLabel;
-- (IBAction)register:(id)sender;
-@property (weak, nonatomic) IBOutlet UIButton *registerButton;
 - (IBAction)unregister:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *unregisterButton;
 @property (weak, nonatomic) IBOutlet UIButton *preAuthorizationTestButton;

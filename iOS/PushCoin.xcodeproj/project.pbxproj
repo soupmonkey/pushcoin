@@ -61,6 +61,7 @@
 		0D20D8A215571ED300098838 /* PCOSMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89B15571ED300098838 /* PCOSMessage.m */; };
 		0D20D8A315571ED300098838 /* PushCoinMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89D15571ED300098838 /* PushCoinMessages.m */; };
 		0D20D8A415571ED300098838 /* PCOSTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89F15571ED300098838 /* PCOSTypes.m */; };
+		0D312FDC156619D600A01753 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D312FDB156619D600A01753 /* logo.png */; };
 		0D3EA61A154872FB0088EFE1 /* pushcoin_rsa.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0D3EA619154872FB0088EFE1 /* pushcoin_rsa.pub */; };
 		0D3EA61D154877670088EFE1 /* OpenSSLWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA61C154877670088EFE1 /* OpenSSLWrapper.mm */; };
 		0D3EA6201548783D0088EFE1 /* PushCoinConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA61F1548783D0088EFE1 /* PushCoinConfig.m */; };
@@ -84,6 +85,7 @@
 		0DB67A5D1564C8C200CA997C /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DB67A5C1564C8C200CA997C /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0DBC491B1543BF3700E56EDF /* VSKeypadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DBC491A1543BF3700E56EDF /* VSKeypadView.m */; };
 		0DCCD2271564E221006C9526 /* pushcoin_dsa.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0DCCD2261564E221006C9526 /* pushcoin_dsa.pub */; };
+		0DD692B615660FC500391E25 /* iphone_delete_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DD692B515660FC500391E25 /* iphone_delete_button.png */; };
 		0DE9FA72155A1D4700FACDA7 /* RegistrationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */; };
 		0DE9FA7E155A278500FACDA7 /* libAQGridView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DE9FA7B155A277700FACDA7 /* libAQGridView.a */; };
 		0DE9FA82155A2B0100FACDA7 /* SpringBoardIconCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9FA81155A2B0100FACDA7 /* SpringBoardIconCell.m */; };
@@ -237,6 +239,7 @@
 		0D20D89E15571ED300098838 /* PCOSTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSTypes.h; sourceTree = "<group>"; };
 		0D20D89F15571ED300098838 /* PCOSTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSTypes.m; sourceTree = "<group>"; };
 		0D20D8A515576E1700098838 /* PCOS-CPP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PCOS-CPP.h"; sourceTree = "<group>"; };
+		0D312FDB156619D600A01753 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		0D3EA619154872FB0088EFE1 /* pushcoin_rsa.pub */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = pushcoin_rsa.pub; sourceTree = "<group>"; };
 		0D3EA61B154877670088EFE1 /* OpenSSLWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenSSLWrapper.h; sourceTree = "<group>"; };
 		0D3EA61C154877670088EFE1 /* OpenSSLWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenSSLWrapper.mm; sourceTree = "<group>"; };
@@ -276,6 +279,7 @@
 		0DBC49191543BF3700E56EDF /* VSKeypadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VSKeypadView.h; sourceTree = "<group>"; };
 		0DBC491A1543BF3700E56EDF /* VSKeypadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VSKeypadView.m; sourceTree = "<group>"; };
 		0DCCD2261564E221006C9526 /* pushcoin_dsa.pub */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = pushcoin_dsa.pub; sourceTree = "<group>"; };
+		0DD692B515660FC500391E25 /* iphone_delete_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphone_delete_button.png; sourceTree = "<group>"; };
 		0DE9FA70155A1D4700FACDA7 /* RegistrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationController.h; sourceTree = "<group>"; };
 		0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegistrationController.m; sourceTree = "<group>"; };
 		0DE9FA73155A277600FACDA7 /* AQGridView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AQGridView.xcodeproj; path = ../../../v1/AQGridView/AQGridView.xcodeproj; sourceTree = "<group>"; };
@@ -545,6 +549,8 @@
 		0DBC491D1543C59A00E56EDF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0D312FDB156619D600A01753 /* logo.png */,
+				0DD692B515660FC500391E25 /* iphone_delete_button.png */,
 				0DF6C5CF15636C9400E28B99 /* PushCoinLogo-Large.png */,
 				0DF6C5D015636C9400E28B99 /* PushCoinLogo-Small.png */,
 				0D19E2E41541CCAE00C8671B /* first.png */,
@@ -719,6 +725,8 @@
 				0DF6C5D115636C9400E28B99 /* PushCoinLogo-Large.png in Resources */,
 				0DF6C5D215636C9400E28B99 /* PushCoinLogo-Small.png in Resources */,
 				0DCCD2271564E221006C9526 /* pushcoin_dsa.pub in Resources */,
+				0DD692B615660FC500391E25 /* iphone_delete_button.png in Resources */,
+				0D312FDC156619D600A01753 /* logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

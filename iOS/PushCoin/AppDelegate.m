@@ -115,6 +115,20 @@
 	return dir;
 }
 
+-(void)registerFromController:(UIViewController<RegistrationControllerDelegate> *)viewController
+{
+    if (!self.registered)
+    {
+        UIStoryboard * storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:[NSBundle mainBundle]];
+        RegistrationController * controller = [storyboard instantiateViewControllerWithIdentifier:@"RegistrationController"];
+        controller.delegate = viewController;
+        controller.modalTransitionStyle =  UIModalTransitionStyleCoverVertical;
+        
+        [viewController presentModalViewController:controller animated:NO];
+    }
+
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     /*

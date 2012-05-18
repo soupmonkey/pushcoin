@@ -7,21 +7,16 @@
 //
 
 #import "SettingsController.h"
-#import "Security/Security.h"
 #import "AppDelegate.h"
 #import "NSString+HexStringToBytes.h"
 #import "NSData+BytesToHexString.h"
 #import "NSData+Base64.h"
 
-#include <openssl/rsa.h>
-#include <openssl/engine.h>
-#include <openssl/pem.h>
 
 
 @implementation SettingsController
 @synthesize unregisterButton;
 @synthesize preAuthorizationTestButton;
-@synthesize registerButton;
 @synthesize resultLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -48,15 +43,22 @@
 {
     [super viewDidLoad];
     
-    [registerButton setTitle:@"Register Device" forState:UIControlStateNormal];
-    [registerButton setTitle:@"Device Registered" forState:UIControlStateDisabled];
-    
     [unregisterButton setTitle:@"Unregister Device" forState:UIControlStateNormal];
     [unregisterButton setTitle:@"Unregister Device" forState:UIControlStateDisabled];
     
     webService = [[PushCoinWebService alloc] initWithDelegate:self];
     buffer =  [[NSMutableData alloc] initWithLength:PushCoinWebServiceOutBufferSize];
     parser = [[PushCoinMessageParser alloc] init];
+    
+    [self.unregisterButton setBackgroundImage:[[UIImage imageNamed:@"iphone_delete_button.png"]
+                                           stretchableImageWithLeftCapWidth:8.0f
+                                           topCapHeight:0.0f]
+                                 forState:UIControlStateNormal];
+    
+    [self.unregisterButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.unregisterButton.titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    self.unregisterButton.titleLabel.shadowColor = [UIColor lightGrayColor];
+    self.unregisterButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
     
     [self updateRegisterButtonStatus];    
 }
@@ -65,13 +67,11 @@
 {
     if (!self.appDelegate.registered)
     {
-        registerButton.enabled = YES;
         unregisterButton.enabled = NO;
         preAuthorizationTestButton.enabled = NO;
     }
     else 
     {
-        registerButton.enabled = NO;
         unregisterButton.enabled = YES;
         preAuthorizationTestButton.enabled = YES;
     }
@@ -79,7 +79,6 @@
 - (void)viewDidUnload
 {
     [self setResultLabel:nil];
-    [self setRegisterButton:nil];
     [self setUnregisterButton:nil];
     [self setPreAuthorizationTestButton:nil];
     [super viewDidUnload];
@@ -95,47 +94,7 @@
 {
     return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
-
-- (IBAction)register:(id)sender 
-{
-    [self performSegueWithIdentifier:@"SegueToRegistration"
-                              sender:self ];  
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue 
-                 sender:(id)sender
-{
-	if ([segue.identifier isEqualToString:@"SegueToRegistration"])
-	{
-		UIViewController *viewController = segue.destinationViewController;
-		RegistrationController *controller = (RegistrationController *)viewController;
-		controller.delegate = self;
-	}
-}
-        
--(void)registrationControllerDidClose:(RegistrationController *)controller
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-
-    NSString * privateKey;
-    NSString * publicKey;
-
-    OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
-    [ssl generateDsaPrivateKey:&privateKey andPublicKey:&publicKey withBits:512 toPEMFile:
-        [self.appDelegate.keyFilePath stringByAppendingPathComponent:PushCoinDSAPublicKeyFile]];
-    self.appDelegate.dsaPrivateKey = privateKey;
     
-    RegisterMessage * msgOut = [[RegisterMessage alloc] init];
-    PCOSRawData * dataOut = [[PCOSRawData alloc] initWithData:buffer];
-    
-    msgOut.register_block.registration_id.string = controller.registrationIDTextBox.text;
-    msgOut.register_block.public_key.data = [NSData dataFromBase64String:self.appDelegate.pemDsaPublicKey];
-    msgOut.register_block.user_agent.string = PushCoinAppUserAgent;
-    
-    [parser encodeMessage:msgOut to:dataOut];
-    [webService sendMessage:dataOut.consumedData];
-}
-
 - (IBAction)unregister:(id)sender 
 {
     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"Unregistering device"
@@ -157,7 +116,13 @@
         self.appDelegate.dsaPrivateKey = @"";
         
         [self updateRegisterButtonStatus];
+        [self.appDelegate registerFromController:self];
     }
+}
+
+-(void) registrationControllerDidClose:(RegistrationController *)controller
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)webService:(PushCoinWebService *)webService didReceiveMessage:(NSData *)data

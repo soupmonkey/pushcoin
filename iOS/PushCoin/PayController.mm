@@ -56,7 +56,7 @@
                             self.scrollView.frame.size.width,
                              self.scrollView.frame.size.height)];
     gridView_.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    gridView_.backgroundColor = [UIColor colorWithRed:119.0/255.0 green:136.0/255.0 blue:153.0/255.0 alpha:1.0];
+    gridView_.backgroundColor = [UIColor blackColor];
     gridView_.opaque = NO;
     gridView_.dataSource = self;
     gridView_.delegate = self;
@@ -75,26 +75,26 @@
     if ( icons_ == nil )
     {
         icons_ = [[NSMutableArray alloc] initWithCapacity: 9];
-        UIBezierPath * path = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(0.0, 0.0, 72.0, 72.0)
-                                                         cornerRadius: 14.0];
+        UIBezierPath * path = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(0.0, 0.0, 57.0, 57.0)
+                                                         cornerRadius: 7.0];
         
         for ( NSUInteger i = 0; i < 9; i++ )
         {
-            UIGraphicsBeginImageContext( CGSizeMake(72.0, 72.0) );
+            UIGraphicsBeginImageContext( CGSizeMake(57.0, 57.0) );
             
             // clear background
             [[UIColor clearColor] set];
-            UIRectFill( CGRectMake(0.0, 0.0, 72.0, 72.0) );
+            UIRectFill( CGRectMake(0.0, 0.0, 57.0, 57.0) );
             
             // fill the rounded rectangle
             //[color set];
-            [[UIColor colorWithRed:250.0/255.0 green:250.0/255.0 blue:210.0/255.0 alpha:1.0] set];
+            [[UIColor darkGrayColor] set];
             [path fill];
             
-            [[UIColor blackColor] set];
+            [[UIColor whiteColor] set];
             NSString * text = [NSString stringWithFormat:@"$%d", i + 1];
-            [text drawInRect:CGRectMake(0.0, 30.0, 72.0, 20.0)
-                    withFont:[UIFont systemFontOfSize:20]
+            [text drawInRect:CGRectMake(0.0, 25.0, 57.0, 20.0)
+                    withFont:[UIFont systemFontOfSize:18]
                lineBreakMode:UILineBreakModeWordWrap
                    alignment:UITextAlignmentCenter];
               
@@ -189,6 +189,11 @@
 -(void)qrViewControllerDidCloseQR:(QRViewController *)controller
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)amountTextFieldTouched:(id)sender
+{
+    [self.scrollView scrollRectToVisible:keypadView_.frame animated:YES];
 }
 
 - (IBAction)push:(id)sender
@@ -642,7 +647,7 @@
         {
             // must be the SAME SIZE AS THE OTHERS
             // Yes, this is probably a bug. Sigh. Look at -[AQGridView fixCellsFromAnimation] to fix
-            hiddenCell = [[AQGridViewCell alloc] initWithFrame: CGRectMake(0.0, 0.0, 72.0, 72.0)
+            hiddenCell = [[AQGridViewCell alloc] initWithFrame: CGRectMake(0.0, 0.0, 57.0, 57.0)
                                                reuseIdentifier: EmptyIdentifier];
         }
         
@@ -653,7 +658,7 @@
     SpringBoardIconCell * cell = (SpringBoardIconCell *)[gridView dequeueReusableCellWithIdentifier: CellIdentifier];
     if ( cell == nil )
     {
-        cell = [[SpringBoardIconCell alloc] initWithFrame: CGRectMake(0.0, 0.0, 72.0, 72.0) reuseIdentifier: CellIdentifier];
+        cell = [[SpringBoardIconCell alloc] initWithFrame: CGRectMake(0.0, 0.0, 57.0, 57.0) reuseIdentifier: CellIdentifier];
     }
     
     cell.icon = [icons_ objectAtIndex: index];
@@ -663,12 +668,14 @@
 
 - (CGSize) portraitGridCellSizeForGridView: (AQGridView *) gridView
 {
-    return ( CGSizeMake(self.scrollView.frame.size.width / 3, self.scrollView.frame.size.height / 3) );
+    return ( CGSizeMake(self.scrollView.frame.size.width / 4, self.scrollView.frame.size.height / 3) );
 }
 
 -(void)gridView:(AQGridView *)gridView didSelectItemAtIndex:(NSUInteger)index
 {
     self.amountTextField.text = [NSString stringWithFormat:@"$ %d.00", index + 1];
+    enteredAmountString_ = @"";
+    
     [gridView deselectItemAtIndex:index animated:YES];
     
     [self push:gridView];

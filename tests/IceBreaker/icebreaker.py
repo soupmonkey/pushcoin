@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys, urllib2, time
 import logging as log
-import pcos, time, binascii, base64, hashlib, Image
+import pcos, time, binascii, base64, hashlib, math, Image
 from decimal import Decimal
 from optparse import OptionParser,OptionError
 from pyparsing import *
@@ -72,6 +72,42 @@ WBKhBPOqvJ8X+w==
 -----END DSA PRIVATE KEY-----'''
 
 class RmoteCall:
+
+	# CMD: `device transaction history query'
+	def history(self):
+		'''Generates the PTA and submits to server for validation.'''
+
+		req = pcos.Doc( name="Hq" )
+		bo = pcos.Block( 'Bo', 512, 'O' )
+		bo.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 ) # mat
+		bo.write_short_string( '', max=127 ) # keywords
+		bo.write_int16( 0 )
+		req.add( bo )
+
+		res = self.send( req )
+
+		assert res.message_id == 'Hr'
+
+		# jump to body
+		body = res.block( 'Bo' )
+
+		# read number of transactions
+		count = body.read_int16()
+		for i in xrange(0, count):
+			tx_id = body.read_int64() # transaction ID
+			tx_type = body.read_fixed_string(1) # transaction type
+			value = body.read_int64() # value
+			scale = body.read_int16() # scale
+			payment = value * math.pow(10, scale)
+			currency = body.read_fixed_string(3) # currency
+			merchant_name = body.read_short_string() # merchant name
+			merchant_email = body.read_short_string() # merchant email
+			pta_receiver = body.read_short_string() # PTA receiver
+			pta_user_data = body.read_short_string() # PTA user-data
+			invoice = body.read_short_string() # invoice
+			print "--- %s/%s ---\ntx-id: %s\ntx_type: %s\npayment: %s\ncurrency: %s\nmerchant_name: %s\nmerchant_email: %s\npta_receiver: %s\npta_user_data: %s\ninvoice: %s\n" % (i, count, tx_id, tx_type, payment, currency, merchant_name, merchant_email, pta_receiver, pta_user_data, invoice)
+		log.info('Returned %s records', count)
+
 
 	# CMD: `preauth'
 	def preauth(self):
@@ -268,6 +304,7 @@ class RmoteCall:
 			"payment": self.payment,
 			"preauth": self.preauth,
 			"transaction_key": self.transaction_key,
+			"history": self.history,
 		}		
 
 	# invoked if user asks for an unknown command

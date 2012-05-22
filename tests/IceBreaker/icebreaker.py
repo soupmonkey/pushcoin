@@ -73,9 +73,34 @@ WBKhBPOqvJ8X+w==
 
 class RmoteCall:
 
-	# CMD: `device transaction history query'
+	def balance(self):
+		'''Returns account balance'''
+
+		bo = pcos.Block( 'Bo', 64, 'O' )
+		bo.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 ) # mat
+		bo.write_short_string( '', max=127 ) # ref_data
+
+		req = pcos.Doc( name="Bq" )
+		req.add( bo )
+
+		res = self.send( req )
+
+		assert res.message_id == 'Br'
+
+		# jump to body
+		body = res.block( 'Bo' )
+
+		value = body.read_int64() # value
+		scale = body.read_int16() # scale
+		balance_asofepoch = body.read_int64();
+
+		balance = value * math.pow(10, scale)
+		balance_asofdate = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(balance_asofepoch))
+		log.info('Balance is $%s as of %s', balance, balance_asofdate)
+
+
 	def history(self):
-		'''Generates the PTA and submits to server for validation.'''
+		'''Returns transaction history'''
 
 		req = pcos.Doc( name="Hq" )
 		bo = pcos.Block( 'Bo', 512, 'O' )
@@ -109,7 +134,6 @@ class RmoteCall:
 		log.info('Returned %s records', count)
 
 
-	# CMD: `preauth'
 	def preauth(self):
 		'''Generates the PTA and submits to server for validation.'''
 		pta_encoded = self.payment()
@@ -140,7 +164,6 @@ class RmoteCall:
 		if res.message_id == "Ok":
 			log.info('RETN Preauthorization Success' )
 
-	# CMD: `payment'
 	def payment(self):
 		'''This command generates the Payment Transaction Authorization, or PTA. It does not communicate with the server, only produces a file.'''
 
@@ -305,6 +328,7 @@ class RmoteCall:
 			"preauth": self.preauth,
 			"transaction_key": self.transaction_key,
 			"history": self.history,
+			"balance": self.balance,
 		}		
 
 	# invoked if user asks for an unknown command

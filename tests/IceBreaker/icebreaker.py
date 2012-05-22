@@ -164,6 +164,44 @@ class RmoteCall:
 		if res.message_id == "Ok":
 			log.info('RETN Preauthorization Success' )
 
+
+	def charge(self):
+		'''Sends a Payment Request'''
+		pta_encoded = self.payment()
+
+		# package PTA into a block
+		pta = pcos.Block( 'Pa', 512, 'O' )
+		pta.write_fixed_string(pta_encoded, size=len(pta_encoded))
+
+		# create payment-request block
+		r1 = pcos.Block( 'R1', 1024, 'O' )
+		# mat
+		r1.write_fixed_string( binascii.unhexlify( self.args['merchant_mat'] ), size=20 )
+		r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
+		r1.write_short_string( '', max=127 ) # ref_data
+
+		# charge amount
+		charge = Decimal(self.args['charge']).normalize()
+		charge_scale = int(charge.as_tuple()[2])
+		charge_int = long(charge.shift(abs(charge_scale)))
+		r1.write_int64( charge_int ) # value
+		r1.write_int16( charge_scale ) # scale
+
+		r1.write_fixed_string( "USD", size=3 ) # currency
+		r1.write_short_string( 'inv-123', max=24 ) # invoice ID
+		r1.write_long_string( 'happy meal' ) # comment
+		r1.write_int16(0) # list of purchased goods
+
+		# package everything and ship out
+		req = pcos.Doc( name="Pt" )
+		req.add( pta )
+		req.add( r1 )
+
+		res = self.send( req )
+		if res.message_id == "Ok":
+			log.info('RETN Successful Charge' )
+
+
 	def payment(self):
 		'''This command generates the Payment Transaction Authorization, or PTA. It does not communicate with the server, only produces a file.'''
 
@@ -176,7 +214,7 @@ class RmoteCall:
 		p1.write_int64( now + 24 * 3600 ) # certificate expiry (in 24 hrs)
 
 		# payment-limit
-		payment = Decimal(self.args['payment']).normalize()
+		payment = Decimal(self.args['limit']).normalize()
 		payment_scale = int(payment.as_tuple()[2])
 		payment_int = long(payment.shift(abs(payment_scale)))
 		p1.write_int64( payment_int ) # value
@@ -237,7 +275,7 @@ class RmoteCall:
 		# RSA Encryption Scheme w/ Optimal Asymmetric Encryption Padding
 		encrypted = encrypter.public_encrypt( str(priv), RSA.pkcs1_oaep_padding )
 
-		# At this point we no longer need the 'priv' object. We only attach the
+		# At this point we no longer need the private object. We only attach the
 		# encrypted instance.
 		s1 = pcos.Block( 'S1', 512, 'O' )
 		s1.write_fixed_string( encrypted, size=128 )
@@ -329,6 +367,7 @@ class RmoteCall:
 			"transaction_key": self.transaction_key,
 			"history": self.history,
 			"balance": self.balance,
+			"charge": self.charge,
 		}		
 
 	# invoked if user asks for an unknown command

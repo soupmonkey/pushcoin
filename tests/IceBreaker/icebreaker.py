@@ -89,6 +89,7 @@ class RmoteCall:
 
 		# jump to body
 		body = res.block( 'Bo' )
+		ref_data = body.read_short_string( ) # ref_data
 
 		value = body.read_int64() # value
 		scale = body.read_int16() # scale
@@ -105,8 +106,10 @@ class RmoteCall:
 		req = pcos.Doc( name="Hq" )
 		bo = pcos.Block( 'Bo', 512, 'O' )
 		bo.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 ) # mat
+		bo.write_short_string( '', max=20 ) # ref-data
 		bo.write_short_string( '', max=127 ) # keywords
 		bo.write_int16( 0 )
+		bo.write_int16( 100 )
 		req.add( bo )
 
 		res = self.send( req )
@@ -115,6 +118,8 @@ class RmoteCall:
 
 		# jump to body
 		body = res.block( 'Bo' )
+
+		ref_data = body.read_short_string() # ref-data
 
 		# read number of transactions
 		count = body.read_int16()
@@ -144,8 +149,8 @@ class RmoteCall:
 
 		# create preauth block
 		preauth = pcos.Block( 'Pr', 512, 'O' )
-		# mat
-		preauth.write_fixed_string( binascii.unhexlify( self.args['preauth_mat'] ), size=20 )
+		preauth.write_fixed_string( binascii.unhexlify( self.args['preauth_mat'] ), size=20 ) # mat
+		preauth.write_short_string( '', max=20 ) # user data
 		# preauth amount
 		charge = Decimal(self.args['charge']).normalize()
 		charge_scale = int(charge.as_tuple()[2])
@@ -153,7 +158,6 @@ class RmoteCall:
 		preauth.write_int64( charge_int ) # value
 		preauth.write_int16( charge_scale ) # scale
 		preauth.write_fixed_string( "USD", size=3 ) # currency
-		preauth.write_short_string( '', max=20 ) # user data
 
 		# package everything and ship out
 		req = pcos.Doc( name="Pr" )
@@ -175,10 +179,9 @@ class RmoteCall:
 
 		# create payment-request block
 		r1 = pcos.Block( 'R1', 1024, 'O' )
-		# mat
-		r1.write_fixed_string( binascii.unhexlify( self.args['merchant_mat'] ), size=20 )
-		r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
+		r1.write_fixed_string( binascii.unhexlify( self.args['merchant_mat'] ), size=20 ) # mat
 		r1.write_short_string( '', max=127 ) # ref_data
+		r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
 
 		# charge amount
 		(charge_value, charge_scale) = decimal_to_parts(Decimal(self.args['charge']))
@@ -406,6 +409,7 @@ class RmoteCall:
 			# jump to the block of interest
 			er = res.block( 'Bo' )
 			if er:
+				ref_data = er.read_short_string();
 				code = er.read_int32();
 				what = er.read_short_string();
 				log.error( '%s (#%s)', what, code )

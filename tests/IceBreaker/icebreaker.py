@@ -181,10 +181,9 @@ class RmoteCall:
 		r1.write_short_string( '', max=127 ) # ref_data
 
 		# charge amount
-		charge = Decimal(self.args['charge']).normalize()
-		charge_scale = int(charge.as_tuple()[2])
-		charge_int = long(charge.shift(abs(charge_scale)))
-		r1.write_int64( charge_int ) # value
+		(charge_value, charge_scale) = decimal_to_parts(Decimal(self.args['charge']))
+
+		r1.write_int64( charge_value ) # value
 		r1.write_int16( charge_scale ) # scale
 
 		r1.write_fixed_string( "USD", size=3 ) # currency
@@ -214,7 +213,7 @@ class RmoteCall:
 		p1.write_int64( now + 24 * 3600 ) # certificate expiry (in 24 hrs)
 
 		# payment-limit
-		payment = Decimal(self.args['limit']).normalize()
+		payment = Decimal(self.args['limit'])
 		payment_scale = int(payment.as_tuple()[2])
 		payment_int = long(payment.shift(abs(payment_scale)))
 		p1.write_int64( payment_int ) # value
@@ -416,6 +415,18 @@ class RmoteCall:
 
 		# return a lightweight PCOS document 
 		return res
+
+
+def decimal_to_parts(value):
+	'''Breaks down the decimal into a tuple of value and scale'''
+	value = value.normalize()
+	exp = int( value.as_tuple()[2] )
+	# if scale is negative, we have to shift to preserve precision
+	if exp < 0:
+		return (long(value.shift(-(exp))), exp)
+	else:
+		return (long(value), 0)
+
 
 if __name__ == "__main__":
 	# start with basic logger configuration

@@ -258,7 +258,8 @@ class RmoteCall:
 		mat = self.args['mat'] 
 		if len( mat ) != 40:
 			raise RuntimeError("MAT must be 40-characters long" % self.cmd)
-		priv.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 )
+		priv.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 ) # mat
+		priv.write_short_string( '', max=20 ) # ref-data
 		
 		# sign the public-block
 		#   * first, produce the checksum

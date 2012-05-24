@@ -166,7 +166,40 @@ class RmoteCall:
 
 		res = self.send( req )
 		if res.message_id == "Ok":
-			log.info('RETN Preauthorization Success' )
+			log.info('RETN Successful preauthorization' )
+
+
+	def transfer(self):
+		'''Sends a Transfer Request'''
+		pta_encoded = self.payment()
+
+		# package PTA into a block
+		pta = pcos.Block( 'Pa', 512, 'O' )
+		pta.write_fixed_string(pta_encoded, size=len(pta_encoded))
+
+		# create transfer-request block
+		r1 = pcos.Block( 'R1', 1024, 'O' )
+		r1.write_fixed_string( binascii.unhexlify( self.args['receiver_mat'] ), size=20 ) # mat
+		r1.write_short_string( '', max=127 ) # ref_data
+		r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
+
+		# transfer amount
+		(charge_value, charge_scale) = decimal_to_parts(Decimal(self.args['transfer']))
+
+		r1.write_int64( charge_value ) # value
+		r1.write_int16( charge_scale ) # scale
+
+		r1.write_fixed_string( "USD", size=3 ) # currency
+		r1.write_long_string( 'John paid his dept' ) # comment
+
+		# package everything and ship out
+		req = pcos.Doc( name="Tt" )
+		req.add( pta )
+		req.add( r1 )
+
+		res = self.send( req )
+		if res.message_id == "Ok":
+			log.info('RETN Successful transfer' )
 
 
 	def charge(self):
@@ -201,7 +234,7 @@ class RmoteCall:
 
 		res = self.send( req )
 		if res.message_id == "Ok":
-			log.info('RETN Successful Charge' )
+			log.info('RETN Successful charge' )
 
 
 	def payment(self):
@@ -371,6 +404,7 @@ class RmoteCall:
 			"history": self.history,
 			"balance": self.balance,
 			"charge": self.charge,
+			"transfer": self.transfer,
 		}		
 
 	# invoked if user asks for an unknown command

@@ -61,34 +61,56 @@
 		0D20D8A215571ED300098838 /* PCOSMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89B15571ED300098838 /* PCOSMessage.m */; };
 		0D20D8A315571ED300098838 /* PushCoinMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89D15571ED300098838 /* PushCoinMessages.m */; };
 		0D20D8A415571ED300098838 /* PCOSTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D20D89F15571ED300098838 /* PCOSTypes.m */; };
-		0D312FDC156619D600A01753 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D312FDB156619D600A01753 /* logo.png */; };
+		0D37760E15683949003FB8B3 /* PaymentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D37760D15683949003FB8B3 /* PaymentCell.m */; };
+		0D377612156839BC003FB8B3 /* Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D377611156839BC003FB8B3 /* Common.m */; };
+		0D37761615684E8B003FB8B3 /* PushCoinPayment.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D37761515684E8B003FB8B3 /* PushCoinPayment.m */; };
 		0D3EA61A154872FB0088EFE1 /* pushcoin_rsa.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0D3EA619154872FB0088EFE1 /* pushcoin_rsa.pub */; };
 		0D3EA61D154877670088EFE1 /* OpenSSLWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA61C154877670088EFE1 /* OpenSSLWrapper.mm */; };
 		0D3EA6201548783D0088EFE1 /* PushCoinConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA61F1548783D0088EFE1 /* PushCoinConfig.m */; };
 		0D3EA6231548FB0A0088EFE1 /* PushCoinWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */; };
 		0D3EA63F154936C50088EFE1 /* ChallengeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA63E154936C50088EFE1 /* ChallengeController.m */; };
+		0D4923CA1568C37A00626AC2 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F8A1542031C00634A79 /* libiconv.dylib */; };
+		0D4923D7156B274400626AC2 /* libGMGridView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D4923D4156B272C00626AC2 /* libGMGridView.a */; };
+		0D4923E4156B3CA900626AC2 /* 1.00.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923D8156B3CA900626AC2 /* 1.00.png */; };
+		0D4923E5156B3CA900626AC2 /* 1.00@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923D9156B3CA900626AC2 /* 1.00@2x.png */; };
+		0D4923E6156B3CA900626AC2 /* 5.00.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923DA156B3CA900626AC2 /* 5.00.png */; };
+		0D4923E7156B3CA900626AC2 /* 5.00@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923DB156B3CA900626AC2 /* 5.00@2x.png */; };
+		0D4923E8156B3CA900626AC2 /* 10.00.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923DC156B3CA900626AC2 /* 10.00.png */; };
+		0D4923E9156B3CA900626AC2 /* 10.00@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923DD156B3CA900626AC2 /* 10.00@2x.png */; };
+		0D4923EA156B3CA900626AC2 /* 50.00.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923DE156B3CA900626AC2 /* 50.00.png */; };
+		0D4923EB156B3CA900626AC2 /* 50.00@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923DF156B3CA900626AC2 /* 50.00@2x.png */; };
+		0D4923EC156B3CA900626AC2 /* 100.00.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923E0156B3CA900626AC2 /* 100.00.png */; };
+		0D4923ED156B3CA900626AC2 /* 100.00@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923E1156B3CA900626AC2 /* 100.00@2x.png */; };
+		0D4923EE156B3CA900626AC2 /* 500.00.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923E2156B3CA900626AC2 /* 500.00.png */; };
+		0D4923EF156B3CA900626AC2 /* 500.00@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923E3156B3CA900626AC2 /* 500.00@2x.png */; };
 		0D7A8F80154202EC00634A79 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F7E154202EC00634A79 /* AddressBook.framework */; };
 		0D7A8F81154202EC00634A79 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F7F154202EC00634A79 /* AddressBookUI.framework */; };
 		0D7A8F83154202F700634A79 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F82154202F700634A79 /* AudioToolbox.framework */; };
 		0D7A8F851542030100634A79 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F841542030100634A79 /* AVFoundation.framework */; };
 		0D7A8F881542031400634A79 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F861542031400634A79 /* CoreMedia.framework */; };
 		0D7A8F891542031400634A79 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F871542031400634A79 /* CoreVideo.framework */; };
-		0D7A8F8B1542031C00634A79 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F8A1542031C00634A79 /* libiconv.dylib */; };
 		0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8FBE154218B700634A79 /* QuartzCore.framework */; };
 		0D7A8FE51542609600634A79 /* SettingsController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D7A8FE41542609600634A79 /* SettingsController.mm */; };
 		0D7A8FF71543614000634A79 /* QRViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D7A8FF61543614000634A79 /* QRViewController.mm */; };
 		0D7E10B9155FF82800429C9A /* NSData+BytesToHexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */; };
 		0D7E10BC155FF8E200429C9A /* NSString+HexStringToBytes.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */; };
+		0D887E3B15688DC9004228F3 /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D887E3A15688DC9004228F3 /* title.png */; };
+		0D887E3F15689CD5004228F3 /* display_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D887E3E15689CD5004228F3 /* display_background.png */; };
+		0D887E4115689CE0004228F3 /* display_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D887E4015689CE0004228F3 /* display_background@2x.png */; };
+		0D887E4315689F20004228F3 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D887E4215689F20004228F3 /* logo.png */; };
+		0D887E461568A0CD004228F3 /* shortcut_grid_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D887E441568A0CD004228F3 /* shortcut_grid_background.png */; };
+		0D887E471568A0CD004228F3 /* shortcut_grid_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D887E451568A0CD004228F3 /* shortcut_grid_background@2x.png */; };
 		0DACCD741558A02A00A69DED /* PCOSParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DACCD731558A02A00A69DED /* PCOSParser.m */; };
 		0DAFD24C1547A8180010459A /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DAFD24D1547ACBA0010459A /* Security.framework */; };
 		0DB67A5D1564C8C200CA997C /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DB67A5C1564C8C200CA997C /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		0DBC491B1543BF3700E56EDF /* VSKeypadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DBC491A1543BF3700E56EDF /* VSKeypadView.m */; };
+		0DBC491B1543BF3700E56EDF /* KeypadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DBC491A1543BF3700E56EDF /* KeypadView.m */; };
 		0DCCD2271564E221006C9526 /* pushcoin_dsa.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0DCCD2261564E221006C9526 /* pushcoin_dsa.pub */; };
 		0DD692B615660FC500391E25 /* iphone_delete_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DD692B515660FC500391E25 /* iphone_delete_button.png */; };
 		0DE9FA72155A1D4700FACDA7 /* RegistrationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */; };
-		0DE9FA7E155A278500FACDA7 /* libAQGridView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DE9FA7B155A277700FACDA7 /* libAQGridView.a */; };
-		0DE9FA82155A2B0100FACDA7 /* SpringBoardIconCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9FA81155A2B0100FACDA7 /* SpringBoardIconCell.m */; };
+		0DED6564156DB2AF00E27A72 /* KeypadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DED6563156DB2AF00E27A72 /* KeypadController.m */; };
+		0DED6567156DCDE400E27A72 /* remove.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DED6565156DCDE400E27A72 /* remove.png */; };
+		0DED6568156DCDE400E27A72 /* remove@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DED6566156DCDE400E27A72 /* remove@2x.png */; };
 		0DF680261545B28500F5E784 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 0DF680251545B28500F5E784 /* README */; };
 		0DF6C5C81563446600E28B99 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DF6C5C71563446600E28B99 /* MainTabBarController.m */; };
 		0DF6C5D115636C9400E28B99 /* PushCoinLogo-Large.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DF6C5CF15636C9400E28B99 /* PushCoinLogo-Large.png */; };
@@ -160,19 +182,19 @@
 			remoteGlobalIDString = 9672D35613BD662F0002B0E2;
 			remoteInfo = qrencoder;
 		};
-		0DE9FA7A155A277700FACDA7 /* PBXContainerItemProxy */ = {
+		0D4923D3156B272C00626AC2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 0DE9FA73155A277600FACDA7 /* AQGridView.xcodeproj */;
+			containerPortal = 0D4923CC156B272C00626AC2 /* GMGridView.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC07E0554694100DB518D;
-			remoteInfo = AQGridView;
+			remoteGlobalIDString = 78509312149FAC2E000787E4;
+			remoteInfo = GMGridView;
 		};
-		0DE9FA7C155A278000FACDA7 /* PBXContainerItemProxy */ = {
+		0D4923D5156B273F00626AC2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 0DE9FA73155A277600FACDA7 /* AQGridView.xcodeproj */;
+			containerPortal = 0D4923CC156B272C00626AC2 /* GMGridView.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC07D0554694100DB518D;
-			remoteInfo = AQGridView;
+			remoteGlobalIDString = 78509311149FAC2E000787E4;
+			remoteInfo = GMGridView;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -239,7 +261,12 @@
 		0D20D89E15571ED300098838 /* PCOSTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSTypes.h; sourceTree = "<group>"; };
 		0D20D89F15571ED300098838 /* PCOSTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSTypes.m; sourceTree = "<group>"; };
 		0D20D8A515576E1700098838 /* PCOS-CPP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PCOS-CPP.h"; sourceTree = "<group>"; };
-		0D312FDB156619D600A01753 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		0D37760C15683949003FB8B3 /* PaymentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PaymentCell.h; path = ../PaymentCell.h; sourceTree = "<group>"; };
+		0D37760D15683949003FB8B3 /* PaymentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PaymentCell.m; path = ../PaymentCell.m; sourceTree = "<group>"; };
+		0D377610156839BC003FB8B3 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Common.h; path = PushCoin/Common.h; sourceTree = "<group>"; };
+		0D377611156839BC003FB8B3 /* Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Common.m; path = PushCoin/Common.m; sourceTree = "<group>"; };
+		0D37761415684E8B003FB8B3 /* PushCoinPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushCoinPayment.h; sourceTree = "<group>"; };
+		0D37761515684E8B003FB8B3 /* PushCoinPayment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushCoinPayment.m; sourceTree = "<group>"; };
 		0D3EA619154872FB0088EFE1 /* pushcoin_rsa.pub */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = pushcoin_rsa.pub; sourceTree = "<group>"; };
 		0D3EA61B154877670088EFE1 /* OpenSSLWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenSSLWrapper.h; sourceTree = "<group>"; };
 		0D3EA61C154877670088EFE1 /* OpenSSLWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenSSLWrapper.mm; sourceTree = "<group>"; };
@@ -249,6 +276,19 @@
 		0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushCoinWebService.m; sourceTree = "<group>"; };
 		0D3EA63D154936C50088EFE1 /* ChallengeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChallengeController.h; sourceTree = "<group>"; };
 		0D3EA63E154936C50088EFE1 /* ChallengeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChallengeController.m; sourceTree = "<group>"; };
+		0D4923CC156B272C00626AC2 /* GMGridView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GMGridView.xcodeproj; path = ../../../v1/GMGridView/GMGridView/GMGridView.xcodeproj; sourceTree = "<group>"; };
+		0D4923D8156B3CA900626AC2 /* 1.00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.00.png; sourceTree = "<group>"; };
+		0D4923D9156B3CA900626AC2 /* 1.00@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1.00@2x.png"; sourceTree = "<group>"; };
+		0D4923DA156B3CA900626AC2 /* 5.00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 5.00.png; sourceTree = "<group>"; };
+		0D4923DB156B3CA900626AC2 /* 5.00@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "5.00@2x.png"; sourceTree = "<group>"; };
+		0D4923DC156B3CA900626AC2 /* 10.00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 10.00.png; sourceTree = "<group>"; };
+		0D4923DD156B3CA900626AC2 /* 10.00@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "10.00@2x.png"; sourceTree = "<group>"; };
+		0D4923DE156B3CA900626AC2 /* 50.00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 50.00.png; sourceTree = "<group>"; };
+		0D4923DF156B3CA900626AC2 /* 50.00@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "50.00@2x.png"; sourceTree = "<group>"; };
+		0D4923E0156B3CA900626AC2 /* 100.00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 100.00.png; sourceTree = "<group>"; };
+		0D4923E1156B3CA900626AC2 /* 100.00@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "100.00@2x.png"; sourceTree = "<group>"; };
+		0D4923E2156B3CA900626AC2 /* 500.00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 500.00.png; sourceTree = "<group>"; };
+		0D4923E3156B3CA900626AC2 /* 500.00@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "500.00@2x.png"; sourceTree = "<group>"; };
 		0D7A8F7E154202EC00634A79 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		0D7A8F7F154202EC00634A79 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		0D7A8F82154202F700634A79 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -264,27 +304,34 @@
 		0D7A8FE61542633100634A79 /* ZXingWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZXingWidget.xcodeproj; path = "../../../v1/zxing-2.0/iphone/ZXingWidget/ZXingWidget.xcodeproj"; sourceTree = "<group>"; };
 		0D7A8FF51543614000634A79 /* QRViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRViewController.h; sourceTree = "<group>"; };
 		0D7A8FF61543614000634A79 /* QRViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QRViewController.mm; sourceTree = "<group>"; };
-		0D7E10B7155FF82800429C9A /* NSData+BytesToHexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+BytesToHexString.h"; sourceTree = "<group>"; };
-		0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+BytesToHexString.m"; sourceTree = "<group>"; };
-		0D7E10BA155FF8E200429C9A /* NSString+HexStringToBytes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HexStringToBytes.h"; sourceTree = "<group>"; };
-		0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HexStringToBytes.m"; sourceTree = "<group>"; };
+		0D7E10B7155FF82800429C9A /* NSData+BytesToHexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+BytesToHexString.h"; path = "PushCoin/NSData+BytesToHexString.h"; sourceTree = "<group>"; };
+		0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+BytesToHexString.m"; path = "PushCoin/NSData+BytesToHexString.m"; sourceTree = "<group>"; };
+		0D7E10BA155FF8E200429C9A /* NSString+HexStringToBytes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+HexStringToBytes.h"; path = "PushCoin/NSString+HexStringToBytes.h"; sourceTree = "<group>"; };
+		0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+HexStringToBytes.m"; path = "PushCoin/NSString+HexStringToBytes.m"; sourceTree = "<group>"; };
+		0D887E3A15688DC9004228F3 /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
+		0D887E3E15689CD5004228F3 /* display_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = display_background.png; sourceTree = "<group>"; };
+		0D887E4015689CE0004228F3 /* display_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "display_background@2x.png"; sourceTree = "<group>"; };
+		0D887E4215689F20004228F3 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		0D887E441568A0CD004228F3 /* shortcut_grid_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shortcut_grid_background.png; sourceTree = "<group>"; };
+		0D887E451568A0CD004228F3 /* shortcut_grid_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shortcut_grid_background@2x.png"; sourceTree = "<group>"; };
 		0DACCD721558A02A00A69DED /* PCOSParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSParser.h; sourceTree = "<group>"; };
 		0DACCD731558A02A00A69DED /* PCOSParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSParser.m; sourceTree = "<group>"; };
 		0DAFD23115478E5E0010459A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "../../../v1/openssl-xcode/openssl.xcodeproj"; sourceTree = "<group>"; };
 		0DAFD24A1547A8180010459A /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		0DAFD24B1547A8180010459A /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		0DAFD24D1547ACBA0010459A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		0DB67A5B1564C8C200CA997C /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
-		0DB67A5C1564C8C200CA997C /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
-		0DBC49191543BF3700E56EDF /* VSKeypadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VSKeypadView.h; sourceTree = "<group>"; };
-		0DBC491A1543BF3700E56EDF /* VSKeypadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VSKeypadView.m; sourceTree = "<group>"; };
+		0DB67A5B1564C8C200CA997C /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+Base64.h"; path = "PushCoin/NSData+Base64.h"; sourceTree = "<group>"; };
+		0DB67A5C1564C8C200CA997C /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+Base64.m"; path = "PushCoin/NSData+Base64.m"; sourceTree = "<group>"; };
+		0DBC49191543BF3700E56EDF /* KeypadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeypadView.h; sourceTree = "<group>"; };
+		0DBC491A1543BF3700E56EDF /* KeypadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeypadView.m; sourceTree = "<group>"; };
 		0DCCD2261564E221006C9526 /* pushcoin_dsa.pub */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = pushcoin_dsa.pub; sourceTree = "<group>"; };
 		0DD692B515660FC500391E25 /* iphone_delete_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphone_delete_button.png; sourceTree = "<group>"; };
 		0DE9FA70155A1D4700FACDA7 /* RegistrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationController.h; sourceTree = "<group>"; };
 		0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegistrationController.m; sourceTree = "<group>"; };
-		0DE9FA73155A277600FACDA7 /* AQGridView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AQGridView.xcodeproj; path = ../../../v1/AQGridView/AQGridView.xcodeproj; sourceTree = "<group>"; };
-		0DE9FA80155A2B0100FACDA7 /* SpringBoardIconCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpringBoardIconCell.h; sourceTree = "<group>"; };
-		0DE9FA81155A2B0100FACDA7 /* SpringBoardIconCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpringBoardIconCell.m; sourceTree = "<group>"; };
+		0DED6562156DB2AF00E27A72 /* KeypadController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeypadController.h; sourceTree = "<group>"; };
+		0DED6563156DB2AF00E27A72 /* KeypadController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeypadController.m; sourceTree = "<group>"; };
+		0DED6565156DCDE400E27A72 /* remove.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = remove.png; sourceTree = "<group>"; };
+		0DED6566156DCDE400E27A72 /* remove@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "remove@2x.png"; sourceTree = "<group>"; };
 		0DF680251545B28500F5E784 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		0DF6C5C61563446500E28B99 /* MainTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarController.h; sourceTree = "<group>"; };
 		0DF6C5C71563446600E28B99 /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
@@ -297,13 +344,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D4923D7156B274400626AC2 /* libGMGridView.a in Frameworks */,
+				0D4923CA1568C37A00626AC2 /* libiconv.dylib in Frameworks */,
 				0D7A8FBF154218B700634A79 /* QuartzCore.framework in Frameworks */,
-				0DE9FA7E155A278500FACDA7 /* libAQGridView.a in Frameworks */,
 				0D0B3831155A0D15002BF845 /* libcrypto.a in Frameworks */,
 				0D0B3832155A0D15002BF845 /* libqrencoder.a in Frameworks */,
 				0D0B3833155A0D15002BF845 /* libZXingWidget.a in Frameworks */,
 				0DAFD24E1547ACBB0010459A /* Security.framework in Frameworks */,
-				0D7A8F8B1542031C00634A79 /* libiconv.dylib in Frameworks */,
 				0D7A8F881542031400634A79 /* CoreMedia.framework in Frameworks */,
 				0D7A8F891542031400634A79 /* CoreVideo.framework in Frameworks */,
 				0D7A8F851542030100634A79 /* AVFoundation.framework in Frameworks */,
@@ -348,8 +395,6 @@
 			isa = PBXGroup;
 			children = (
 				0D19E2D21541CCAE00C8671B /* PushCoin.App */,
-				0DAFD22D15475A9E0010459A /* PushCoin */,
-				0DBC491C1543C58200E56EDF /* KeyPad */,
 				0D7A8F7A154202A800634A79 /* Dependencies */,
 				0DBC491D1543C59A00E56EDF /* Resources */,
 				0D19E2CB1541CCAE00C8671B /* Frameworks */,
@@ -389,26 +434,12 @@
 		0D19E2D21541CCAE00C8671B /* PushCoin.App */ = {
 			isa = PBXGroup;
 			children = (
+				0DAFD22D15475A9E0010459A /* PushCoin */,
+				0D37760B15683916003FB8B3 /* Utilities */,
+				0D37761315683B17003FB8B3 /* ViewControllers */,
 				0D19E2D31541CCAE00C8671B /* Supporting Files */,
 				0D19E2DB1541CCAE00C8671B /* AppDelegate.h */,
 				0D19E2DC1541CCAE00C8671B /* AppDelegate.m */,
-				0D19E2DE1541CCAE00C8671B /* MainStoryboard.storyboard */,
-				0D19E2E11541CCAE00C8671B /* PayController.h */,
-				0D19E2E21541CCAE00C8671B /* PayController.mm */,
-				0D19E2E81541CCAE00C8671B /* ReceiveController.h */,
-				0D19E2E91541CCAE00C8671B /* ReceiveController.mm */,
-				0D7A8FE31542609600634A79 /* SettingsController.h */,
-				0D7A8FE41542609600634A79 /* SettingsController.mm */,
-				0D7A8FF51543614000634A79 /* QRViewController.h */,
-				0D7A8FF61543614000634A79 /* QRViewController.mm */,
-				0D3EA63D154936C50088EFE1 /* ChallengeController.h */,
-				0D3EA63E154936C50088EFE1 /* ChallengeController.m */,
-				0DE9FA70155A1D4700FACDA7 /* RegistrationController.h */,
-				0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */,
-				0DE9FA80155A2B0100FACDA7 /* SpringBoardIconCell.h */,
-				0DE9FA81155A2B0100FACDA7 /* SpringBoardIconCell.m */,
-				0DF6C5C61563446500E28B99 /* MainTabBarController.h */,
-				0DF6C5C71563446600E28B99 /* MainTabBarController.m */,
 			);
 			name = PushCoin.App;
 			path = PushCoin;
@@ -423,6 +454,56 @@
 				0D19E2DA1541CCAE00C8671B /* PushCoin-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0D37760A15683744003FB8B3 /* Scanner */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Scanner;
+			sourceTree = "<group>";
+		};
+		0D37760B15683916003FB8B3 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				0DB67A5B1564C8C200CA997C /* NSData+Base64.h */,
+				0DB67A5C1564C8C200CA997C /* NSData+Base64.m */,
+				0D7E10B7155FF82800429C9A /* NSData+BytesToHexString.h */,
+				0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */,
+				0D7E10BA155FF8E200429C9A /* NSString+HexStringToBytes.h */,
+				0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */,
+				0D377610156839BC003FB8B3 /* Common.h */,
+				0D377611156839BC003FB8B3 /* Common.m */,
+			);
+			name = Utilities;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		0D37761315683B17003FB8B3 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				0DBC491C1543C58200E56EDF /* KeyPad */,
+				0D19E2DE1541CCAE00C8671B /* MainStoryboard.storyboard */,
+				0DF6C5C61563446500E28B99 /* MainTabBarController.h */,
+				0DF6C5C71563446600E28B99 /* MainTabBarController.m */,
+				0D19E2E11541CCAE00C8671B /* PayController.h */,
+				0D19E2E21541CCAE00C8671B /* PayController.mm */,
+				0D37760C15683949003FB8B3 /* PaymentCell.h */,
+				0D37760D15683949003FB8B3 /* PaymentCell.m */,
+				0D19E2E81541CCAE00C8671B /* ReceiveController.h */,
+				0D19E2E91541CCAE00C8671B /* ReceiveController.mm */,
+				0D7A8FE31542609600634A79 /* SettingsController.h */,
+				0D7A8FE41542609600634A79 /* SettingsController.mm */,
+				0D7A8FF51543614000634A79 /* QRViewController.h */,
+				0D7A8FF61543614000634A79 /* QRViewController.mm */,
+				0D3EA63D154936C50088EFE1 /* ChallengeController.h */,
+				0D3EA63E154936C50088EFE1 /* ChallengeController.m */,
+				0DE9FA70155A1D4700FACDA7 /* RegistrationController.h */,
+				0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */,
+				0DED6562156DB2AF00E27A72 /* KeypadController.h */,
+				0DED6563156DB2AF00E27A72 /* KeypadController.m */,
+			);
+			name = ViewControllers;
 			sourceTree = "<group>";
 		};
 		0D3EA6BD154F629F0088EFE1 /* Messaging */ = {
@@ -441,10 +522,18 @@
 			name = Messaging;
 			sourceTree = "<group>";
 		};
+		0D4923CD156B272C00626AC2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0D4923D4156B272C00626AC2 /* libGMGridView.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0D7A8F7A154202A800634A79 /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
-				0DE9FA73155A277600FACDA7 /* AQGridView.xcodeproj */,
+				0D4923CC156B272C00626AC2 /* GMGridView.xcodeproj */,
 				0DAFD23115478E5E0010459A /* openssl.xcodeproj */,
 				0D7A8FE61542633100634A79 /* ZXingWidget.xcodeproj */,
 				0D7A8FC015421B7000634A79 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */,
@@ -452,23 +541,10 @@
 			name = Dependencies;
 			sourceTree = "<group>";
 		};
-		0D7E10B6155FF44700429C9A /* Utilities */ = {
-			isa = PBXGroup;
-			children = (
-				0DB67A5B1564C8C200CA997C /* NSData+Base64.h */,
-				0DB67A5C1564C8C200CA997C /* NSData+Base64.m */,
-				0D7E10B7155FF82800429C9A /* NSData+BytesToHexString.h */,
-				0D7E10B8155FF82800429C9A /* NSData+BytesToHexString.m */,
-				0D7E10BA155FF8E200429C9A /* NSString+HexStringToBytes.h */,
-				0D7E10BB155FF8E200429C9A /* NSString+HexStringToBytes.m */,
-			);
-			name = Utilities;
-			sourceTree = "<group>";
-		};
 		0DAFD22D15475A9E0010459A /* PushCoin */ = {
 			isa = PBXGroup;
 			children = (
-				0D7E10B6155FF44700429C9A /* Utilities */,
+				0D37760A15683744003FB8B3 /* Scanner */,
 				0DAFD2491547A7ED0010459A /* Security */,
 				0D3EA6BD154F629F0088EFE1 /* Messaging */,
 				0D3EA61E1548783D0088EFE1 /* PushCoinConfig.h */,
@@ -477,8 +553,10 @@
 				0D20D89D15571ED300098838 /* PushCoinMessages.m */,
 				0D3EA6211548FB0A0088EFE1 /* PushCoinWebService.h */,
 				0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */,
+				0D37761415684E8B003FB8B3 /* PushCoinPayment.h */,
+				0D37761515684E8B003FB8B3 /* PushCoinPayment.m */,
 			);
-			path = PushCoin;
+			name = PushCoin;
 			sourceTree = "<group>";
 		};
 		0DAFD2491547A7ED0010459A /* Security */ = {
@@ -539,17 +617,37 @@
 		0DBC491C1543C58200E56EDF /* KeyPad */ = {
 			isa = PBXGroup;
 			children = (
-				0DBC49191543BF3700E56EDF /* VSKeypadView.h */,
-				0DBC491A1543BF3700E56EDF /* VSKeypadView.m */,
+				0DBC49191543BF3700E56EDF /* KeypadView.h */,
+				0DBC491A1543BF3700E56EDF /* KeypadView.m */,
 				0DBC48D21543BF2F00E56EDF /* KeyBGs */,
 			);
-			path = KeyPad;
+			name = KeyPad;
+			path = ../KeyPad;
 			sourceTree = "<group>";
 		};
 		0DBC491D1543C59A00E56EDF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				0D312FDB156619D600A01753 /* logo.png */,
+				0DED6565156DCDE400E27A72 /* remove.png */,
+				0DED6566156DCDE400E27A72 /* remove@2x.png */,
+				0D4923D8156B3CA900626AC2 /* 1.00.png */,
+				0D4923D9156B3CA900626AC2 /* 1.00@2x.png */,
+				0D4923DA156B3CA900626AC2 /* 5.00.png */,
+				0D4923DB156B3CA900626AC2 /* 5.00@2x.png */,
+				0D4923DC156B3CA900626AC2 /* 10.00.png */,
+				0D4923DD156B3CA900626AC2 /* 10.00@2x.png */,
+				0D4923DE156B3CA900626AC2 /* 50.00.png */,
+				0D4923DF156B3CA900626AC2 /* 50.00@2x.png */,
+				0D4923E0156B3CA900626AC2 /* 100.00.png */,
+				0D4923E1156B3CA900626AC2 /* 100.00@2x.png */,
+				0D4923E2156B3CA900626AC2 /* 500.00.png */,
+				0D4923E3156B3CA900626AC2 /* 500.00@2x.png */,
+				0D887E441568A0CD004228F3 /* shortcut_grid_background.png */,
+				0D887E451568A0CD004228F3 /* shortcut_grid_background@2x.png */,
+				0D887E4215689F20004228F3 /* logo.png */,
+				0D887E4015689CE0004228F3 /* display_background@2x.png */,
+				0D887E3E15689CD5004228F3 /* display_background.png */,
+				0D887E3A15688DC9004228F3 /* title.png */,
 				0DD692B515660FC500391E25 /* iphone_delete_button.png */,
 				0DF6C5CF15636C9400E28B99 /* PushCoinLogo-Large.png */,
 				0DF6C5D015636C9400E28B99 /* PushCoinLogo-Small.png */,
@@ -559,14 +657,6 @@
 				0D19E2ED1541CCAE00C8671B /* second@2x.png */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
-		};
-		0DE9FA74155A277600FACDA7 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0DE9FA7B155A277700FACDA7 /* libAQGridView.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -584,7 +674,7 @@
 				0D3EA6681549CB070088EFE1 /* PBXBuildRule */,
 			);
 			dependencies = (
-				0DE9FA7D155A278000FACDA7 /* PBXTargetDependency */,
+				0D4923D6156B273F00626AC2 /* PBXTargetDependency */,
 				0D0B382A155A0D06002BF845 /* PBXTargetDependency */,
 				0D0B382E155A0D06002BF845 /* PBXTargetDependency */,
 				0D0B3830155A0D06002BF845 /* PBXTargetDependency */,
@@ -614,8 +704,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 0DE9FA74155A277600FACDA7 /* Products */;
-					ProjectRef = 0DE9FA73155A277600FACDA7 /* AQGridView.xcodeproj */;
+					ProductGroup = 0D4923CD156B272C00626AC2 /* Products */;
+					ProjectRef = 0D4923CC156B272C00626AC2 /* GMGridView.xcodeproj */;
 				},
 				{
 					ProductGroup = 0D0B37CD155A0B73002BF845 /* Products */;
@@ -666,11 +756,11 @@
 			remoteRef = 0D0B37E3155A0B94002BF845 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0DE9FA7B155A277700FACDA7 /* libAQGridView.a */ = {
+		0D4923D4156B272C00626AC2 /* libGMGridView.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libAQGridView.a;
-			remoteRef = 0DE9FA7A155A277700FACDA7 /* PBXContainerItemProxy */;
+			path = libGMGridView.a;
+			remoteRef = 0D4923D3156B272C00626AC2 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -726,7 +816,26 @@
 				0DF6C5D215636C9400E28B99 /* PushCoinLogo-Small.png in Resources */,
 				0DCCD2271564E221006C9526 /* pushcoin_dsa.pub in Resources */,
 				0DD692B615660FC500391E25 /* iphone_delete_button.png in Resources */,
-				0D312FDC156619D600A01753 /* logo.png in Resources */,
+				0D887E3B15688DC9004228F3 /* title.png in Resources */,
+				0D887E3F15689CD5004228F3 /* display_background.png in Resources */,
+				0D887E4115689CE0004228F3 /* display_background@2x.png in Resources */,
+				0D887E4315689F20004228F3 /* logo.png in Resources */,
+				0D887E461568A0CD004228F3 /* shortcut_grid_background.png in Resources */,
+				0D887E471568A0CD004228F3 /* shortcut_grid_background@2x.png in Resources */,
+				0D4923E4156B3CA900626AC2 /* 1.00.png in Resources */,
+				0D4923E5156B3CA900626AC2 /* 1.00@2x.png in Resources */,
+				0D4923E6156B3CA900626AC2 /* 5.00.png in Resources */,
+				0D4923E7156B3CA900626AC2 /* 5.00@2x.png in Resources */,
+				0D4923E8156B3CA900626AC2 /* 10.00.png in Resources */,
+				0D4923E9156B3CA900626AC2 /* 10.00@2x.png in Resources */,
+				0D4923EA156B3CA900626AC2 /* 50.00.png in Resources */,
+				0D4923EB156B3CA900626AC2 /* 50.00@2x.png in Resources */,
+				0D4923EC156B3CA900626AC2 /* 100.00.png in Resources */,
+				0D4923ED156B3CA900626AC2 /* 100.00@2x.png in Resources */,
+				0D4923EE156B3CA900626AC2 /* 500.00.png in Resources */,
+				0D4923EF156B3CA900626AC2 /* 500.00@2x.png in Resources */,
+				0DED6567156DCDE400E27A72 /* remove.png in Resources */,
+				0DED6568156DCDE400E27A72 /* remove@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -743,7 +852,7 @@
 				0D19E2EA1541CCAE00C8671B /* ReceiveController.mm in Sources */,
 				0D7A8FE51542609600634A79 /* SettingsController.mm in Sources */,
 				0D7A8FF71543614000634A79 /* QRViewController.mm in Sources */,
-				0DBC491B1543BF3700E56EDF /* VSKeypadView.m in Sources */,
+				0DBC491B1543BF3700E56EDF /* KeypadView.m in Sources */,
 				0DAFD24C1547A8180010459A /* KeychainItemWrapper.m in Sources */,
 				0D3EA61D154877670088EFE1 /* OpenSSLWrapper.mm in Sources */,
 				0D3EA6201548783D0088EFE1 /* PushCoinConfig.m in Sources */,
@@ -755,11 +864,14 @@
 				0D20D8A415571ED300098838 /* PCOSTypes.m in Sources */,
 				0DACCD741558A02A00A69DED /* PCOSParser.m in Sources */,
 				0DE9FA72155A1D4700FACDA7 /* RegistrationController.m in Sources */,
-				0DE9FA82155A2B0100FACDA7 /* SpringBoardIconCell.m in Sources */,
 				0D7E10B9155FF82800429C9A /* NSData+BytesToHexString.m in Sources */,
 				0D7E10BC155FF8E200429C9A /* NSString+HexStringToBytes.m in Sources */,
 				0DF6C5C81563446600E28B99 /* MainTabBarController.m in Sources */,
 				0DB67A5D1564C8C200CA997C /* NSData+Base64.m in Sources */,
+				0D37760E15683949003FB8B3 /* PaymentCell.m in Sources */,
+				0D377612156839BC003FB8B3 /* Common.m in Sources */,
+				0D37761615684E8B003FB8B3 /* PushCoinPayment.m in Sources */,
+				0DED6564156DB2AF00E27A72 /* KeypadController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -781,10 +893,10 @@
 			name = qrencoder;
 			targetProxy = 0D0B382F155A0D06002BF845 /* PBXContainerItemProxy */;
 		};
-		0DE9FA7D155A278000FACDA7 /* PBXTargetDependency */ = {
+		0D4923D6156B273F00626AC2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = AQGridView;
-			targetProxy = 0DE9FA7C155A278000FACDA7 /* PBXContainerItemProxy */;
+			name = GMGridView;
+			targetProxy = 0D4923D5156B273F00626AC2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -832,8 +944,8 @@
 					"/Users/gilbert/v1/zxing-2.0/iphone/ZXingWidget/Classes",
 					/Users/gilbert/v1/QRCodeEncoderObjectiveC/QRCodeEncoderObjectiveCAtGithub,
 					"/Users/gilbert/v1/zxing-2.0/cpp/core/src/",
+					/Users/gilbert/v1/GMGridView/GMGridView,
 					"/Users/gilbert/v1/openssl-xcode/openssl/include",
-					/Users/gilbert/v1/AQGridView/Classes,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = YES;
@@ -859,8 +971,8 @@
 					"/Users/gilbert/v1/zxing-2.0/iphone/ZXingWidget/Classes",
 					/Users/gilbert/v1/QRCodeEncoderObjectiveC/QRCodeEncoderObjectiveCAtGithub,
 					"/Users/gilbert/v1/zxing-2.0/cpp/core/src/",
+					/Users/gilbert/v1/GMGridView/GMGridView,
 					"/Users/gilbert/v1/openssl-xcode/openssl/include",
-					/Users/gilbert/v1/AQGridView/Classes,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				ONLY_ACTIVE_ARCH = YES;

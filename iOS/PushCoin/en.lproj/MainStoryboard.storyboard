@@ -15,63 +15,68 @@
                         <rect key="frame" x="0.0" y="20" width="320" height="411"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="bezel" textAlignment="right" minimumFontSize="17" clearButtonMode="always" id="DnF-bc-vd7">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="87"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.81087139798757679" green="1" blue="0.8968138736432657" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="50"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="numbersAndPunctuation" enablesReturnKeyAutomatically="YES"/>
-                                <connections>
-                                    <action selector="amountTextFieldTouched:" destination="2" eventType="touchDown" id="Jlg-Qk-CqC"/>
-                                    <outlet property="delegate" destination="2" id="vBO-iO-EAo"/>
-                                </connections>
-                            </textField>
-                            <view contentMode="scaleToFill" id="d81-4T-2ba">
-                                <rect key="frame" x="0.0" y="87" width="320" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="xSh-FK-5HX">
-                                        <rect key="frame" x="20" y="0.0" width="280" height="24"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                        <size key="shadowOffset" width="0.0" height="1"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" indicatorStyle="black" id="agL-gJ-83s">
-                                <rect key="frame" x="0.0" y="110" width="320" height="281"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            </scrollView>
-                            <view contentMode="scaleToFill" id="uaO-Lv-bzy">
-                                <rect key="frame" x="0.0" y="387" width="320" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="2" id="rhN-Zv-pdu">
-                                        <rect key="frame" x="20" y="-5" width="280" height="36"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </pageControl>
-                                </subviews>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            <navigationBar contentMode="scaleToFill" id="fxF-wy-hof">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" red="0.74065053205065579" green="0.75" blue="0.71485989523621307" alpha="1" colorSpace="calibratedRGB"/>
+                                <items>
+                                    <navigationItem id="kfw-Dg-J3T">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="iC8-yw-L1x">
+                                            <connections>
+                                                <action selector="editPayment:" destination="2" id="OQj-8z-849"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="WcJ-iP-9oW">
+                                            <connections>
+                                                <action selector="addPayment:" destination="2" id="iYG-UT-2aZ"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <view autoresizesSubviews="NO" clipsSubviews="YES" contentMode="scaleToFill" id="WFa-ys-yMX">
+                                <rect key="frame" x="0.0" y="44" width="320" height="367"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Pay" image="first" id="g9W-fR-biI"/>
                     <toolbarItems/>
+                    <nil key="simulatedTopBarMetrics"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="amountTextField" destination="DnF-bc-vd7" id="qz6-K4-lQe"/>
-                        <outlet property="pageControl" destination="rhN-Zv-pdu" id="UtN-z4-v9B"/>
-                        <outlet property="receiverLabel" destination="xSh-FK-5HX" id="qzm-bq-inK"/>
-                        <outlet property="scrollView" destination="agL-gJ-83s" id="sGz-pb-LlQ"/>
-                        <segue destination="WWO-ub-brD" kind="modal" identifier="SegueToQR" modalTransitionStyle="coverVertical" id="GAQ-nM-Oxi"/>
+                        <outlet property="navigationBar" destination="fxF-wy-hof" id="4Lz-v8-s2M"/>
+                        <outlet property="placeHolderView" destination="WFa-ys-yMX" id="HN9-08-gd1"/>
                     </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="653" y="-138"/>
+        </scene>
+        <!--Keypad Controller-->
+        <scene sceneID="h1X-BW-Wid">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="knR-VL-cBy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="KeypadController" id="v2e-Lr-egW" customClass="KeypadController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="gdT-dH-7cz">
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="fiN-BJ-P7A">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="placeHolderView" destination="fiN-BJ-P7A" id="MKK-GA-pH7"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="1226" y="-720"/>
         </scene>
         <!--Settings Controller - Settings-->
         <scene sceneID="l2z-lT-Rty">
@@ -127,6 +132,7 @@
                             <navigationBar contentMode="scaleToFill" id="gt5-fw-mcd">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" red="0.74065053209999998" green="0.75" blue="0.71485989520000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
                                     <navigationItem title="Settings" id="YKd-54-CCW"/>
                                 </items>
@@ -202,15 +208,16 @@
                             <navigationBar contentMode="scaleToFill" id="6bA-Pm-xba">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" red="0.74065053209999998" green="0.75" blue="0.71485989520000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
                                     <navigationItem title="Receive" id="Xbw-F3-Eji"/>
                                 </items>
                             </navigationBar>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="H3w-rv-yxc">
-                                <rect key="frame" x="20" y="67" width="280" height="37"/>
+                                <rect key="frame" x="20" y="138" width="280" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <state key="normal" title="Scan">
+                                <state key="normal" title="Scan Payment">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -221,10 +228,19 @@
                                     <action selector="scan:" destination="3" eventType="touchUpInside" id="9tE-nW-Snx"/>
                                 </connections>
                             </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Transfer Amount" textAlignment="right" minimumFontSize="20" id="UIh-Jd-7CH">
+                                <rect key="frame" x="20" y="92" width="280" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Receive" image="second" id="6"/>
+                    <connections>
+                        <outlet property="paymentTextField" destination="UIh-Jd-7CH" id="ke1-mb-N6C"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="653" y="498"/>
@@ -245,6 +261,7 @@
                             <navigationBar contentMode="scaleToFill" id="6P6-aI-Szg">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" red="0.74065053209999998" green="0.75" blue="0.71485989520000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
                                     <navigationItem title="Challenge" id="mXL-Hr-Y9m"/>
                                 </items>
@@ -272,8 +289,8 @@
         <scene sceneID="ILF-5r-jCs">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QW5-Xp-IRB" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController storyboardIdentifier="" title="QR" id="WWO-ub-brD" customClass="QRViewController" sceneMemberID="viewController">
-                    <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="p7w-It-7L2">
+                <viewController storyboardIdentifier="QRViewController" title="QR" id="WWO-ub-brD" customClass="QRViewController" sceneMemberID="viewController">
+                    <view key="view" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="p7w-It-7L2">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
@@ -281,33 +298,27 @@
                                 <rect key="frame" x="20" y="65" width="280" height="280"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Amount" lineBreakMode="tailTruncation" minimumFontSize="10" id="VZC-Cx-ux8">
-                                <rect key="frame" x="20" y="357" width="72" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="right" lineBreakMode="tailTruncation" minimumFontSize="10" id="Kkz-TC-Ath">
-                                <rect key="frame" x="100" y="353" width="200" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <navigationBar contentMode="scaleToFill" id="lHL-DN-3dX">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" red="0.74065053209999998" green="0.75" blue="0.71485989520000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
-                                    <navigationItem title="Payment Coupon" id="Ps6-lu-geC"/>
+                                    <navigationItem title="Scan Now" id="Ps6-lu-geC">
+                                        <barButtonItem key="leftBarButtonItem" title="Close" id="JBA-gh-5Y2"/>
+                                    </navigationItem>
                                 </items>
                             </navigationBar>
+                            <view autoresizesSubviews="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleToFill" id="TTn-ff-YZ1">
+                                <rect key="frame" x="85" y="353" width="150" height="80"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.53107446729447727" green="0.54083625637755106" blue="0.50949836291246464" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <connections>
+                        <outlet property="detailView" destination="TTn-ff-YZ1" id="id7-sX-A8a"/>
                         <outlet property="imageView" destination="azC-Id-3zJ" id="HR0-ZZ-A2Y"/>
-                        <outlet property="summaryLabel" destination="Kkz-TC-Ath" id="8pH-Q4-Uqu"/>
+                        <outlet property="navigationBar" destination="lHL-DN-3dX" id="iu8-gj-R8a"/>
                     </connections>
                 </viewController>
             </objects>
@@ -322,7 +333,6 @@
                     <tabBar key="tabBar" contentMode="scaleToFill" id="5">
                         <rect key="frame" x="0.0" y="431" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
                         <outlet property="tabBar" destination="5" id="Yt1-vk-ux4"/>
@@ -344,6 +354,13 @@
         <class className="ChallengeController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ChallengeController.h"/>
         </class>
+        <class className="KeypadController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/KeypadController.h"/>
+            <relationships>
+                <relationship kind="action" name="amountTextFieldTouched:"/>
+                <relationship kind="outlet" name="placeHolderView" candidateClass="UIView"/>
+            </relationships>
+        </class>
         <class className="MainTabBarController" superclassName="UITabBarController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/MainTabBarController.h"/>
             <relationships>
@@ -353,25 +370,26 @@
         <class className="PayController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PayController.h"/>
             <relationships>
-                <relationship kind="action" name="amountTextFieldTouched:"/>
+                <relationship kind="action" name="addPayment:"/>
+                <relationship kind="action" name="editPayment:"/>
                 <relationship kind="action" name="push:"/>
-                <relationship kind="outlet" name="amountTextField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="pageControl" candidateClass="UIPageControl"/>
-                <relationship kind="outlet" name="receiverLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
+                <relationship kind="outlet" name="placeHolderView" candidateClass="UIView"/>
             </relationships>
         </class>
         <class className="QRViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/QRViewController.h"/>
             <relationships>
+                <relationship kind="outlet" name="detailView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="summaryLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="navigationBar" candidateClass="UINavigationBar"/>
             </relationships>
         </class>
         <class className="ReceiveController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ReceiveController.h"/>
             <relationships>
                 <relationship kind="action" name="scan:"/>
+                <relationship kind="outlet" name="paymentTextField" candidateClass="UITextField"/>
             </relationships>
         </class>
         <class className="RegistrationController" superclassName="UIViewController">

@@ -11,6 +11,17 @@
 #import <ZXingWidgetController.h>
 #import <QRCodeReader.h>
 
-@interface ReceiveController : UIViewController<ZXingDelegate>
+#import "PushCoinWebService.h"
+#import "PushCoinMessages.h"
+#import "KeychainItemWrapper.h"
+
+@interface ReceiveController : UIViewController<PushCoinWebServiceDelegate, PushCoinMessageReceiver, ZXingDelegate, UITextFieldDelegate>
+{
+    PushCoinMessageParser * parser;
+    PushCoinWebService * webService;
+    NSMutableData * buffer;
+    NSMutableString * storedValue;
+}
+@property (weak, nonatomic) IBOutlet UITextField *paymentTextField;
 - (IBAction)scan:(id)sender;
 @end

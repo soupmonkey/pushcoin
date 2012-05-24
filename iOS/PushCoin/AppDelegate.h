@@ -20,5 +20,6 @@
 @property (nonatomic, readonly, getter = keyFilePath) NSString * keyFilePath;
 
 -(void)registerFromController:(UIViewController<RegistrationControllerDelegate> *)viewController;
+-(id)viewControllerWithIdentifier:(NSString *) identifier;
 
 @end

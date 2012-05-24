@@ -104,7 +104,7 @@
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
     resultLabel.text = [NSString stringWithFormat:@"error message received with code:%d reason:%@",
-                        msg.error_block.error_code.val, msg.error_block.reason.string];
+                        msg.block.error_code.val, msg.block.reason.string];
     [resultLabel sizeToFit];
     [self.registrationIDTextBox becomeFirstResponder];
 

@@ -8,17 +8,22 @@
 
 #import "QRViewController.h"
 #import "QREncoder.h"
+#import "PaymentCell.h"
 
 @implementation QRViewController
-
+@synthesize detailView;
+@synthesize detail;
+@synthesize navigationBar;
 @synthesize delegate;
 @synthesize imageView;
-@synthesize summaryLabel;
+@synthesize data;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
+    if (self) 
+    {
         // Custom initialization
     }
     return self;
@@ -26,50 +31,56 @@
 
 - (void)didReceiveMemoryWarning
 {
-    // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
 }
 
 #pragma mark - View lifecycle
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
-
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self 
-                                                                                      action:@selector(handleSingleTap:)];
+    [self prepareNavigationBar];
+    
+    UITapGestureRecognizer *singleFingerTap =
+        [[UITapGestureRecognizer alloc] initWithTarget:self 
+                                                action:@selector(handleSingleTap:)];
     [self.view addGestureRecognizer:singleFingerTap];
     
-    UISwipeGestureRecognizer * swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self 
-                                                                                           action:@selector(handleSwipe:)];
+    UISwipeGestureRecognizer * swipeRecognizer = 
+        [[UISwipeGestureRecognizer alloc] initWithTarget:self   
+                                                  action:@selector(handleSwipe:)];
     swipeRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
     [self.view addGestureRecognizer:swipeRecognizer];
-
     
     int qrcodeImageDimension = self.imageView.frame.size.width;    
     
     DataMatrix *qrMatrix = [QREncoder encodeWithECLevel:QR_ECLEVEL_AUTO
                                                 version:QR_VERSION_AUTO
-                                                  bytes:data];
+                                                  bytes:self.data];
     
     UIImage *qrcodeImage = [QREncoder renderDataMatrix:qrMatrix 
                                         imageDimension:qrcodeImageDimension];
     
     self.imageView.image = qrcodeImage;
-    self.summaryLabel.text = summary;
     
+    PaymentCell * cell = [[PaymentCell alloc] initWithFrame:CGRectMake(0,0, 
+                                                                         self.detailView.bounds.size.width,
+                                                                         self.detailView.bounds.size.height)];
+    cell.payment = detail;
+    
+    [self.detailView addSubview:cell];
+
 }
 
+-(void) prepareNavigationBar
+{
+    /*
+    UIImageView * logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"title.png"]];
+    logoView.contentMode = UIViewContentModeScaleAspectFit;
+    logoView.bounds = CGRectInset(self.navigationBar.bounds, 0, 5.0f);
+    self.navigationBar.topItem.titleView = logoView;
+     */
+}
 
 - (IBAction) handleSwipe:(UISwipeGestureRecognizer *) recognizer
 {
@@ -84,7 +95,8 @@
 - (void)viewDidUnload
 {
     [self setImageView:nil];
-    [self setSummaryLabel:nil];
+    [self setDetailView:nil];
+    [self setNavigationBar:nil];
     [super viewDidUnload];
 }
 
@@ -93,10 +105,10 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
--(void) setQRData:(NSData*)d withSummary:(NSString*)s
+-(void) setQRData:(NSData*)data_ withDetails:(PushCoinPayment *)detail_
 {
-    data = d;
-    summary = s;
+    self.data = data_;
+    self.detail = detail_;
 }
 
 @end

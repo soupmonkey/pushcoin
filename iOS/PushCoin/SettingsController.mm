@@ -140,7 +140,7 @@
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
     resultLabel.text = [NSString stringWithFormat:@"error message received with code:%d reason:%@",
-                        msg.error_block.error_code.val, msg.error_block.reason.string];
+                        msg.block.error_code.val, msg.block.reason.string];
 }
 
 -(void) didDecodeSuccessMessage:(SuccessMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
@@ -150,7 +150,7 @@
 
 -(void) didDecodePongMessage:(PongMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    resultLabel.text = [NSString stringWithFormat:@"pong.tm=%lld", msg.pong_block.tm.val];        
+    resultLabel.text = [NSString stringWithFormat:@"pong.tm=%lld", msg.block.tm.val];        
 }
 
 -(void) didDecodeRegisterAckMessage:(RegisterAckMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
@@ -175,7 +175,7 @@
     PCOSRawData * dataOut = [[PCOSRawData alloc] initWithData:buffer];
     
     msgOut.prv_block.mat.data = self.appDelegate.authToken.hexStringToBytes;
-    msgOut.prv_block.user_data.string=@"";
+    msgOut.prv_block.ref_data.string=@"";
     
     msgOut.pub_block.utc_ctime.val = (SInt64)[now timeIntervalSince1970];
     msgOut.pub_block.utc_etime.val = (SInt64)[now timeIntervalSince1970] + 60; /* exp in 1 min */
@@ -196,13 +196,13 @@
     PreauthorizationRequestMessage * msgOut2 = [[PreauthorizationRequestMessage alloc] init];
     PCOSRawData * dataOut2 = [[PCOSRawData alloc] initWithData:buffer];
     
-    msgOut2.preauthorization_block.mat.data = self.appDelegate.authToken.hexStringToBytes;
-    msgOut2.preauthorization_block.preauthorization_amount.value.val = 200;
-    msgOut2.preauthorization_block.preauthorization_amount.scale.val = -2;
-    msgOut2.preauthorization_block.currency.string = @"USD";
-    msgOut2.preauthorization_block.user_data.string=@"";
+    msgOut2.block.mat.data = self.appDelegate.authToken.hexStringToBytes;
+    msgOut2.block.preauthorization_amount.value.val = 200;
+    msgOut2.block.preauthorization_amount.scale.val = -2;
+    msgOut2.block.currency.string = @"USD";
+    msgOut2.block.ref_data.string=@"";
 
-    msgOut2.payment_transfer_authorization_block.data = encodedData;
+    msgOut2.pta_block.data = encodedData;
     
     [parser encodeMessage:msgOut2 to:dataOut2];
     [webService sendMessage:dataOut2.consumedData];

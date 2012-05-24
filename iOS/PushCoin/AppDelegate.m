@@ -119,14 +119,19 @@
 {
     if (!self.registered)
     {
-        UIStoryboard * storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:[NSBundle mainBundle]];
-        RegistrationController * controller = [storyboard instantiateViewControllerWithIdentifier:@"RegistrationController"];
+        RegistrationController * controller = [self viewControllerWithIdentifier:@"RegistrationController"];
         controller.delegate = viewController;
         controller.modalTransitionStyle =  UIModalTransitionStyleCoverVertical;
         
         [viewController presentModalViewController:controller animated:NO];
     }
+}
 
+-(id)viewControllerWithIdentifier:(NSString *) identifier
+{
+    UIStoryboard * storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:[NSBundle mainBundle]];
+    id controller = [storyboard instantiateViewControllerWithIdentifier:identifier];
+    return controller;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PushCoinPayment.h"
 
 @class QRViewController;
 
@@ -18,15 +19,16 @@
 @end
 
 @interface QRViewController : UIViewController
-{
-    NSData * data;
-    NSString * summary;
-}
 
+
+@property (nonatomic, strong) NSData * data;
 @property (nonatomic, weak) id <QRViewControllerDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
-@property (weak, nonatomic) IBOutlet UILabel *summaryLabel;
+@property (weak, nonatomic) IBOutlet UIView *detailView;
+@property (nonatomic, strong) PushCoinPayment * detail;
+@property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 
--(void) setQRData:(NSData*)d withSummary:(NSString*)s;
+-(void) setQRData:(NSData*)d withDetails:(PushCoinPayment *)detail;
+
 
 @end

@@ -3,6 +3,9 @@ Requires Libraries:
 2) ZXingWidget
 3) QRCodeEncoderObjectiveCAtGitHub
 
+ZXingWidget
+By default it only returns result in text form. To get the rawbytes, we have to modify the TwoDimensionResult class to carry the string and 
+the raw bytes. To keep zxing from iconv the encoding to UTF8, we have to pass an additional flag -DNO_ICONV to the compiler.
 
 
 Google Protocol Buffer

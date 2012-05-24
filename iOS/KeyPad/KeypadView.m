@@ -1,14 +1,14 @@
 //
-//  VSKeypad.m
+//  KeypadView.m
 //  KeyPad
 //
 //  Created by Manuel on 03.08.10.
 //  Copyright 2010 vikingosegundo. All rights reserved.
 //
 
-#import "VSKeypadView.h"
+#import "KeypadView.h"
 
-@implementation VSKeypadView
+@implementation KeypadView
 @synthesize delegate;
 
 - (id)initWithFrame:(CGRect)r 
@@ -19,9 +19,9 @@
 	[self setOpaque:NO];
 	return self;
 }
-+ (VSKeypadView *)keypadViewWithFrame:(CGRect)r 
++ (KeypadView *)keypadViewWithFrame:(CGRect)r 
 {
-	VSKeypadView *v = [[self alloc] initWithFrame:r];
+	KeypadView *v = [[self alloc] initWithFrame:r];
 	return v;//[v autorelease];
 }
 
@@ -38,7 +38,7 @@
 	return YES;
 }
 
--(void) setDelegate:(id <VSKeypadViewDelegate>)d
+-(void) setDelegate:(id <KeypadViewDelegate>)d
 {
 	delegate = d;
 	if ( delegate != nil ) {

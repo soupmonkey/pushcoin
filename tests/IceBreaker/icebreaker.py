@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 import sys, urllib2, time
 import logging as log
-import pcos, time, binascii, base64, hashlib, Image
+import pcos, time, binascii, base64, hashlib, math, Image
+from decimal import Decimal
 from optparse import OptionParser,OptionError
 from pyparsing import *
 from M2Crypto import DSA, BIO, RSA
@@ -72,7 +73,72 @@ WBKhBPOqvJ8X+w==
 
 class RmoteCall:
 
-	# CMD: `preauth'
+	def balance(self):
+		'''Returns account balance'''
+
+		bo = pcos.Block( 'Bo', 64, 'O' )
+		bo.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 ) # mat
+		bo.write_short_string( '', max=127 ) # ref_data
+
+		req = pcos.Doc( name="Bq" )
+		req.add( bo )
+
+		res = self.send( req )
+
+		assert res.message_id == 'Br'
+
+		# jump to body
+		body = res.block( 'Bo' )
+		ref_data = body.read_short_string( ) # ref_data
+
+		value = body.read_int64() # value
+		scale = body.read_int16() # scale
+		balance_asofepoch = body.read_int64();
+
+		balance = value * math.pow(10, scale)
+		balance_asofdate = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(balance_asofepoch))
+		log.info('Balance is $%s as of %s', balance, balance_asofdate)
+
+
+	def history(self):
+		'''Returns transaction history'''
+
+		req = pcos.Doc( name="Hq" )
+		bo = pcos.Block( 'Bo', 512, 'O' )
+		bo.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 ) # mat
+		bo.write_short_string( '', max=20 ) # ref-data
+		bo.write_short_string( '', max=127 ) # keywords
+		bo.write_int16( 0 )
+		bo.write_int16( 100 )
+		req.add( bo )
+
+		res = self.send( req )
+
+		assert res.message_id == 'Hr'
+
+		# jump to body
+		body = res.block( 'Bo' )
+
+		ref_data = body.read_short_string() # ref-data
+
+		# read number of transactions
+		count = body.read_int16()
+		for i in xrange(0, count):
+			tx_id = body.read_int64() # transaction ID
+			tx_type = body.read_fixed_string(1) # transaction type
+			value = body.read_int64() # value
+			scale = body.read_int16() # scale
+			payment = value * math.pow(10, scale)
+			currency = body.read_fixed_string(3) # currency
+			merchant_name = body.read_short_string() # merchant name
+			merchant_email = body.read_short_string() # merchant email
+			pta_receiver = body.read_short_string() # PTA receiver
+			pta_user_data = body.read_short_string() # PTA user-data
+			invoice = body.read_short_string() # invoice
+			print "--- %s/%s ---\ntx-id: %s\ntx_type: %s\npayment: %s\ncurrency: %s\nmerchant_name: %s\nmerchant_email: %s\npta_receiver: %s\npta_user_data: %s\ninvoice: %s\n" % (i, count, tx_id, tx_type, payment, currency, merchant_name, merchant_email, pta_receiver, pta_user_data, invoice)
+		log.info('Returned %s records', count)
+
+
 	def preauth(self):
 		'''Generates the PTA and submits to server for validation.'''
 		pta_encoded = self.payment()
@@ -83,11 +149,15 @@ class RmoteCall:
 
 		# create preauth block
 		preauth = pcos.Block( 'Pr', 512, 'O' )
-		preauth.write_fixed_string( binascii.unhexlify( self.args['preauth_mat'] ), size=20 )
-		preauth.write_int64( long( self.args['preauth_scaled_payment'] ) ) # payment
-		preauth.write_int16( int( self.args['preauth_scale'] ) ) # scale
-		preauth.write_fixed_string( "USD", size=3 ) # currency
+		preauth.write_fixed_string( binascii.unhexlify( self.args['preauth_mat'] ), size=20 ) # mat
 		preauth.write_short_string( '', max=20 ) # user data
+		# preauth amount
+		charge = Decimal(self.args['charge']).normalize()
+		charge_scale = int(charge.as_tuple()[2])
+		charge_int = long(charge.shift(abs(charge_scale)))
+		preauth.write_int64( charge_int ) # value
+		preauth.write_int16( charge_scale ) # scale
+		preauth.write_fixed_string( "USD", size=3 ) # currency
 
 		# package everything and ship out
 		req = pcos.Doc( name="Pr" )
@@ -96,9 +166,77 @@ class RmoteCall:
 
 		res = self.send( req )
 		if res.message_id == "Ok":
-			log.info('RETN Preauthorization Success' )
+			log.info('RETN Successful preauthorization' )
 
-	# CMD: `payment'
+
+	def transfer(self):
+		'''Sends a Transfer Request'''
+		pta_encoded = self.payment()
+
+		# package PTA into a block
+		pta = pcos.Block( 'Pa', 512, 'O' )
+		pta.write_fixed_string(pta_encoded, size=len(pta_encoded))
+
+		# create transfer-request block
+		r1 = pcos.Block( 'R1', 1024, 'O' )
+		r1.write_fixed_string( binascii.unhexlify( self.args['receiver_mat'] ), size=20 ) # mat
+		r1.write_short_string( '', max=127 ) # ref_data
+		r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
+
+		# transfer amount
+		(charge_value, charge_scale) = decimal_to_parts(Decimal(self.args['transfer']))
+
+		r1.write_int64( charge_value ) # value
+		r1.write_int16( charge_scale ) # scale
+
+		r1.write_fixed_string( "USD", size=3 ) # currency
+		r1.write_long_string( 'John paid his dept' ) # comment
+
+		# package everything and ship out
+		req = pcos.Doc( name="Tt" )
+		req.add( pta )
+		req.add( r1 )
+
+		res = self.send( req )
+		if res.message_id == "Ok":
+			log.info('RETN Successful transfer' )
+
+
+	def charge(self):
+		'''Sends a Payment Request'''
+		pta_encoded = self.payment()
+
+		# package PTA into a block
+		pta = pcos.Block( 'Pa', 512, 'O' )
+		pta.write_fixed_string(pta_encoded, size=len(pta_encoded))
+
+		# create payment-request block
+		r1 = pcos.Block( 'R1', 1024, 'O' )
+		r1.write_fixed_string( binascii.unhexlify( self.args['merchant_mat'] ), size=20 ) # mat
+		r1.write_short_string( '', max=127 ) # ref_data
+		r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
+
+		# charge amount
+		(charge_value, charge_scale) = decimal_to_parts(Decimal(self.args['charge']))
+
+		r1.write_int64( charge_value ) # value
+		r1.write_int16( charge_scale ) # scale
+
+		r1.write_fixed_string( "USD", size=3 ) # currency
+		r1.write_short_string( 'inv-123', max=24 ) # invoice ID
+		r1.write_long_string( 'happy meal' ) # comment
+		r1.write_int16(0) # list of purchased goods
+
+		# package everything and ship out
+		req = pcos.Doc( name="Pt" )
+		req.add( pta )
+		req.add( r1 )
+
+		res = self.send( req )
+		if res.message_id == "Ok":
+			log.info('RETN Successful charge' )
+
+
 	def payment(self):
 		'''This command generates the Payment Transaction Authorization, or PTA. It does not communicate with the server, only produces a file.'''
 
@@ -110,8 +248,33 @@ class RmoteCall:
 		p1.write_int64( now ) # certificate create-time
 		p1.write_int64( now + 24 * 3600 ) # certificate expiry (in 24 hrs)
 
-		p1.write_int64( long( self.args['scaled_payment'] ) ) # payment
-		p1.write_int16( int( self.args['scale'] ) ) # scale
+		# payment-limit
+		payment = Decimal(self.args['limit'])
+		payment_scale = int(payment.as_tuple()[2])
+		payment_int = long(payment.shift(abs(payment_scale)))
+		p1.write_int64( payment_int ) # value
+		p1.write_int16( payment_scale ) # scale
+
+		# gratuity
+		tip = tip_type = None
+		tipv = self.args.get('tip_pct', None)
+		if tipv:
+			tip_type = 'P'
+		else:
+			tipv = self.args.get('tip_abs', None)
+			if tipv:
+				tip_type = 'A'
+
+		if tipv:
+			tip = Decimal(tipv).normalize()
+			tip_scale = int(tip.as_tuple()[2])
+			tip_int = long(tip.shift(abs(tip_scale)))
+			p1.write_byte(1) # optional indicator
+			p1.write_fixed_string(tip_type, size=1) # tip type (P or A)
+			p1.write_int64( tip_int ) # value
+			p1.write_int16( tip_scale ) # scale
+		else:
+			p1.write_byte(0) # optional indicator -- no tip
 
 		p1.write_fixed_string( "USD", size=3 ) # currency
 		p1.write_fixed_string( binascii.unhexlify( API_TRANSACTION_KEY_ID ), size=4 ) # key-ID
@@ -128,7 +291,8 @@ class RmoteCall:
 		mat = self.args['mat'] 
 		if len( mat ) != 40:
 			raise RuntimeError("MAT must be 40-characters long" % self.cmd)
-		priv.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 )
+		priv.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 ) # mat
+		priv.write_short_string( '', max=20 ) # ref-data
 		
 		# sign the public-block
 		#   * first, produce the checksum
@@ -147,7 +311,7 @@ class RmoteCall:
 		# RSA Encryption Scheme w/ Optimal Asymmetric Encryption Padding
 		encrypted = encrypter.public_encrypt( str(priv), RSA.pkcs1_oaep_padding )
 
-		# At this point we no longer need the 'priv' object. We only attach the
+		# At this point we no longer need the private object. We only attach the
 		# encrypted instance.
 		s1 = pcos.Block( 'S1', 512, 'O' )
 		s1.write_fixed_string( encrypted, size=128 )
@@ -237,6 +401,10 @@ class RmoteCall:
 			"payment": self.payment,
 			"preauth": self.preauth,
 			"transaction_key": self.transaction_key,
+			"history": self.history,
+			"balance": self.balance,
+			"charge": self.charge,
+			"transfer": self.transfer,
 		}		
 
 	# invoked if user asks for an unknown command
@@ -276,6 +444,7 @@ class RmoteCall:
 			# jump to the block of interest
 			er = res.block( 'Bo' )
 			if er:
+				ref_data = er.read_short_string();
 				code = er.read_int32();
 				what = er.read_short_string();
 				log.error( '%s (#%s)', what, code )
@@ -285,6 +454,18 @@ class RmoteCall:
 
 		# return a lightweight PCOS document 
 		return res
+
+
+def decimal_to_parts(value):
+	'''Breaks down the decimal into a tuple of value and scale'''
+	value = value.normalize()
+	exp = int( value.as_tuple()[2] )
+	# if scale is negative, we have to shift to preserve precision
+	if exp < 0:
+		return (long(value.shift(-(exp))), exp)
+	else:
+		return (long(value), 0)
+
 
 if __name__ == "__main__":
 	# start with basic logger configuration

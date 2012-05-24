@@ -190,7 +190,7 @@ class RmoteCall:
 		r1.write_int16( charge_scale ) # scale
 
 		r1.write_fixed_string( "USD", size=3 ) # currency
-		r1.write_long_string( 'John paid his dept' ) # comment
+		r1.write_short_string( 'John paid his dept', max=127 ) # note
 
 		# package everything and ship out
 		req = pcos.Doc( name="Tt" )
@@ -224,7 +224,7 @@ class RmoteCall:
 
 		r1.write_fixed_string( "USD", size=3 ) # currency
 		r1.write_short_string( 'inv-123', max=24 ) # invoice ID
-		r1.write_long_string( 'happy meal' ) # comment
+		r1.write_short_string( 'happy meal', max=127 ) # note
 		r1.write_int16(0) # list of purchased goods
 
 		# package everything and ship out

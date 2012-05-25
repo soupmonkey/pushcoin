@@ -9,9 +9,27 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFiles</key>
-	<array/>
+	<array>
+		<string>PushCoinLogo-Large.png</string>
+		<string>PushCoinLogo-Small.png</string>
+		<string>Default.png</string>
+		<string>Default@2x.png</string>
+	</array>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>PushCoinLogo-Large.png</string>
+				<string>PushCoinLogo-Small.png</string>
+				<string>Default.png</string>
+				<string>Default@2x.png</string>
+			</array>
+		</dict>
+	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>Gilbert-Cheung.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>com.pushcoin.gc</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

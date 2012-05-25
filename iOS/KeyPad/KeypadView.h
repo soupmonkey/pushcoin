@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-@protocol VSKeypadViewDelegate
+@protocol KeypadViewDelegate
 @required
 -(int)numberOfRows;
 -(int)numberOfColumns;
@@ -28,17 +28,17 @@
 @end
 
 
-@interface VSKeypadView : UIView {
-	__weak id<VSKeypadViewDelegate> delegate;
+@interface KeypadView : UIView {
+	__weak id<KeypadViewDelegate> delegate;
 	NSArray *keypadButtons;
 }
 
-+ (VSKeypadView *)keypadViewWithFrame:(CGRect)r;
++ (KeypadView *)keypadViewWithFrame:(CGRect)r;
 
 - (id)initWithFrame:(CGRect)r ;
 - (void)fireKeypadButton:(id)sender;
 
-@property(nonatomic, weak) id<VSKeypadViewDelegate> delegate;
+@property(nonatomic, weak) id<KeypadViewDelegate> delegate;
 
 @end
 

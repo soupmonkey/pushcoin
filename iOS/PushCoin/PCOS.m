@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/2/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import "PCOS.h"
@@ -88,34 +88,6 @@
 -(void) consume:(NSUInteger)nBytes
 {
     self.offset += nBytes;
-}
-
-@end
-
-
-@implementation PCOSDataBlock
-@synthesize data;
-
--(id) initWithData:(NSMutableData *)d
-{
-    self = [super self];
-    if (self)
-    {
-        data = d;
-    }
-    return self;
-}
-
--(NSUInteger) encode:(PCOSRawData *)raw
-{
-    [raw.data appendData:data];
-    return raw.data.length;
-}
-
--(NSUInteger) decode:(PCOSRawData *)raw
-{
-    data = [data initWithBytes:(raw.data.bytes+raw.offset) length:raw.data.length];
-    return raw.data.length;
 }
 
 @end

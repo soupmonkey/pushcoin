@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/2/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -20,21 +20,27 @@ extern const PCOSDouble * protoDouble;
 
 @interface PCOSHeaderBlock : PCOSBlock
 @property (nonatomic, strong) PCOSFixedArray * magic;
-@property (nonatomic, strong) PCOSFixedArray * msg_id;
-@property (nonatomic, strong) PCOSInt16 * msg_len;
+@property (nonatomic, strong) PCOSInt32 * message_length;
+@property (nonatomic, strong) PCOSFixedArray * message_id;
+@property (nonatomic, strong) PCOSFixedArray * reserved;
 @end
 
 @interface PCOSBlockMetaBlock : PCOSBlock
-@property (nonatomic, strong) PCOSFixedArray * block_name;
-@property (nonatomic, strong) PCOSInt16 * block_len;
+@property (nonatomic, strong) PCOSFixedArray * block_id;
+@property (nonatomic, strong) PCOSInt16 * block_length;
 @end
 
+
+
+
 @interface PCOSMessage : NSObject<PCOSSerializable, NSCopying>
-@property (nonatomic, strong) PCOSLongArray * block_enum;
+@property (nonatomic, strong) PCOSLongArray * block_meta;
 @property (nonatomic, strong) NSMutableDictionary * blocks;
 
 +(NSString *) messageID;
 
 -(id) copyWithZone:(NSZone *)zone;
 -(void) addBlock:(NSObject<PCOSSerializable> *)block withName:(NSString *)name;
+-(void) block:(NSObject<PCOSSerializable> *)block withKey:(NSString *)key encodedToBytes:(void const *)bytes withLength:(NSUInteger)len;
+
 @end

@@ -40,10 +40,10 @@ ERR_INCOMPATIBLE_REQUEST = 102
 class PcosError( Exception ):
 	""" Basis for all exceptions thrown from the PCOS codec."""
 
-	def __init__(self, code, what = '', in_reference_to = ''):
+	def __init__(self, code, what = '', ref_data = ''):
 		self.code = code
 		self.what = what
-		self.in_reference_to = in_reference_to
+		self.ref_data = ref_data
 
 	def __str__(self):
 		return repr("code=%s;what=%s" % (self.code, self. what) )
@@ -284,7 +284,10 @@ class Block:
 		return self.read_data(str(length)+'s', length)
 
 	def write_short_string( self, val, max):
-		length = len( val )
+		if val:
+			length = len( val )
+		else: 
+			length = 0
 		assert max < 256
 		if length > max:
 			raise PcosError( ERR_MALFORMED_MESSAGE, 'short array-field exeeds specified maximum length: %s > max(%s)' % (length, max) )
@@ -297,6 +300,10 @@ class Block:
 		return self.read_data(str(length)+'s', length)
 
 	def write_long_string( self, val ):
+		if val:
+			length = len( val )
+		else: 
+			length = 0
 		length = len( val )
 		self.write_int16( length )
 		if length:

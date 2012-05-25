@@ -152,9 +152,7 @@ class RmoteCall:
 		preauth.write_fixed_string( binascii.unhexlify( self.args['preauth_mat'] ), size=20 ) # mat
 		preauth.write_short_string( '', max=20 ) # user data
 		# preauth amount
-		charge = Decimal(self.args['charge']).normalize()
-		charge_scale = int(charge.as_tuple()[2])
-		charge_int = long(charge.shift(abs(charge_scale)))
+		(charge_int, charge_scale) = decimal_to_parts(Decimal(self.args['charge']))
 		preauth.write_int64( charge_int ) # value
 		preauth.write_int16( charge_scale ) # scale
 		preauth.write_fixed_string( "USD", size=3 ) # currency
@@ -246,9 +244,7 @@ class RmoteCall:
 		p1.write_int64( now + 24 * 3600 ) # certificate expiry (in 24 hrs)
 
 		# payment-limit
-		payment = Decimal(self.args['limit'])
-		payment_scale = int(payment.as_tuple()[2])
-		payment_int = long(payment.shift(abs(payment_scale)))
+		(payment_int, payment_scale) = decimal_to_parts(Decimal(self.args['limit']))
 		p1.write_int64( payment_int ) # value
 		p1.write_int16( payment_scale ) # scale
 
@@ -263,9 +259,7 @@ class RmoteCall:
 				tip_type = 'A'
 
 		if tipv:
-			tip = Decimal(tipv).normalize()
-			tip_scale = int(tip.as_tuple()[2])
-			tip_int = long(tip.shift(abs(tip_scale)))
+			(tip_int, tip_scale) = decimal_to_parts(Decimal(tipv))
 			p1.write_byte(1) # optional indicator
 			p1.write_fixed_string(tip_type, size=1) # tip type (P or A)
 			p1.write_int64( tip_int ) # value

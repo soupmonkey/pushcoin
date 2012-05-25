@@ -255,12 +255,12 @@
 		0D19E2DF1541CCAE00C8671B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
 		0D19E2E11541CCAE00C8671B /* PayController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PayController.h; sourceTree = "<group>"; };
 		0D19E2E21541CCAE00C8671B /* PayController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = PayController.mm; sourceTree = "<group>"; };
-		0D19E2E41541CCAE00C8671B /* first.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = first.png; path = PushCoin/first.png; sourceTree = "<group>"; };
-		0D19E2E61541CCAE00C8671B /* first@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "first@2x.png"; path = "PushCoin/first@2x.png"; sourceTree = "<group>"; };
+		0D19E2E41541CCAE00C8671B /* first.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = first.png; sourceTree = "<group>"; };
+		0D19E2E61541CCAE00C8671B /* first@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "first@2x.png"; sourceTree = "<group>"; };
 		0D19E2E81541CCAE00C8671B /* ReceiveController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReceiveController.h; sourceTree = "<group>"; };
 		0D19E2E91541CCAE00C8671B /* ReceiveController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ReceiveController.mm; sourceTree = "<group>"; };
-		0D19E2EB1541CCAE00C8671B /* second.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = second.png; path = PushCoin/second.png; sourceTree = "<group>"; };
-		0D19E2ED1541CCAE00C8671B /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "second@2x.png"; path = "PushCoin/second@2x.png"; sourceTree = "<group>"; };
+		0D19E2EB1541CCAE00C8671B /* second.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = second.png; sourceTree = "<group>"; };
+		0D19E2ED1541CCAE00C8671B /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
 		0D20D89615571ED300098838 /* PCOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOS.h; sourceTree = "<group>"; };
 		0D20D89715571ED300098838 /* PCOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOS.m; sourceTree = "<group>"; };
 		0D20D89A15571ED300098838 /* PCOSMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSMessage.h; sourceTree = "<group>"; };
@@ -270,8 +270,8 @@
 		0D20D89E15571ED300098838 /* PCOSTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCOSTypes.h; sourceTree = "<group>"; };
 		0D20D89F15571ED300098838 /* PCOSTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCOSTypes.m; sourceTree = "<group>"; };
 		0D20D8A515576E1700098838 /* PCOS-CPP.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PCOS-CPP.h"; sourceTree = "<group>"; };
-		0D37760C15683949003FB8B3 /* PaymentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PaymentCell.h; path = ../PaymentCell.h; sourceTree = "<group>"; };
-		0D37760D15683949003FB8B3 /* PaymentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PaymentCell.m; path = ../PaymentCell.m; sourceTree = "<group>"; };
+		0D37760C15683949003FB8B3 /* PaymentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentCell.h; sourceTree = "<group>"; };
+		0D37760D15683949003FB8B3 /* PaymentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentCell.m; sourceTree = "<group>"; };
 		0D377610156839BC003FB8B3 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Common.h; path = PushCoin/Common.h; sourceTree = "<group>"; };
 		0D377611156839BC003FB8B3 /* Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Common.m; path = PushCoin/Common.m; sourceTree = "<group>"; };
 		0D37761415684E8B003FB8B3 /* PushCoinPayment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushCoinPayment.h; sourceTree = "<group>"; };
@@ -417,8 +417,6 @@
 		0D19E2BD1541CCAE00C8671B = {
 			isa = PBXGroup;
 			children = (
-				0DF8D8EB156E255B00AEA91D /* Default@2x.png */,
-				0DF8D8E9156E255600AEA91D /* Default.png */,
 				0D19E2D21541CCAE00C8671B /* PushCoin.App */,
 				0D7A8F7A154202A800634A79 /* Dependencies */,
 				0DBC491D1543C59A00E56EDF /* Resources */,
@@ -663,6 +661,8 @@
 		0DBC491D1543C59A00E56EDF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0DF8D8EB156E255B00AEA91D /* Default@2x.png */,
+				0DF8D8E9156E255600AEA91D /* Default.png */,
 				0DF8D8E5156E253F00AEA91D /* startup_background.png */,
 				0DF8D8E6156E253F00AEA91D /* startup_background@2x.png */,
 				0DED6565156DCDE400E27A72 /* remove.png */,
@@ -693,7 +693,7 @@
 				0D19E2EB1541CCAE00C8671B /* second.png */,
 				0D19E2ED1541CCAE00C8671B /* second@2x.png */,
 			);
-			name = Resources;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

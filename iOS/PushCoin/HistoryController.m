@@ -56,17 +56,27 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     // Create transfer request
-    TransactionHistoryQueryMessage * msgOut = [[TransactionHistoryQueryMessage alloc] init];
-    PCOSRawData * dataOut = [[PCOSRawData alloc] initWithData:buffer];
+    TransactionHistoryQueryMessage * trxMsg = [[TransactionHistoryQueryMessage alloc] init];
+    PCOSRawData * trxData = [[PCOSRawData alloc] initWithData:buffer];
     
-    msgOut.block.mat.data = self.appDelegate.authToken.hexStringToBytes;
-    msgOut.block.ref_data.string=@"";
-    msgOut.block.keywords.string=@"";
-    msgOut.block.page.val = 0;
-    msgOut.block.page.val = 100;
+    trxMsg.block.mat.data = self.appDelegate.authToken.hexStringToBytes;
+    trxMsg.block.ref_data.string=@"";
+    trxMsg.block.keywords.string=@"";
+    trxMsg.block.page.val = 0;
+    trxMsg.block.page.val = 100;
     
-    [parser encodeMessage:msgOut to:dataOut];
-    [webService sendMessage:dataOut.consumedData];
+    [parser encodeMessage:trxMsg to:trxData];
+    [webService sendMessage:trxData.consumedData];
+        
+    // Create balance request
+    BalanceQueryMessage * balMsg = [[BalanceQueryMessage alloc] init];
+    PCOSRawData * balData = [[PCOSRawData alloc] initWithData:buffer];
+    
+    balMsg.block.mat.data = self.appDelegate.authToken.hexStringToBytes;
+    balMsg.block.ref_data.string=@"";
+    
+    [parser encodeMessage:balMsg to:balData];
+    [webService sendMessage:balData.consumedData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -150,12 +160,33 @@ andDescription:(NSString *)description
     [self.tableView reloadData];
 }
 
+-(void) didDecodeBalanceReportMessage:(BalanceReportMessage *)msg withHeader:(PCOSHeaderBlock *)hdr
+{
+    balance = msg.block.balance.value.val * (pow(10.0f, (Float32)msg.block.balance.scale.val));
+    [self.tableView reloadData];
+}
 
 #pragma mark UITableViewDelegates
 
+-(NSInteger) numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 2;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
+{
+    if (section == 0)
+        return @"";
+    else 
+        return @"Transaction History";
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return transactions.count;
+    if (section == 0)
+        return 1;
+    else
+        return transactions.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -165,15 +196,25 @@ andDescription:(NSString *)description
     {
         cell = [[TransactionCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"Transaction"];
     }
-    PushCoinTransaction * trx = [transactions objectAtIndex:indexPath.row];
     
-    Float32 amount = trx.amountValue * pow(10.0f, (Float32)trx.amountScale);
-    if (trx.transactionType == 'D')
-        amount *= -1.0f;
+    if (indexPath.section == 0)
+    {
+        NSNumber *c = [NSNumber numberWithFloat:balance];
+        cell.detailTextLabel.text = [numberFormatter stringFromNumber:c];
+        cell.textLabel.text = @"Balance";
+    }
+    else
+    {
+        PushCoinTransaction * trx = [transactions objectAtIndex:indexPath.row];
+    
+        Float32 amount = trx.amountValue * pow(10.0f, (Float32)trx.amountScale);
+        if (trx.transactionType == 'D')
+            amount *= -1.0f;
         
-    NSNumber *c = [NSNumber numberWithFloat:amount];
-    cell.detailTextLabel.text = [numberFormatter stringFromNumber:c];
-    cell.textLabel.text = trx.merchantName;
+        NSNumber *c = [NSNumber numberWithFloat:amount];
+        cell.detailTextLabel.text = [numberFormatter stringFromNumber:c];
+        cell.textLabel.text = trx.merchantName;
+    }
     
     return cell;
 }

@@ -19,6 +19,7 @@
     NSMutableData * buffer;
     NSMutableArray * transactions;
     NSNumberFormatter * numberFormatter;
+    Float32 balance;
 }
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 - (IBAction)settingsButtonTapped:(id)sender;

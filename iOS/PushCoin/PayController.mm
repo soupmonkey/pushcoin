@@ -129,7 +129,7 @@
     if (controller)
     {
         controller.delegate = self;
-        controller.payment = payment;
+        controller.payment = [payment copy];
         controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
         [self presentModalViewController:controller animated:YES];
     }

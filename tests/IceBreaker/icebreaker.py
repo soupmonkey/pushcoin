@@ -124,7 +124,7 @@ class RmoteCall:
 		# read number of transactions
 		count = body.read_int16()
 		for i in xrange(0, count):
-			tx_id = body.read_int64() # transaction ID
+			tx_id = binascii.hexlify( body.read_short_string() ) # transaction ID
 			tx_type = body.read_fixed_string(1) # transaction type
 			value = body.read_int64() # value
 			scale = body.read_int16() # scale
@@ -165,8 +165,7 @@ class RmoteCall:
 		req.add( preauth )
 
 		res = self.send( req )
-		if res.message_id == "Ok":
-			log.info('RETN Successful preauthorization' )
+		self.expect_success( res )
 
 
 	def transfer(self):
@@ -198,8 +197,7 @@ class RmoteCall:
 		req.add( r1 )
 
 		res = self.send( req )
-		if res.message_id == "Ok":
-			log.info('RETN Successful transfer' )
+		self.expect_success( res )
 
 
 	def charge(self):
@@ -233,8 +231,7 @@ class RmoteCall:
 		req.add( r1 )
 
 		res = self.send( req )
-		if res.message_id == "Ok":
-			log.info('RETN Successful charge' )
+		self.expect_success( res )
 
 
 	def payment(self):
@@ -407,6 +404,16 @@ class RmoteCall:
 			"transfer": self.transfer,
 		}		
 
+	def expect_success( self, res ):
+		'''Shows details of Success PCOS message'''
+		if res.message_id == "Ok":
+			bo = res.block( 'Bo' )
+			ref_data = bo.read_short_string() # ref_data
+			transaction_id = bo.read_short_string() # tx-id
+			log.info('Success (tx_id: %s, ref_data: %s)', binascii.hexlify( transaction_id ), binascii.hexlify( ref_data ))
+		else:
+			raise RuntimeError("'%s' not a Success message" % res.message_id)
+
 	# invoked if user asks for an unknown command
 	def unknown_command(self):
 		raise RuntimeError("'%s' is not a recognized command" % self.cmd)
@@ -445,12 +452,12 @@ class RmoteCall:
 			er = res.block( 'Bo' )
 			if er:
 				ref_data = er.read_short_string();
+				transaction_id = er.read_short_string();
 				code = er.read_int32();
 				what = er.read_short_string();
-				log.error( '%s (#%s)', what, code )
+				raise RuntimeError('tx-id=%s;what=%s;code=%s' % (binascii.hexlify( transaction_id ), what, code )) 
 			else:
-				log.error( 'ERROR -- cause unknown' )
-			raise RuntimeError('error result') 
+				raise RuntimeError('ERROR -- cause unknown') 
 
 		# return a lightweight PCOS document 
 		return res

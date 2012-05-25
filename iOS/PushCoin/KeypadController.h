@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/23/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -15,6 +15,7 @@
 @protocol KeypadControllerDelegate <NSObject>
 
 - (void)keypadControllerDidClose:(KeypadController *)controller;
+- (void)keypadControllerDidCancel:(KeypadController *)controller;
 
 @end
 
@@ -28,9 +29,9 @@
 @property (strong, nonatomic) UILabel * displayLabel;
 @property (strong, nonatomic) UIView * displayBackground;
 @property (nonatomic, weak) id <KeypadControllerDelegate> delegate;
-
-
-- (IBAction)amountTextFieldTouched:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *placeHolderView;
+
+- (IBAction)cancelButtonTapped:(id)sender;
+- (IBAction)clearButtonTapped:(id)sender;
 
 @end

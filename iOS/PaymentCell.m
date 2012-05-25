@@ -25,10 +25,6 @@
         self.contentView = view;
         self.backgroundColor = [UIColor clearColor];
         self.opaque = YES;
-        
-        self.contentView.backgroundColor = [UIColor colorWithPatternImage:
-                                            [UIImage imageNamed:@"500.00.png"]];
-        
         self.deleteButtonIcon = [UIImage imageNamed:@"remove.png"];
         [self addLabels];
 
@@ -39,25 +35,9 @@
 -(void) setPayment:(PushCoinPayment *)payment
 {
     _payment = payment;
-
-    NSString * imageFileName;
-    switch(payment.amountType)
-    {
-        case PushCoinPaymentAmountTypeGreen: imageFileName = @"1.00"; break;
-        case PushCoinPaymentAmountTypePurple: imageFileName = @"5.00"; break;
-        case PushCoinPaymentAmountTypeRed: imageFileName = @"10.00"; break;
-        case PushCoinPaymentAmountTypeBrown: imageFileName = @"50.00"; break;
-        case PushCoinPaymentAmountTypeYellow: imageFileName = @"100.00"; break;
-        case PushCoinPaymentAmountTypeClear: imageFileName = @"500.00"; break;
-    }
-    
     self.contentView.backgroundColor = [UIColor colorWithPatternImage:
-                                        [UIImage imageNamed:
-                                         [NSString stringWithFormat:@"%@.png", imageFileName]]];
-    
+                                        [self.appDelegate imageForAmountType:payment.amountType]];
     [self setAmount:self.payment.amount andTip:self.payment.tip];
-    
-    //[self setNeedsDisplay];
 }
 
 - (float) outerMargin
@@ -120,7 +100,12 @@
 - (void) setAmount:(Float32) amount andTip:(Float32)tip
 {
     self.amountLabel.text = [NSString stringWithFormat:@"$%.2f", amount];
-    self.tipLabel.text = [NSString stringWithFormat:@"+ %.2f%% tips", tip * 100];
+    
+    if (tip != 0.0f)
+        self.tipLabel.text = [NSString stringWithFormat:@"+ %.2f%% tips", tip * 100];
+    else
+        self.tipLabel.text = @"";
+    
 }
 
 /* Generate Background Image

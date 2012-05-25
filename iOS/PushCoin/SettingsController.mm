@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 4/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import "SettingsController.h"
@@ -12,12 +12,10 @@
 #import "NSData+BytesToHexString.h"
 #import "NSData+Base64.h"
 
-
-
 @implementation SettingsController
 @synthesize unregisterButton;
 @synthesize preAuthorizationTestButton;
-@synthesize resultLabel;
+@synthesize delegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -78,7 +76,6 @@
 }
 - (void)viewDidUnload
 {
-    [self setResultLabel:nil];
     [self setUnregisterButton:nil];
     [self setPreAuthorizationTestButton:nil];
     [super viewDidUnload];
@@ -123,8 +120,8 @@
 -(void) registrationControllerDidClose:(RegistrationController *)controller
 {
     [self dismissModalViewControllerAnimated:YES];
+    [self updateRegisterButtonStatus];
 }
-
 - (void)webService:(PushCoinWebService *)webService didReceiveMessage:(NSData *)data
 {
     [parser decode:data toReceiver:self];
@@ -134,36 +131,27 @@
 - (void)webService:(PushCoinWebService *)webService didFailWithStatusCode:(NSInteger)statusCode 
     andDescription:(NSString *)description
 {
-    resultLabel.text = [NSString stringWithFormat:@"web service returns %d; %@", statusCode, description];
+    [[self appDelegate] showAlert:description
+                        withTitle:[NSString stringWithFormat:@"Webservice Error - %d", statusCode]];
 }
 
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    resultLabel.text = [NSString stringWithFormat:@"error message received with code:%d reason:%@",
-                        msg.block.error_code.val, msg.block.reason.string];
+    [[self appDelegate] showAlert:msg.block.reason.string 
+                        withTitle:[NSString stringWithFormat:@"Error - %d", msg.block.error_code.val]];
 }
 
 -(void) didDecodeSuccessMessage:(SuccessMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    resultLabel.text = [NSString stringWithFormat:@"OK"];
-}
-
--(void) didDecodePongMessage:(PongMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
-{
-    resultLabel.text = [NSString stringWithFormat:@"pong.tm=%lld", msg.block.tm.val];        
-}
-
--(void) didDecodeRegisterAckMessage:(RegisterAckMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
-{
-    self.appDelegate.authToken = [msg.register_ack_block.mat.data bytesToHexString];
-    resultLabel.text = @"Device successfully registered.";      
-    
-    [self updateRegisterButtonStatus];
+    [[self appDelegate] showAlert:@"Success"
+                        withTitle:@"Success!"];
 }
 
 -(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    resultLabel.text = [NSString stringWithFormat:@"unexpected message received: [%@]", hdr.message_id.string];
+    [[self appDelegate] showAlert:[NSString stringWithFormat:@"unexpected message received: [%@]",
+                                   hdr.message_id.string]
+                        withTitle:@"Error"];
 }
 
 - (IBAction)preAuthorizationTest:(id)sender 
@@ -206,6 +194,14 @@
     
     [parser encodeMessage:msgOut2 to:dataOut2];
     [webService sendMessage:dataOut2.consumedData];
+}
+
+- (IBAction)closeButtonTapped:(id)sender 
+{
+    if (self.delegate)
+    {
+        [self.delegate settingsControllerDidClose:self];
+    }
 }
 @end
 

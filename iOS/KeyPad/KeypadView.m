@@ -61,6 +61,7 @@
 				[b setOpaque:!NO];
 				[b setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 				[b setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+                b.titleLabel.font = [UIFont boldSystemFontOfSize:20.0f];
 				[b setTitle:[delegate titleForButtonOnRow:i andColumn:j] forState:UIControlStateNormal];
 				[b setEnabled:[delegate isButtonEnabledAtRow:i andColumn:j]];
 

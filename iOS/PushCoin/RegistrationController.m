@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/8/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import "RegistrationController.h"
@@ -15,7 +15,6 @@
 
 @implementation RegistrationController
 @synthesize registrationIDTextBox;
-@synthesize resultLabel;
 @synthesize delegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -43,7 +42,6 @@
 - (void)viewDidUnload
 {
     [self setRegistrationIDTextBox:nil];
-    [self setResultLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -57,6 +55,27 @@
 {
     [self register];
     return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    NSCharacterSet *charSet = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"];
+    NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    int charCount = [newString length];
+    
+    if ([newString rangeOfCharacterFromSet:[charSet invertedSet]].location != NSNotFound
+        || [string rangeOfString:@"-"].location != NSNotFound
+        || charCount > 19) {
+        return NO;
+    }
+    
+    if (charCount == 4 || charCount == 9 || charCount == 14) {
+        newString = [newString stringByAppendingString:@"-"];
+    }
+    
+    textField.text = newString;
+    
+    return NO;
 }
 
 - (AppDelegate *)appDelegate
@@ -96,16 +115,15 @@
 - (void)webService:(PushCoinWebService *)webService didFailWithStatusCode:(NSInteger)statusCode 
     andDescription:(NSString *)description
 {
-    resultLabel.text = [NSString stringWithFormat:@"web service returns %d; %@", statusCode, description];
-    [resultLabel sizeToFit];
+    [[self appDelegate] showAlert:description
+                        withTitle:[NSString stringWithFormat:@"Webservice Error - %d", statusCode]];
     [self.registrationIDTextBox becomeFirstResponder];
 }
 
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    resultLabel.text = [NSString stringWithFormat:@"error message received with code:%d reason:%@",
-                        msg.block.error_code.val, msg.block.reason.string];
-    [resultLabel sizeToFit];
+    [[self appDelegate] showAlert:msg.block.reason.string 
+                        withTitle:[NSString stringWithFormat:@"Error - %d", msg.block.error_code.val]];
     [self.registrationIDTextBox becomeFirstResponder];
 
 }
@@ -113,17 +131,15 @@
 -(void) didDecodeRegisterAckMessage:(RegisterAckMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
     self.appDelegate.authToken = [msg.register_ack_block.mat.data bytesToHexString];
-    resultLabel.text = @"Device successfully registered.";      
-    
-    [resultLabel sizeToFit];
     [self.delegate registrationControllerDidClose:self];
 }
 
 -(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    resultLabel.text = [NSString stringWithFormat:@"unexpected message received: [%@]", hdr.message_id.string];
+    [[self appDelegate] showAlert:[NSString stringWithFormat:@"unexpected message received: [%@]",
+                                   hdr.message_id.string]
+                        withTitle:@"Error"];
     [self.registrationIDTextBox becomeFirstResponder];
-
 }
 
 

@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 4/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -13,7 +13,6 @@
 
 #import "PushCoinWebService.h"
 #import "PushCoinMessages.h"
-#import "KeychainItemWrapper.h"
 
 @interface ReceiveController : UIViewController<PushCoinWebServiceDelegate, PushCoinMessageReceiver, ZXingDelegate, UITextFieldDelegate>
 {
@@ -24,4 +23,5 @@
 }
 @property (weak, nonatomic) IBOutlet UITextField *paymentTextField;
 - (IBAction)scan:(id)sender;
+- (IBAction)backgroundTouched:(id)sender;
 @end

@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 4/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import "ReceiveController.h"
@@ -36,7 +36,6 @@
     storedValue = [NSMutableString stringWithString:@""];
     self.paymentTextField.delegate = self;
     self.paymentTextField.keyboardType = UIKeyboardTypeNumberPad;
-    [self.paymentTextField becomeFirstResponder];
 }
 
 - (void)viewDidUnload
@@ -80,21 +79,21 @@
 {
     [self.paymentTextField resignFirstResponder];
     
-    ZXingWidgetController *widController = [[ZXingWidgetController alloc] initWithDelegate:self showCancel:YES OneDMode:NO];
+    ZXingWidgetController *widController = [[ZXingWidgetController alloc] initWithDelegate:self
+                                                                                showCancel:YES 
+                                                                                  OneDMode:NO];
     
     QRCodeReader* qrcodeReader = [[QRCodeReader alloc] init];
     widController.readers = [[NSSet alloc] initWithObjects:qrcodeReader, nil];
+    widController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+
     [self presentModalViewController:widController animated:YES];
 }
 
-- (void) alert:(NSString *)message withTitle:(NSString *)title
+- (IBAction)backgroundTouched:(id)sender 
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                    message:message
-                                                   delegate:nil
-                                          cancelButtonTitle:@"Close" 
-                                          otherButtonTitles:nil];
-    [alert show];
+    [self.paymentTextField resignFirstResponder];
+
 }
 
 #pragma mark -
@@ -150,17 +149,20 @@
 
 -(void) didDecodeErrorMessage:(ErrorMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    [self alert:msg.block.reason.string withTitle:@"Error"];
+    [self.appDelegate showAlert:msg.block.reason.string 
+                      withTitle:[NSString stringWithFormat:@"Error - %d", msg.block.error_code.val]];
 }
 
 -(void) didDecodeSuccessMessage:(SuccessMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    [self alert:@"Success!" withTitle:@"Success"];
+    [self.appDelegate showAlert:@"Success!" 
+                      withTitle:@"Success"];
 }
 
 -(void) didDecodeUnknownMessage:(PCOSMessage *)msg withHeader:(PCOSHeaderBlock*)hdr
 {
-    [self alert:@"Unknown message received." withTitle:@"Unknown"];
+    [self.appDelegate showAlert:@"Unknown message received." 
+                      withTitle:@"Unknown"];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string

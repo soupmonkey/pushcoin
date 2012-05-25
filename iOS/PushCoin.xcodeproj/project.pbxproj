@@ -107,6 +107,8 @@
 		0DBC491B1543BF3700E56EDF /* KeypadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DBC491A1543BF3700E56EDF /* KeypadView.m */; };
 		0DCCD2271564E221006C9526 /* pushcoin_dsa.pub in Resources */ = {isa = PBXBuildFile; fileRef = 0DCCD2261564E221006C9526 /* pushcoin_dsa.pub */; };
 		0DD692B615660FC500391E25 /* iphone_delete_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DD692B515660FC500391E25 /* iphone_delete_button.png */; };
+		0DDD095A156F19FC001C36BB /* PaymentDetailsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DDD0959156F19FC001C36BB /* PaymentDetailsController.m */; };
+		0DDD095D156F1A42001C36BB /* PaymentTipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DDD095C156F1A41001C36BB /* PaymentTipCell.m */; };
 		0DE9FA72155A1D4700FACDA7 /* RegistrationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */; };
 		0DED6564156DB2AF00E27A72 /* KeypadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DED6563156DB2AF00E27A72 /* KeypadController.m */; };
 		0DED6567156DCDE400E27A72 /* remove.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DED6565156DCDE400E27A72 /* remove.png */; };
@@ -115,6 +117,13 @@
 		0DF6C5C81563446600E28B99 /* MainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DF6C5C71563446600E28B99 /* MainTabBarController.m */; };
 		0DF6C5D115636C9400E28B99 /* PushCoinLogo-Large.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DF6C5CF15636C9400E28B99 /* PushCoinLogo-Large.png */; };
 		0DF6C5D215636C9400E28B99 /* PushCoinLogo-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DF6C5D015636C9400E28B99 /* PushCoinLogo-Small.png */; };
+		0DF8D8E1156E139300AEA91D /* HistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DF8D8E0156E139300AEA91D /* HistoryController.m */; };
+		0DF8D8E4156E1E1800AEA91D /* PushCoinTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DF8D8E3156E1E1800AEA91D /* PushCoinTransaction.m */; };
+		0DF8D8E7156E253F00AEA91D /* startup_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DF8D8E5156E253F00AEA91D /* startup_background.png */; };
+		0DF8D8E8156E253F00AEA91D /* startup_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DF8D8E6156E253F00AEA91D /* startup_background@2x.png */; };
+		0DF8D8EA156E255600AEA91D /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DF8D8E9156E255600AEA91D /* Default.png */; };
+		0DF8D8EC156E255B00AEA91D /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0DF8D8EB156E255B00AEA91D /* Default@2x.png */; };
+		0DF8D8EF156EFF3200AEA91D /* TransactionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DF8D8EE156EFF3200AEA91D /* TransactionCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -326,6 +335,10 @@
 		0DBC491A1543BF3700E56EDF /* KeypadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeypadView.m; sourceTree = "<group>"; };
 		0DCCD2261564E221006C9526 /* pushcoin_dsa.pub */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = pushcoin_dsa.pub; sourceTree = "<group>"; };
 		0DD692B515660FC500391E25 /* iphone_delete_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphone_delete_button.png; sourceTree = "<group>"; };
+		0DDD0958156F19FC001C36BB /* PaymentDetailsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentDetailsController.h; sourceTree = "<group>"; };
+		0DDD0959156F19FC001C36BB /* PaymentDetailsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentDetailsController.m; sourceTree = "<group>"; };
+		0DDD095B156F1A41001C36BB /* PaymentTipCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentTipCell.h; sourceTree = "<group>"; };
+		0DDD095C156F1A41001C36BB /* PaymentTipCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentTipCell.m; sourceTree = "<group>"; };
 		0DE9FA70155A1D4700FACDA7 /* RegistrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationController.h; sourceTree = "<group>"; };
 		0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegistrationController.m; sourceTree = "<group>"; };
 		0DED6562156DB2AF00E27A72 /* KeypadController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeypadController.h; sourceTree = "<group>"; };
@@ -337,6 +350,16 @@
 		0DF6C5C71563446600E28B99 /* MainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarController.m; sourceTree = "<group>"; };
 		0DF6C5CF15636C9400E28B99 /* PushCoinLogo-Large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PushCoinLogo-Large.png"; sourceTree = "<group>"; };
 		0DF6C5D015636C9400E28B99 /* PushCoinLogo-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PushCoinLogo-Small.png"; sourceTree = "<group>"; };
+		0DF8D8DF156E139300AEA91D /* HistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryController.h; sourceTree = "<group>"; };
+		0DF8D8E0156E139300AEA91D /* HistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryController.m; sourceTree = "<group>"; };
+		0DF8D8E2156E1E1800AEA91D /* PushCoinTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushCoinTransaction.h; sourceTree = "<group>"; };
+		0DF8D8E3156E1E1800AEA91D /* PushCoinTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushCoinTransaction.m; sourceTree = "<group>"; };
+		0DF8D8E5156E253F00AEA91D /* startup_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startup_background.png; sourceTree = "<group>"; };
+		0DF8D8E6156E253F00AEA91D /* startup_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "startup_background@2x.png"; sourceTree = "<group>"; };
+		0DF8D8E9156E255600AEA91D /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		0DF8D8EB156E255B00AEA91D /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		0DF8D8ED156EFF3100AEA91D /* TransactionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransactionCell.h; sourceTree = "<group>"; };
+		0DF8D8EE156EFF3200AEA91D /* TransactionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransactionCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -394,6 +417,8 @@
 		0D19E2BD1541CCAE00C8671B = {
 			isa = PBXGroup;
 			children = (
+				0DF8D8EB156E255B00AEA91D /* Default@2x.png */,
+				0DF8D8E9156E255600AEA91D /* Default.png */,
 				0D19E2D21541CCAE00C8671B /* PushCoin.App */,
 				0D7A8F7A154202A800634A79 /* Dependencies */,
 				0DBC491D1543C59A00E56EDF /* Resources */,
@@ -502,6 +527,14 @@
 				0DE9FA71155A1D4700FACDA7 /* RegistrationController.m */,
 				0DED6562156DB2AF00E27A72 /* KeypadController.h */,
 				0DED6563156DB2AF00E27A72 /* KeypadController.m */,
+				0DF8D8DF156E139300AEA91D /* HistoryController.h */,
+				0DF8D8E0156E139300AEA91D /* HistoryController.m */,
+				0DF8D8ED156EFF3100AEA91D /* TransactionCell.h */,
+				0DF8D8EE156EFF3200AEA91D /* TransactionCell.m */,
+				0DDD0958156F19FC001C36BB /* PaymentDetailsController.h */,
+				0DDD0959156F19FC001C36BB /* PaymentDetailsController.m */,
+				0DDD095B156F1A41001C36BB /* PaymentTipCell.h */,
+				0DDD095C156F1A41001C36BB /* PaymentTipCell.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -555,6 +588,8 @@
 				0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */,
 				0D37761415684E8B003FB8B3 /* PushCoinPayment.h */,
 				0D37761515684E8B003FB8B3 /* PushCoinPayment.m */,
+				0DF8D8E2156E1E1800AEA91D /* PushCoinTransaction.h */,
+				0DF8D8E3156E1E1800AEA91D /* PushCoinTransaction.m */,
 			);
 			name = PushCoin;
 			sourceTree = "<group>";
@@ -628,6 +663,8 @@
 		0DBC491D1543C59A00E56EDF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0DF8D8E5156E253F00AEA91D /* startup_background.png */,
+				0DF8D8E6156E253F00AEA91D /* startup_background@2x.png */,
 				0DED6565156DCDE400E27A72 /* remove.png */,
 				0DED6566156DCDE400E27A72 /* remove@2x.png */,
 				0D4923D8156B3CA900626AC2 /* 1.00.png */,
@@ -836,6 +873,10 @@
 				0D4923EF156B3CA900626AC2 /* 500.00@2x.png in Resources */,
 				0DED6567156DCDE400E27A72 /* remove.png in Resources */,
 				0DED6568156DCDE400E27A72 /* remove@2x.png in Resources */,
+				0DF8D8E7156E253F00AEA91D /* startup_background.png in Resources */,
+				0DF8D8E8156E253F00AEA91D /* startup_background@2x.png in Resources */,
+				0DF8D8EA156E255600AEA91D /* Default.png in Resources */,
+				0DF8D8EC156E255B00AEA91D /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -872,6 +913,11 @@
 				0D377612156839BC003FB8B3 /* Common.m in Sources */,
 				0D37761615684E8B003FB8B3 /* PushCoinPayment.m in Sources */,
 				0DED6564156DB2AF00E27A72 /* KeypadController.m in Sources */,
+				0DF8D8E1156E139300AEA91D /* HistoryController.m in Sources */,
+				0DF8D8E4156E1E1800AEA91D /* PushCoinTransaction.m in Sources */,
+				0DF8D8EF156EFF3200AEA91D /* TransactionCell.m in Sources */,
+				0DDD095A156F19FC001C36BB /* PaymentDetailsController.m in Sources */,
+				0DDD095D156F1A42001C36BB /* PaymentTipCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

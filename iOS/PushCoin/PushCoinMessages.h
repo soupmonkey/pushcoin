@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/2/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -39,7 +39,7 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 @end
 
 @interface Transaction : PCOSBlock
-@property (nonatomic, strong) PCOSInt64 * tx_id;
+@property (nonatomic, strong) PCOSShortArray * transaction_id;
 @property (nonatomic, strong) PCOSChar * tx_type;
 @property (nonatomic, strong) Amount * amount;
 @property (nonatomic, strong) PCOSFixedArray * currency;
@@ -53,6 +53,7 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 /* Error Message */
 @interface ErrorMessageBlock : PCOSBlock
 @property (nonatomic, strong) PCOSShortArray * ref_data;
+@property (nonatomic, strong) PCOSShortArray * transaction_id;
 @property (nonatomic, strong) PCOSInt32 * error_code;
 @property (nonatomic, strong) PCOSShortArray * reason;
 @end
@@ -64,6 +65,7 @@ extern NSString * const MID_PREAUTHORIZATION_REQUEST;
 /* Success Message */
 @interface SuccessMessageBlock : PCOSBlock
 @property (nonatomic, strong) PCOSShortArray * ref_data;
+@property (nonatomic, strong) PCOSShortArray * transaction_id;
 @end
 
 @interface SuccessMessage : PCOSMessage

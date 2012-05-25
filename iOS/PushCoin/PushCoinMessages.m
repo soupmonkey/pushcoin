@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/2/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import "PushCoinMessages.h"
@@ -43,6 +43,12 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     }
     return self;
 }
+
+-(id) copyWithZone:(NSZone *)zone
+{
+    Amount * other = [[Amount alloc] init];
+       return other;
+}
 @end
 
 
@@ -63,11 +69,17 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     }
     return self;
 }
+
+-(id) copyWithZone:(NSZone *)zone
+{
+    Gratuity * other = [[Gratuity alloc] init];
+      return other;
+}
 @end
 
 
 @implementation Transaction
-@synthesize tx_id;
+@synthesize transaction_id;
 @synthesize tx_type;
 @synthesize amount;
 @synthesize currency;
@@ -82,7 +94,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     self = [super init];
     if (self)
     {
-        self.tx_id =[[PCOSInt64 alloc] init]; 
+        self.transaction_id =[[PCOSShortArray alloc] initWithItemPrototype:protoByte];
         self.tx_type =[[PCOSChar alloc] init]; 
         self.amount =[[Amount alloc] init]; 
         self.currency =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:3]; 
@@ -92,7 +104,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         self.pta_ref_data =[[PCOSShortArray alloc] initWithItemPrototype:protoByte];
         self.invoice =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
         
-        [self addField:self.tx_id withName:@"tx_id"];
+        [self addField:self.transaction_id withName:@"transaction_id"];
         [self addField:self.tx_type withName:@"tx_type"];
         [self addField:self.amount withName:@"amount"];
         [self addField:self.currency withName:@"currency"];
@@ -104,6 +116,14 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     }
     return self;
 }
+
+
+-(id) copyWithZone:(NSZone *)zone
+{
+    Transaction * other = [[Transaction alloc] init];
+    return other;
+}
+
 @end
 
 
@@ -111,6 +131,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 /* Error Message */
 @implementation ErrorMessageBlock
 @synthesize ref_data;
+@synthesize transaction_id;
 @synthesize error_code;
 @synthesize reason;
 
@@ -120,10 +141,12 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     if (self)
     {
         self.ref_data =[[PCOSShortArray alloc] initWithItemPrototype:protoByte]; 
+        self.transaction_id =[[PCOSShortArray alloc] initWithItemPrototype:protoByte]; 
         self.error_code = [[PCOSInt32 alloc] init];
         self.reason =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
 
         [self addField:self.ref_data withName:@"ref_data"];
+        [self addField:self.transaction_id withName:@"transaction_id"];
         [self addField:self.error_code withName:@"error_code"];
         [self addField:self.reason withName:@"reason"];
 
@@ -147,6 +170,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 /* Success Message */
 @implementation SuccessMessageBlock
 @synthesize ref_data;
+@synthesize transaction_id;
 
 -(id) init
 {
@@ -154,7 +178,10 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     if (self)
     {
         self.ref_data =[[PCOSShortArray alloc] initWithItemPrototype:protoByte]; 
+        self.transaction_id =[[PCOSShortArray alloc] initWithItemPrototype:protoByte]; 
+
         [self addField:self.ref_data withName:@"ref_data"];
+        [self addField:self.transaction_id withName:@"transaction_id"];
     }
     return self;
 }
@@ -564,7 +591,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         self.utc_ctime =[[PCOSInt64 alloc] init]; 
         self.transfer =[[Amount alloc] init]; 
         self.currency =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:3]; 
-        self.note =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
+        self.note =[[PCOSLongArray alloc] initWithItemPrototype:protoChar]; 
 
         [self addField:self.mat withName:@"mat"];
         [self addField:self.ref_data withName:@"ref_data"];

@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 4/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -11,14 +11,11 @@
 #import "QRViewController.h"
 #import "GMGridView.h"
 #import "PaymentCell.h"
-#import "PushCoinMessages.h"
 #import "KeypadController.h"
 
 
 @interface PayController : UIViewController <QRViewControllerDelegate, KeypadControllerDelegate, /*ABPeoplePickerNavigationControllerDelegate,*/ GMGridViewDataSource, GMGridViewSortingDelegate,  GMGridViewActionDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate>
 {
-    PushCoinMessageParser * parser_;
-    NSMutableData * buffer_;
     NSMutableArray *payments_;
     NSInteger lastDeleteItemIndexAsked_;
     BOOL movingCell_;

@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/23/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import "KeypadController.h"
@@ -69,7 +69,7 @@ int KeyBackgroundStyle = 1;
     self.displayLabel.textColor = [UIColor blackColor];
     self.displayLabel.backgroundColor = [UIColor clearColor];
     self.displayLabel.textAlignment = UITextAlignmentRight;
-    
+   
     self.keypadView = [KeypadView keypadViewWithFrame:
                        CGRectMake(0, 87.0, 
                                   self.placeHolderView.frame.size.width,
@@ -83,18 +83,8 @@ int KeyBackgroundStyle = 1;
     [self.placeHolderView addSubview:self.keypadView];        
 }
 
-
-
-- (IBAction)amountTextFieldTouched:(id)sender
-{
-
-}
-
-
-
 #pragma mark -
 #pragma mark Keypads
-
 
 -(int) numberOfRows
 {
@@ -135,14 +125,14 @@ int KeyBackgroundStyle = 1;
 			if (column == 2) return @"3";
 		}
 		if (row == 3) {
-            if (column == 0) return @"Receiver";
+            if (column == 0) return @"";
 			if (column == 1) return @"0";
             if (column == 2) return @"OK";
         }
 		return @"";
 	} else {
 		if (row == 3) {
-            if (column == 0) return @"Receiver";
+            if (column == 0) return @"";
 			if (column == 1) return @"0";
             if (column == 2) return @"OK";
 			return @"";
@@ -223,4 +213,14 @@ int KeyBackgroundStyle = 1;
 }
 
 
+- (IBAction)cancelButtonTapped:(id)sender 
+{
+    [self.delegate keypadControllerDidCancel:self];
+}
+
+- (IBAction)clearButtonTapped:(id)sender 
+{
+    self.amountString = @"";
+    self.displayLabel.text = @"";
+}
 @end

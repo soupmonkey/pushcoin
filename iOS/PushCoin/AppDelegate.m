@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 4/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import "AppDelegate.h"
@@ -13,7 +13,8 @@
 
 @synthesize window = _window;
 @synthesize keychain = _keychain;
-@synthesize pemDsaPublicKey;
+@synthesize images = _images;
+@synthesize pemDsaPublicKey = _pemDsaPublicKey;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -21,7 +22,7 @@
     [self prepareKeyChain];
     [self prepareDSA];
     [self prepareRSA];
-    
+    [self prepareImageCache];
     return YES;
 }
 
@@ -40,6 +41,34 @@
                                      error:&error];
     }
     return ret;
+}
+
+-(BOOL) prepareImageCache
+{
+    self.images = [NSArray arrayWithObjects:
+                   [UIImage imageNamed:@"1.00.png"],
+                   [UIImage imageNamed:@"5.00.png"],
+                   [UIImage imageNamed:@"10.00.png"],
+                   [UIImage imageNamed:@"50.00.png"],
+                   [UIImage imageNamed:@"100.00.png"],
+                   [UIImage imageNamed:@"500.00.png"], 
+                   nil];
+    return YES;
+
+}
+             
+-(UIImage *) imageForAmountType:(PushCoinPaymentAmountType) type
+{
+    switch(type)
+    {
+        case PushCoinPaymentAmountTypeGreen:    return [self.images objectAtIndex:0];
+        case PushCoinPaymentAmountTypePurple:   return [self.images objectAtIndex:1];
+        case PushCoinPaymentAmountTypeRed:      return [self.images objectAtIndex:2];
+        case PushCoinPaymentAmountTypeBrown:    return [self.images objectAtIndex:3];
+        case PushCoinPaymentAmountTypeYellow:   return [self.images objectAtIndex:4];
+        case PushCoinPaymentAmountTypeClear:    return [self.images objectAtIndex:5];
+        default:                                return [self.images objectAtIndex:5];
+    }
 }
 
 -(BOOL) prepareKeyChain
@@ -134,6 +163,17 @@
     return controller;
 }
 
+
+- (void) showAlert:(NSString *)message withTitle:(NSString *)title
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"Close" 
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     /*
@@ -148,6 +188,10 @@
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName: @"handleCleanup" 
+                                                        object: nil 
+                                                      userInfo: nil];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application

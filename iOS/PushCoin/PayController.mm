@@ -3,13 +3,13 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 4/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 #import <QuartzCore/QuartzCore.h>
 #import "PayController.h"
 #import "PushCoinConfig.h"
 #import "AppDelegate.h"
-#import "NSString+HexStringToBytes.h"
+
 
 @implementation PayController
 @synthesize navigationBar;
@@ -27,14 +27,32 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    buffer_ = [[NSMutableData alloc] initWithLength:PushCoinWebServiceOutBufferSize];
-    parser_ = [[PushCoinMessageParser alloc] init];
- 
-    payments_ = [[NSMutableArray alloc] init];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self 
+                                             selector: @selector(saveAndCleanup) 
+                                                 name: @"handleCleanup" 
+                                               object: nil];
+    
+   
+    if ([[[NSFileManager alloc] init] fileExistsAtPath:self.dataFilePath] == YES)
+        payments_ = [NSKeyedUnarchiver unarchiveObjectWithFile:self.dataFilePath];
+    else
+        payments_ = [[NSMutableArray alloc] init];    
+    
     movingCell_ = NO;
     
     [self prepareNavigationBar];
     [self preparePaymentGrid];
+}
+
+-(NSString *) dataFilePath
+{
+    return [self.appDelegate.keyFilePath stringByAppendingPathComponent:@"payments.dat"];            
+}
+        
+-(void)saveAndCleanup
+{
+    [NSKeyedArchiver archiveRootObject:payments_ toFile:self.dataFilePath];
 }
 
 -(void) prepareNavigationBar
@@ -47,10 +65,9 @@
 
 -(void) preparePaymentGrid
 {
-    self.gridView = [[GMGridView alloc] initWithFrame: 
-                     CGRectMake(0, 0,
-                                self.placeHolderView.frame.size.width,
-                                self.placeHolderView.frame.size.height)];
+    CGRect frame = self.placeHolderView.bounds;
+    frame.size.height = frame.size.height - 48;
+    self.gridView = [[GMGridView alloc] initWithFrame: frame];
     self.gridView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     //self.gridView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"payment_grid_background.png"]];  
     self.gridView.backgroundColor = [UIColor darkGrayColor];
@@ -60,7 +77,6 @@
     self.gridView.sortingDelegate = self;
     self.gridView.dataSource = self;
     self.gridView.scrollEnabled = YES;
-    
     [self.placeHolderView addSubview:self.gridView];    
     [self.gridView reloadData];
 }
@@ -87,6 +103,8 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
+    [self gridView].editing = NO;
+    [self saveAndCleanup];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -106,48 +124,14 @@
 
 - (IBAction)push:(id)sender payment:(PushCoinPayment *)payment
 {
-    NSDate * now = [NSDate date];
+    QRViewController * controller = [self.appDelegate viewControllerWithIdentifier:@"QRViewController"];
     
-    //set data
-    PaymentTransferAuthorizationMessage * msgOut = [[PaymentTransferAuthorizationMessage alloc] init];
-    PCOSRawData * dataOut = [[PCOSRawData alloc] initWithData:buffer_];
-    
-    msgOut.prv_block.mat.data = self.appDelegate.authToken.hexStringToBytes;
-    msgOut.prv_block.ref_data.string=@"";
-    
-    msgOut.pub_block.utc_ctime.val = (SInt64)[now timeIntervalSince1970];
-    msgOut.pub_block.utc_etime.val = (SInt64)[now timeIntervalSince1970] + 60;    
-    msgOut.pub_block.payment_limit.value.val = payment.amountValue;
-    msgOut.pub_block.payment_limit.scale.val = payment.amountScale;
-    
-    if (payment.tipValue != 0)
+    if (controller)
     {
-        Gratuity * tip = [[Gratuity alloc] init];
-        tip.type.val = 'P';
-        tip.add.value.val = payment.tipValue;
-        tip.add.scale.val = payment.tipScale;
-        
-        [msgOut.pub_block.tip.val addObject:tip];
-    }
-    
-    msgOut.pub_block.currency.string = @"USD";
-    msgOut.pub_block.keyid.data = [PushCoinRSAPublicKeyID hexStringToBytes];
-    msgOut.pub_block.receiver.string = @"";
-    msgOut.pub_block.note.string = @"";
-    
-    [parser_ encodeMessage:msgOut to:dataOut];
-    
-    if (dataOut.consumedData.length)
-    {
-        QRViewController * controller = [self.appDelegate viewControllerWithIdentifier:@"QRViewController"];
-        
-        if (controller)
-        {
-            controller.delegate = self;
-            controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-            [controller setQRData:dataOut.consumedData withDetails:payment];
-            [self presentModalViewController:controller animated:YES];
-        }
+        controller.delegate = self;
+        controller.payment = payment;
+        controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        [self presentModalViewController:controller animated:YES];
     }
 }
 
@@ -182,9 +166,14 @@
     }
 }
 
+-(void)keypadControllerDidCancel:(KeypadController *)controller
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 #pragma mark -
 #pragma mark QRController
--(void)qrViewControllerDidCloseQR:(QRViewController *)controller
+-(void)qrViewControllerDidClose:(QRViewController *)controller
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -284,6 +273,11 @@
         if (cell)
             [self push:view payment:cell.payment];
     }
+}
+
+-(void) GMGridViewDidTapOnEmptySpace:(GMGridView *)gridView
+{
+    self.gridView.editing = NO;
 }
 
 

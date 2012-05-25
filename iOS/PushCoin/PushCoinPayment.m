@@ -3,16 +3,16 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/19/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import "PushCoinPayment.h"
 
 @implementation PushCoinPayment
-@synthesize amountScale;
-@synthesize amountValue;
-@synthesize tipScale;
-@synthesize tipValue;
+@synthesize amountScale = amountScale_;
+@synthesize amountValue = amountValue_;
+@synthesize tipScale    = tipScale_;
+@synthesize tipValue    = tipValue_;
 @synthesize tip;
 @synthesize amount;
 @synthesize amountType;
@@ -31,16 +31,28 @@
     return self;
 }
 
+-(id) initWithAmountValue:(NSUInteger)amountValue
+              amountScale:(NSInteger)amountScale
+                 tipValue:(NSUInteger)tipValue
+                 tipScale:(NSInteger)tipScale
+{
+    self = [super init];
+    if (self)
+    {
+        self.amountScale = amountScale;
+        self.amountValue = amountValue;
+        self.tipScale = tipScale;
+        self.tipValue = tipValue;
+    }
+    return self;
+}
+
 -(id) copyWithZone:(NSZone *)zone
 {
-    PushCoinPayment * other = [[PushCoinPayment alloc] init];
-    if (other)
-    {
-        other.amountScale = self.amountScale;
-        other.amountValue = self.amountValue;
-        other.tipScale = self.tipScale;
-        other.tipValue = self.tipValue;
-    }
+    PushCoinPayment * other = [[PushCoinPayment alloc] initWithAmountValue:self.amountValue
+                                                               amountScale:self.amountScale
+                                                                  tipValue:self.tipValue 
+                                                                  tipScale:self.tipScale];
     return other;
     
 }
@@ -107,4 +119,58 @@
                            alpha:alpha];
 }
 */
+
+
+#pragma mark NSCoding
+
+#define kAmountValue   @"AmountValue"
+#define kAmountScale   @"AmountScale"
+#define kTipValue      @"TipValue"
+#define kTipScale      @"TipScale"
+
+
+- (void) encodeWithCoder:(NSCoder *)encoder {
+    [encoder encodeInteger:amountValue_ forKey:kAmountValue];
+    [encoder encodeInteger:amountScale_ forKey:kAmountScale];
+    [encoder encodeInteger:tipValue_ forKey:kTipValue];
+    [encoder encodeInteger:tipScale_ forKey:kTipScale];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    NSUInteger amountValue = [decoder decodeIntegerForKey:kAmountValue];
+    NSInteger amountScale = [decoder decodeIntegerForKey:kAmountScale];
+    NSUInteger tipValue = [decoder decodeIntegerForKey:kTipValue];
+    NSInteger tipScale = [decoder decodeIntegerForKey:kTipScale];
+    
+    return [self initWithAmountValue:amountValue
+                         amountScale:amountScale
+                            tipValue:tipValue 
+                            tipScale:tipScale];
+}
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

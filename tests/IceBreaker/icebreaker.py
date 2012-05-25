@@ -108,8 +108,8 @@ class RmoteCall:
 		bo.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 ) # mat
 		bo.write_short_string( '', max=20 ) # ref-data
 		bo.write_short_string( '', max=127 ) # keywords
-		bo.write_int16( 0 )
-		bo.write_int16( 100 )
+		bo.write_int16( int(self.args['page']) )
+		bo.write_int16( int(self.args['size']) )
 		req.add( bo )
 
 		res = self.send( req )

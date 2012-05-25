@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/2/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -104,3 +104,17 @@
 -(id) copyWithZone:(NSZone *)zone;
 -(void) addField:(PCOSBaseType *)field withName:(NSString*) name;
 @end
+
+@interface PCOSEncryptedBlock : PCOSBlock
+-(NSUInteger) encode:(PCOSRawData *)data;
+-(NSUInteger) decode:(PCOSRawData *)data;
+@end
+
+
+@interface PCOSDataBlock : PCOSBaseType
+@property (nonatomic, strong) NSData * data;
+-(id) initWithData:(NSData *)data;
+-(NSUInteger) encode:(PCOSRawData *)data;
+-(NSUInteger) decode:(PCOSRawData *)data;
+@end
+

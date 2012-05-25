@@ -3,19 +3,18 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 4/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
-
+#import <QuartzCore/QuartzCore.h>
 #import "PayController.h"
-#import "VSKeypadView.h"
 #import "PushCoinConfig.h"
+#import "AppDelegate.h"
+
 
 @implementation PayController
-@synthesize amountTextField;
-@synthesize encodedData;
-@synthesize receiverLabel;
-@synthesize scrollView;
-@synthesize pageControl;
+@synthesize navigationBar;
+@synthesize placeHolderView;
+@synthesize gridView;
 
 - (void)didReceiveMemoryWarning
 {
@@ -28,96 +27,67 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    buffer_ = [[NSMutableData alloc] initWithLength:PushCoinWebServiceOutBufferSize];
-    parser_ = [[PushCoinMessageParser alloc] init];
-
-    self.scrollView.delegate = self;
     
-    emptyCellIndex_ = NSNotFound;
-    
-    keypadView_ = [VSKeypadView keypadViewWithFrame:
-                       CGRectMake(self.scrollView.frame.size.width, 0, 
-                                  self.scrollView.frame.size.width,
-                                  self.scrollView.frame.size.height)];
-	keypadView_.delegate = self;	
-	[keypadView_ setOpaque:YES];
-    [self.scrollView addSubview:keypadView_];    
-    [self.scrollView setContentSize:CGSizeMake(self.scrollView.frame.size.width * 2, 
-                                               self.scrollView.frame.size.height)];  
+    [[NSNotificationCenter defaultCenter] addObserver: self 
+                                             selector: @selector(saveAndCleanup) 
+                                                 name: @"handleCleanup" 
+                                               object: nil];
     
    
-    enteredAmountString_ = @"";
+    if ([[[NSFileManager alloc] init] fileExistsAtPath:self.dataFilePath] == YES)
+        payments_ = [NSKeyedUnarchiver unarchiveObjectWithFile:self.dataFilePath];
+    else
+        payments_ = [[NSMutableArray alloc] init];    
     
-    gridView_ = [[AQGridView alloc] initWithFrame: 
-                 CGRectMake(0, 0,
-                            self.scrollView.frame.size.width,
-                             self.scrollView.frame.size.height)];
-    gridView_.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    gridView_.backgroundColor = [UIColor colorWithRed:119.0/255.0 green:136.0/255.0 blue:153.0/255.0 alpha:1.0];
-    gridView_.opaque = NO;
-    gridView_.dataSource = self;
-    gridView_.delegate = self;
-    gridView_.scrollEnabled = NO;
+    movingCell_ = NO;
     
-    [self.scrollView addSubview:gridView_];    
-    
-    /*
-    // add our gesture recognizer to the grid view
-    UILongPressGestureRecognizer * gr = [[UILongPressGestureRecognizer alloc] initWithTarget: self action: @selector(moveActionGestureRecognizerStateChanged:)];
-    gr.minimumPressDuration = 0.5;
-    gr.delegate = self;
-    [gridView_ addGestureRecognizer: gr];
-    */
-    
-    if ( icons_ == nil )
-    {
-        icons_ = [[NSMutableArray alloc] initWithCapacity: 9];
-        UIBezierPath * path = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(0.0, 0.0, 72.0, 72.0)
-                                                         cornerRadius: 14.0];
-        
-        for ( NSUInteger i = 0; i < 9; i++ )
-        {
-            UIGraphicsBeginImageContext( CGSizeMake(72.0, 72.0) );
-            
-            // clear background
-            [[UIColor clearColor] set];
-            UIRectFill( CGRectMake(0.0, 0.0, 72.0, 72.0) );
-            
-            // fill the rounded rectangle
-            //[color set];
-            [[UIColor colorWithRed:250.0/255.0 green:250.0/255.0 blue:210.0/255.0 alpha:1.0] set];
-            [path fill];
-            
-            [[UIColor blackColor] set];
-            NSString * text = [NSString stringWithFormat:@"$%d", i + 1];
-            [text drawInRect:CGRectMake(0.0, 30.0, 72.0, 20.0)
-                    withFont:[UIFont systemFontOfSize:20]
-               lineBreakMode:UILineBreakModeWordWrap
-                   alignment:UITextAlignmentCenter];
-              
-            UIImage * image = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-            
-            // put the image into our list
-            [icons_ addObject: image];
-        }
-    }
-    
-    [gridView_ reloadData];
-    
+    [self prepareNavigationBar];
+    [self preparePaymentGrid];
 }
 
+-(NSString *) dataFilePath
+{
+    return [self.appDelegate.keyFilePath stringByAppendingPathComponent:@"payments.dat"];            
+}
+        
+-(void)saveAndCleanup
+{
+    [NSKeyedArchiver archiveRootObject:payments_ toFile:self.dataFilePath];
+}
+
+-(void) prepareNavigationBar
+{
+    UIImageView * logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"title.png"]];
+    logoView.contentMode = UIViewContentModeScaleAspectFit;
+    logoView.bounds = CGRectInset(self.navigationBar.bounds, 0, 5.0f);
+    self.navigationBar.topItem.titleView = logoView;
+}
+
+-(void) preparePaymentGrid
+{
+    CGRect frame = self.placeHolderView.bounds;
+    frame.size.height = frame.size.height - 48;
+    self.gridView = [[GMGridView alloc] initWithFrame: frame];
+    self.gridView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    //self.gridView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"payment_grid_background.png"]];  
+    self.gridView.backgroundColor = [UIColor darkGrayColor];
+    self.gridView.opaque = YES;
+
+    self.gridView.actionDelegate = self;
+    self.gridView.sortingDelegate = self;
+    self.gridView.dataSource = self;
+    self.gridView.scrollEnabled = YES;
+    [self.placeHolderView addSubview:self.gridView];    
+    [self.gridView reloadData];
+}
 - (void)viewDidUnload
 {
-    [self setAmountTextField:nil];
-    [self setReceiverLabel:nil];
-    [self setScrollView:nil];
-    [self setPageControl:nil];
-    gridView_ = nil;
+    self.gridView = nil;
     
+    [self setNavigationBar:nil];
+    [self setPlaceHolderView:nil];
+    [self setGridView:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -133,6 +103,8 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
+    [self gridView].editing = NO;
+    [self saveAndCleanup];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -142,207 +114,74 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
+- (AppDelegate *)appDelegate
 {
-    //hide keyboard
-    //if (textField == amountTextField)
-    //    [textField resignFirstResponder];
-    
-    [self push:textField];
-    return YES;
+    return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+- (IBAction)push:(id)sender payment:(PushCoinPayment *)payment
 {
-    return NO;
+    QRViewController * controller = [self.appDelegate viewControllerWithIdentifier:@"QRViewController"];
+    
+    if (controller)
+    {
+        controller.delegate = self;
+        controller.payment = [payment copy];
+        controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        [self presentModalViewController:controller animated:YES];
+    }
 }
+
+- (IBAction)editPayment:(id)sender 
+{
+    self.gridView.editing = !self.gridView.editing;
+}
+
+- (IBAction)addPayment:(id)sender 
+{
+    KeypadController * controller = [self.appDelegate viewControllerWithIdentifier:@"KeypadController"];
+    
+    if (controller)
+    {
+        controller.delegate = self;
+        controller.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        [self presentModalViewController:controller animated:YES];
+    }
+}
+
 
 #pragma mark -
-#pragma mark QRController
-
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue 
-                 sender:(id)sender
+#pragma mark KeypadController
+-(void)keypadControllerDidClose:(KeypadController *)controller
 {
-	if ([segue.identifier isEqualToString:@"SegueToQR"])
-	{
-		UIViewController *viewController = segue.destinationViewController;
-		QRViewController *qrViewController = (QRViewController *)viewController;
-		qrViewController.delegate = self;
-        [qrViewController setQRData:encodedData
-                        withSummary:self.amountTextField.text];
-	}
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    if (controller.payment.amountValue != 0)
+    {
+        [payments_ addObject:[controller.payment copy]];
+        [self.gridView insertObjectAtIndex:payments_.count-1 withAnimation:GMGridViewItemAnimationFade];
+    }
 }
 
--(void)qrViewControllerDidCloseQR:(QRViewController *)controller
+-(void)keypadControllerDidCancel:(KeypadController *)controller
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)push:(id)sender
-{
-    //set data
-    PaymentTransferAuthorizationMessage * msgOut = [[PaymentTransferAuthorizationMessage alloc] init];
-    PCOSRawData * dataOut = [[PCOSRawData alloc] initWithData:buffer_];
-    
-    msgOut.keyid.string = @"01234567890123456789";
-    msgOut.prv_block.mat.string=@"01234567890123456789";
-    msgOut.prv_block.sig.string=@"012345678901234567890123456";
-    msgOut.prv_block.ref.string=@"";
-    
-    msgOut.pub_block.ct.val = 1000000;
-    msgOut.pub_block.ep.val = 1000000;
-    msgOut.pub_block.amt.string = self.amountTextField.text;
-    msgOut.pub_block.cur.string = @"USD";
-    msgOut.pub_block.rcv.string = @"";
-    msgOut.pub_block.note.string = @"";
-    
-    [parser_ encodeMessage:msgOut to:dataOut];
-    encodedData = dataOut.consumedData;
-    
-    if (encodedData.length)
-    {
-        //show qr view
-        [self performSegueWithIdentifier:@"SegueToQR"
-                                  sender:self ];   
-    }
-}
-
 #pragma mark -
-#pragma mark Keypads
-
-
--(int) numberOfRows
+#pragma mark QRController
+-(void)qrViewControllerDidClose:(QRViewController *)controller
 {
-	return 4;
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(int) numberOfColumns
-{
-	return 3;
-}
-
--(CGSize) sizeForButtonOnRow:(int)row 
-                   andColumn:(int)column
-{
-    int width = self.scrollView.frame.size.width / 3;
-    int height = self.scrollView.frame.size.height / 4;
-       
-    return CGSizeMake(width, height);
-}
-
--(NSString *) titleForButtonOnRow:(int)row
-                        andColumn:(int)column
-{
-	if (REVERSE_KEYPAD) {		
-		if (row == 0) {
-			if (column == 0) return @"7";
-			if (column == 1) return @"8";
-			if (column == 2) return @"9";
-		}
-		if (row == 1) {
-			if (column == 0) return @"4";
-			if (column == 1) return @"5";
-			if (column == 2) return @"6";
-		}
-		if (row == 2) {
-			if (column == 0) return @"1";
-			if (column == 1) return @"2";
-			if (column == 2) return @"3";
-		}
-		if (row == 3) {
-            if (column == 0) return @"Receiver";
-			if (column == 1) return @"0";
-            if (column == 2) return @"OK";
-        }
-		return @"";
-	} else {
-		if (row == 3) {
-            if (column == 0) return @"Receiver";
-			if (column == 1) return @"0";
-            if (column == 2) return @"OK";
-			return @"";
-		}
-		return [NSString stringWithFormat:@"%d", row*[keypadView_.delegate numberOfColumns]+column+1];
-	}
-	return nil;
-}
-
--(id) valueForButtonOnRow:(int)row 
-                andColumn:(int)column
-{
-    return [self titleForButtonOnRow:row andColumn:column];
-}
-
--(void) receivedValue:(id)value
-{
-    if ([value isEqualToString:@"OK"] == YES)
-    {
-        [self push:nil];
-        return;
-    }
-    else if ([value isEqualToString:@"Receiver"] == YES)
-    {
-        ABPeoplePickerNavigationController *picker = [[ABPeoplePickerNavigationController alloc] init];
-        picker.peoplePickerDelegate = self;
-        [self presentModalViewController:picker animated:YES];
-    }
-    else
-    {
-        // Empty Check
-        if (amountTextField.text.length == 0)
-        {
-            enteredAmountString_ = @"";
-        }
-
-        // Sanity check (8.2)
-        if (enteredAmountString_.length < 10)
-        {
-            enteredAmountString_ = [enteredAmountString_ stringByAppendingFormat:@"%@", value];
-        }
-    
-        // Zero check
-        if ([enteredAmountString_ isEqualToString:@"0"])
-        {
-            enteredAmountString_ =@"";
-        }
-        
-        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-        NSNumber *number = [f numberFromString:enteredAmountString_];
-        NSString *numStr = [NSString stringWithFormat:@"$ %.2lf", number.doubleValue / 100];
-        amountTextField.text = numStr;
-    }
-}
-
--(UIImage *) backgroundImageForState:(UIControlState)state 
-                         forKeyAtRow:(int)row 
-                           andColumn:(int)column
-{
-    if (state != UIControlStateHighlighted)
-        return [UIImage imageNamed:@"keyBG.png"];
-    else
-        return [UIImage imageNamed:@"keyBG_touched.png"];
-}
-
--(CGPoint) keypadOrigin
-{
-	return CGPointMake(0, 0);
-}
-
--(BOOL)isButtonEnabledAtRow:(int)row 
-                  andColumn:(int)column
-{
-	return ![[self titleForButtonOnRow:row andColumn:column] isEqualToString:@""];
-}
 
 #pragma mark -
 #pragma mark peoplePicker delegates
-
-
+/*
 - (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker
 {
     [self dismissModalViewControllerAnimated:YES];
@@ -383,281 +222,118 @@
     {
         email = @"[None]";
     }
-    receiverLabel.text = [NSString stringWithFormat:@"Pay to: %@ <%@>", name, email];
-}
-
-
-#pragma mark -
-#pragma mark UIScrollViewDelegate
-
-
-- (void)scrollViewDidScroll:(UIScrollView *)sender {
-   
-    CGFloat pageWidth = scrollView.frame.size.width;
-    int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-    pageControl.currentPage = page;
     
-}
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-   
-}
-
-
-
-#pragma mark -
-#pragma mark UIGestureRecognizer Delegate/Actions
-
-/*
-- (BOOL) gestureRecognizerShouldBegin: (UIGestureRecognizer *) gestureRecognizer
-{
-    CGPoint location = [gestureRecognizer locationInView: gridView_];
-    if ( [gridView_ indexForItemAtPoint: location] < [icons_ count] )
-        return ( YES );
-    
-    // touch is outside the bounds of any icon cells, so don't start the gesture
-    return ( NO );
-}
-
-- (void) moveActionGestureRecognizerStateChanged: (UIGestureRecognizer *) recognizer
-{
-    switch ( recognizer.state )
-    {
-        default:
-        case UIGestureRecognizerStateFailed:
-            // do nothing
-            break;
-            
-        case UIGestureRecognizerStatePossible:
-        case UIGestureRecognizerStateCancelled:
-        {
-            [gridView_ beginUpdates];
-            
-            if ( emptyCellIndex_ != dragOriginIndex_ )
-            {
-                [gridView_ moveItemAtIndex: emptyCellIndex_ toIndex: dragOriginIndex_ withAnimation: AQGridViewItemAnimationFade];
-            }
-            
-            emptyCellIndex_ = dragOriginIndex_;
-            
-            // move the cell back to its origin
-            [UIView beginAnimations: @"SnapBack" context: NULL];
-            [UIView setAnimationCurve: UIViewAnimationCurveEaseOut];
-            [UIView setAnimationDuration: 0.5];
-            [UIView setAnimationDelegate: self];
-            [UIView setAnimationDidStopSelector: @selector(finishedSnap:finished:context:)];
-            
-            CGRect f = draggingCell_.frame;
-            f.origin = dragOriginCellOrigin_;
-            draggingCell_.frame = f;
-            
-            [UIView commitAnimations];
-            
-            [gridView_ endUpdates];
-            
-            break;
-        }
-            
-        case UIGestureRecognizerStateEnded:
-        {
-            CGPoint p = [recognizer locationInView: gridView_];
-            NSUInteger index = [gridView_ indexForItemAtPoint: p];
-			if ( index == NSNotFound )
-			{
-				// index is the last available location
-				index = [icons_ count] - 1;
-			}
-            
-            // update the data store
-            id obj = [icons_ objectAtIndex: dragOriginIndex_];
-            [icons_ removeObjectAtIndex: dragOriginIndex_];
-            [icons_ insertObject: obj atIndex: index];
-            
-            if ( index != emptyCellIndex_ )
-            {
-                [gridView_ beginUpdates];
-                [gridView_ moveItemAtIndex: emptyCellIndex_ toIndex: index withAnimation: AQGridViewItemAnimationFade];
-                emptyCellIndex_ = index;
-                [gridView_ endUpdates];
-            }
-            
-            // move the real cell into place
-            [UIView beginAnimations: @"SnapToPlace" context: NULL];
-            [UIView setAnimationCurve: UIViewAnimationCurveEaseOut];
-            [UIView setAnimationDuration: 0.5];
-            [UIView setAnimationDelegate: self];
-            [UIView setAnimationDidStopSelector: @selector(finishedSnap:finished:context:)];
-            
-            CGRect r = [gridView_ rectForItemAtIndex: emptyCellIndex_];
-            CGRect f = draggingCell_.frame;
-            f.origin.x = r.origin.x + floorf((r.size.width - f.size.width) * 0.5);
-            f.origin.y = r.origin.y + floorf((r.size.height - f.size.height) * 0.5) - gridView_.contentOffset.y;
-            NSLog( @"Gesture ended-- moving to %@", NSStringFromCGRect(f) );
-            draggingCell_.frame = f;
-            
-            draggingCell_.transform = CGAffineTransformIdentity;
-            draggingCell_.alpha = 1.0;
-            
-            [UIView commitAnimations];
-            break;
-        }
-            
-        case UIGestureRecognizerStateBegan:
-        {
-            NSUInteger index = [gridView_ indexForItemAtPoint: [recognizer locationInView: gridView_]];
-            emptyCellIndex_ = index;    // we'll put an empty cell here now
-            
-            // find the cell at the current point and copy it into our main view, applying some transforms
-            AQGridViewCell * sourceCell = [gridView_ cellForItemAtIndex: index];
-            CGRect frame = [self.view convertRect: sourceCell.frame fromView: gridView_];
-            draggingCell_ = [[SpringBoardIconCell alloc] initWithFrame: frame reuseIdentifier: @""];
-            draggingCell_.icon = [icons_ objectAtIndex: index];
-            [self.view addSubview: draggingCell_];
-            
-            // grab some info about the origin of this cell
-            dragOriginCellOrigin_ = frame.origin;
-            dragOriginIndex_ = index;
-            
-            [UIView beginAnimations: @"" context: NULL];
-            [UIView setAnimationDuration: 0.2];
-            [UIView setAnimationCurve: UIViewAnimationCurveEaseOut];
-            
-            // transformation-- larger, slightly transparent
-            draggingCell_.transform = CGAffineTransformMakeScale( 1.2, 1.2 );
-            draggingCell_.alpha = 0.7;
-            
-            // also make it center on the touch point
-            draggingCell_.center = [recognizer locationInView: self.view];
-            
-            [UIView commitAnimations];
-            
-            // reload the grid underneath to get the empty cell in place
-            [gridView_ reloadItemsAtIndices: [NSIndexSet indexSetWithIndex: index]
-                              withAnimation: AQGridViewItemAnimationNone];
-            
-            break;
-        }
-            
-        case UIGestureRecognizerStateChanged:
-        {
-            // update draging cell location
-            draggingCell_.center = [recognizer locationInView: self.view];
-            
-            // don't do anything with content if grid view is in the middle of an animation block
-            if ( gridView_.isAnimatingUpdates )
-                break;
-            
-            // update empty cell to follow, if necessary
-            NSUInteger index = [gridView_ indexForItemAtPoint: [recognizer locationInView: gridView_]];
-            
-			// don't do anything if it's over an unused grid cell
-			if ( index == NSNotFound )
-			{
-				// snap back to the last possible index
-				index = [icons_ count] - 1;
-			}
-            
-            if ( index != emptyCellIndex_ )
-            {
-                NSLog( @"Moving empty cell from %u to %u", emptyCellIndex_, index );
-                
-                // batch the movements
-                [gridView_ beginUpdates];
-                
-                // move everything else out of the way
-                if ( index < emptyCellIndex_ )
-                {
-                    for ( NSUInteger i = index; i < emptyCellIndex_; i++ )
-                    {
-                        NSLog( @"Moving %u to %u", i, i+1 );
-                        [gridView_ moveItemAtIndex: i toIndex: i+1 withAnimation: AQGridViewItemAnimationFade];
-                    }
-                }
-                else
-                {
-                    for ( NSUInteger i = index; i > emptyCellIndex_; i-- )
-                    {
-                        NSLog( @"Moving %u to %u", i, i-1 );
-                        [gridView_ moveItemAtIndex: i toIndex: i-1 withAnimation: AQGridViewItemAnimationFade];
-                    }
-                }
-                
-                [gridView_ moveItemAtIndex: emptyCellIndex_ toIndex: index withAnimation: AQGridViewItemAnimationFade];
-                emptyCellIndex_ = index;
-                
-                [gridView_ endUpdates];
-            }
-            
-            break;
-        }
-    }
-}
-
-- (void) finishedSnap: (NSString *) animationID finished: (NSNumber *) finished context: (void *) context
-{
-    NSIndexSet * indices = [[NSIndexSet alloc] initWithIndex: emptyCellIndex_];
-    emptyCellIndex_ = NSNotFound;
-    
-    // load the moved cell into the grid view
-    [gridView_ reloadItemsAtIndices: indices withAnimation: AQGridViewItemAnimationNone];
-    
-    // dismiss our copy of the cell
-    [draggingCell_ removeFromSuperview];
-    draggingCell_ = nil;
-    
+    // Do something here.
 }
 */
 
-#pragma mark -
-#pragma mark GridView Data Source
 
-- (NSUInteger) numberOfItemsInGridView: (AQGridView *) gridView
+
+//////////////////////////////////////////////////////////////
+#pragma mark GMGridViewDataSource
+//////////////////////////////////////////////////////////////
+
+- (NSInteger)numberOfItemsInGMGridView:(GMGridView *)view
 {
-    return ( [icons_ count] );
+    return payments_.count;   
 }
 
-- (AQGridViewCell *) gridView: (AQGridView *) gridView cellForItemAtIndex: (NSUInteger) index
+- (CGSize)GMGridView:(GMGridView *)view sizeForItemsInInterfaceOrientation:(UIInterfaceOrientation)orientation
 {
-    static NSString * EmptyIdentifier = @"EmptyIdentifier";
-    static NSString * CellIdentifier = @"CellIdentifier";
+    return ( CGSizeMake(150, 80) );
+}
+
+- (GMGridViewCell *)GMGridView:(GMGridView *)view cellForItemAtIndex:(NSInteger)index
+{
+    PaymentCell * cell = (PaymentCell *)[view dequeueReusableCell];
+    if (!cell)
+        cell = [[PaymentCell alloc] initWithFrame:CGRectMake(0.0, 0.0, 150.0, 80.0)];
     
-    if ( index == emptyCellIndex_ )
-    {
-        NSLog( @"Loading empty cell at index %u", index );
-        AQGridViewCell * hiddenCell = [gridView dequeueReusableCellWithIdentifier: EmptyIdentifier];
-        if ( hiddenCell == nil )
-        {
-            // must be the SAME SIZE AS THE OTHERS
-            // Yes, this is probably a bug. Sigh. Look at -[AQGridView fixCellsFromAnimation] to fix
-            hiddenCell = [[AQGridViewCell alloc] initWithFrame: CGRectMake(0.0, 0.0, 72.0, 72.0)
-                                               reuseIdentifier: EmptyIdentifier];
-        }
-        
-        hiddenCell.hidden = YES;
-        return ( hiddenCell );
-    }
-    
-    SpringBoardIconCell * cell = (SpringBoardIconCell *)[gridView dequeueReusableCellWithIdentifier: CellIdentifier];
-    if ( cell == nil )
-    {
-        cell = [[SpringBoardIconCell alloc] initWithFrame: CGRectMake(0.0, 0.0, 72.0, 72.0) reuseIdentifier: CellIdentifier];
-    }
-    
-    cell.icon = [icons_ objectAtIndex: index];
-    
+    cell.payment = [[payments_ objectAtIndex:index] copy];
     return ( cell );
 }
 
-- (CGSize) portraitGridCellSizeForGridView: (AQGridView *) gridView
+
+- (BOOL)GMGridView:(GMGridView *)gridView canDeleteItemAtIndex:(NSInteger)index
 {
-    return ( CGSizeMake(self.scrollView.frame.size.width / 3, self.scrollView.frame.size.height / 3) );
+    return YES;
 }
 
--(void)gridView:(AQGridView *)gridView didSelectItemAtIndex:(NSUInteger)index
+
+
+//////////////////////////////////////////////////////////////
+#pragma mark GMGridViewActionDelegate
+//////////////////////////////////////////////////////////////
+
+- (void)GMGridView:(GMGridView *)view didTapOnItemAtIndex:(NSInteger)index;
 {
-    self.amountTextField.text = [NSString stringWithFormat:@"$ %d.00", index + 1];
-    [gridView deselectItemAtIndex:index animated:YES];
-    
-    [self push:gridView];
+    if (!movingCell_)
+    {
+        PaymentCell * cell = (PaymentCell *) [view cellForItemAtIndex:index];
+        if (cell)
+            [self push:view payment:cell.payment];
+    }
 }
+
+-(void) GMGridViewDidTapOnEmptySpace:(GMGridView *)gridView
+{
+    self.gridView.editing = NO;
+}
+
+
+- (void)GMGridView:(GMGridView *)gridView processDeleteActionForItemAtIndex:(NSInteger)index
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm" 
+                                                    message:@"Are you sure you want to delete this payment?" 
+                                                   delegate:self 
+                                          cancelButtonTitle:@"Cancel" 
+                                          otherButtonTitles:@"Delete", nil];
+    
+    [alert show];
+    lastDeleteItemIndexAsked_ = index;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) 
+    {
+        [payments_ removeObjectAtIndex:lastDeleteItemIndexAsked_];
+        [self.gridView removeObjectAtIndex:lastDeleteItemIndexAsked_ withAnimation:GMGridViewItemAnimationFade];
+    }
+}
+
+
+//////////////////////////////////////////////////////////////
+#pragma mark GMGridViewSortingDelegate
+//////////////////////////////////////////////////////////////
+
+- (void)GMGridView:(GMGridView *)gridView didStartMovingCell:(GMGridViewCell *)cell
+{
+    movingCell_ = YES;
+}
+
+- (void)GMGridView:(GMGridView *)gridView didEndMovingCell:(GMGridViewCell *)cell
+{
+    movingCell_ = NO;
+}
+
+- (BOOL)GMGridView:(GMGridView *)gridView shouldAllowShakingBehaviorWhenMovingCell:(GMGridViewCell *)cell atIndex:(NSInteger)index
+{
+    return YES;
+}
+
+- (void)GMGridView:(GMGridView *)gridView moveItemAtIndex:(NSInteger)oldIndex toIndex:(NSInteger)newIndex
+{
+    NSObject *object = [payments_ objectAtIndex:oldIndex];
+    [payments_ removeObject:object];
+    [payments_ insertObject:object atIndex:newIndex];
+}
+
+- (void)GMGridView:(GMGridView *)gridView exchangeItemAtIndex:(NSInteger)index1 withItemAtIndex:(NSInteger)index2
+{
+    [payments_ exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
+}
+
+
 
 @end

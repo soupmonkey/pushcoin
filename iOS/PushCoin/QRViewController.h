@@ -3,30 +3,37 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 4/21/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
+#import "PushCoinMessages.h"
+#import "PushCoinPayment.h"
+#import "PaymentDetailsController.h"
 
 @class QRViewController;
 
 @protocol QRViewControllerDelegate <NSObject>
 
-- (void)qrViewControllerDidCloseQR:
+- (void)qrViewControllerDidClose:
 (QRViewController *)controller;
 
 @end
 
-@interface QRViewController : UIViewController
-{
-    NSData * data;
-    NSString * summary;
-}
+@interface QRViewController : UIViewController<PaymentDetailsControllerDelegate>
 
+@property (nonatomic, strong) PushCoinMessageParser * parser;
+@property (nonatomic, strong) NSMutableData * buffer;
+@property (nonatomic, strong) PushCoinPayment * payment;
 @property (nonatomic, weak) id <QRViewControllerDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
-@property (weak, nonatomic) IBOutlet UILabel *summaryLabel;
+@property (weak, nonatomic) IBOutlet UIView *detailView;
+@property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 
--(void) setQRData:(NSData*)d withSummary:(NSString*)s;
+
+- (IBAction)closeButtonTapped:(id)sender;
+- (IBAction)addTipsButtonTapped:(id)sender;
+- (IBAction)detailViewTapped:(id)sender;
+
 
 @end

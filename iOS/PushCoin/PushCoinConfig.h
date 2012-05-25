@@ -3,14 +3,15 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 4/25/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-extern NSString * const PEM_RSA_PublicKeyFile;
-extern NSString * const PEM_DSA_PrivateKey;
-
+extern NSString * const PushCoinRSAPublicKeyID;
+extern NSString * const PushCoinRSAPublicKeyFile;
+extern NSString * const PushCoinDSAPublicKeyFile;
 extern NSString * const PushCoinWebServicePath;
-
+extern NSString * const PushCoinKeychainId;
+extern NSString * const PushCoinAppUserAgent;
 extern NSUInteger const PushCoinWebServiceOutBufferSize;

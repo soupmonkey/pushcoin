@@ -3,51 +3,31 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 4/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import <AddressBookUI/AddressBookUI.h>
+//#import <AddressBookUI/AddressBookUI.h>
 #import "QRViewController.h"
-#import "VSKeypadView.h"
-#import "AQGridView.h"
-#import "SpringBoardIconCell.h"
-#import "PushCoinMessages.h"
+#import "GMGridView.h"
+#import "PaymentCell.h"
+#import "KeypadController.h"
 
 
-BOOL REVERSE_KEYPAD = YES;
-int KeyBackgroundStyle = 1;
-
-@class SpringBoardIconCell;
-
-@interface PayController : UIViewController <UITextFieldDelegate,QRViewControllerDelegate, VSKeypadViewDelegate, ABPeoplePickerNavigationControllerDelegate, AQGridViewDataSource, AQGridViewDelegate, UIGestureRecognizerDelegate, UIScrollViewDelegate>
+@interface PayController : UIViewController <QRViewControllerDelegate, KeypadControllerDelegate, /*ABPeoplePickerNavigationControllerDelegate,*/ GMGridViewDataSource, GMGridViewSortingDelegate,  GMGridViewActionDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate>
 {
-    NSString *enteredAmountString_;
-    
-    NSMutableArray * icons_;
-    AQGridView * gridView_;
-    
-    NSUInteger emptyCellIndex_;
-    
-    NSUInteger dragOriginIndex_;
-    CGPoint dragOriginCellOrigin_;
-    
-    SpringBoardIconCell * draggingCell_;
-    
-    VSKeypadView * keypadView_;
-    
-    BOOL pageControlUsed_;
-    
-    PushCoinMessageParser * parser_;
-    NSMutableData * buffer_;
+    NSMutableArray *payments_;
+    NSInteger lastDeleteItemIndexAsked_;
+    BOOL movingCell_;
 }
 
-@property (weak, nonatomic) IBOutlet UITextField *amountTextField;
-@property (weak, nonatomic) IBOutlet UILabel *receiverLabel;
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
-@property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
-@property (nonatomic) NSData * encodedData;
+
+@property (strong, nonatomic) GMGridView * gridView;
+@property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
+@property (weak, nonatomic) IBOutlet UIView *placeHolderView;
 
 - (IBAction)push:(id)sender;
+- (IBAction)editPayment:(id)sender;
+- (IBAction)addPayment:(id)sender;
 
 @end

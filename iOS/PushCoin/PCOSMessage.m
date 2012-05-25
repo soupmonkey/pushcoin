@@ -3,11 +3,10 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/2/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import "PCOSMessage.h"
-#define METABLOCK_IS_NSCOPYING
 
 const PCOSByte   * protoByte;
 const PCOSBool   * protoBool;
@@ -19,8 +18,9 @@ const PCOSDouble * protoDouble;
 
 @implementation PCOSHeaderBlock
 @synthesize magic;
-@synthesize msg_id;
-@synthesize msg_len;
+@synthesize message_length;
+@synthesize message_id;
+@synthesize reserved;
 
 -(id) init
 {
@@ -28,12 +28,14 @@ const PCOSDouble * protoDouble;
     if (self)
     {
         self.magic = [[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:4];
-        self.msg_id =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:2]; 
-        self.msg_len = [[PCOSInt16 alloc] initWithValue:0];
+        self.message_length = [[PCOSInt32 alloc] initWithValue:0];
+        self.message_id =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:2]; 
+        self.reserved =[[PCOSFixedArray alloc] initWithItemPrototype:protoByte andCount:6];   
         
         [self addField:self.magic withName:@"magic"];
-        [self addField:self.msg_id withName:@"msg_id"];
-        [self addField:self.msg_len withName:@"msg_len"];
+        [self addField:self.message_length withName:@"message_length"];
+        [self addField:self.message_id withName:@"message_id"];
+        [self addField:self.reserved withName:@"reserved"];
     }
     return self;
     
@@ -41,26 +43,24 @@ const PCOSDouble * protoDouble;
 @end
 
 @implementation PCOSBlockMetaBlock
-@synthesize block_name;
-@synthesize block_len;
+@synthesize block_id;
+@synthesize block_length;
 
-#ifdef METABLOCK_IS_NSCOPYING
 -(id) copyWithZone:(NSZone *)zone
 {
     return [[PCOSBlockMetaBlock alloc] init];
 }
-#endif
 
 -(id) init
 {
     self = [super init];
     if (self)
     {
-        self.block_name = [[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:2];
-        self.block_len = [[PCOSInt16 alloc] initWithValue:0];
+        self.block_id = [[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:2];
+        self.block_length = [[PCOSInt16 alloc] initWithValue:0];
         
-        [self addField:self.block_name withName:@"block_name"];
-        [self addField:self.block_len withName:@"block_len"];
+        [self addField:self.block_id withName:@"block_id"];
+        [self addField:self.block_length withName:@"block_length"];
     }
     return self;
     
@@ -69,7 +69,7 @@ const PCOSDouble * protoDouble;
 
 
 @implementation PCOSMessage
-@synthesize block_enum;
+@synthesize block_meta;
 @synthesize blocks;
 
 +(void) initialize
@@ -88,7 +88,7 @@ const PCOSDouble * protoDouble;
     PCOSMessage * copy = [[PCOSMessage alloc] init];
     if (copy)
     {
-        copy.block_enum = [self.block_enum copyWithZone:zone];
+        copy.block_meta = [self.block_meta copyWithZone:zone];
         copy.blocks = [self.blocks copyWithZone:zone];
     }
     return copy;
@@ -99,7 +99,7 @@ const PCOSDouble * protoDouble;
     self = [super init];
     if (self)
     {
-        self.block_enum = [[PCOSLongArray alloc] 
+        self.block_meta = [[PCOSLongArray alloc] 
                            initWithItemPrototype:[[PCOSBlockMetaBlock alloc] init] 
                                         andCount:0];
         self.blocks = [[NSMutableDictionary alloc] init];
@@ -112,32 +112,45 @@ const PCOSDouble * protoDouble;
 -(void) addBlock:(NSObject<PCOSSerializable> *)block withName:(NSString *)name
 {
     PCOSBlockMetaBlock * meta = [[PCOSBlockMetaBlock alloc] init];
-    [meta.block_name setString:name];
+    [meta.block_id setString:name];
     
-    [self.block_enum.val addObject:meta];
+    [self.block_meta.val addObject:meta];
     [self.blocks setObject:block 
                     forKey:name];
+}
+
+-(void) block:(NSObject<PCOSSerializable> *)block withKey:(NSString *)key encodedToBytes:(void const *)bytes withLength:(NSUInteger)len
+{
+    
 }
 
 -(NSUInteger) encode:(PCOSRawData *)data
 {
     // Skip block meta for now.
     PCOSRawData * copy = [data copy];
-    NSUInteger hdr_len = self.block_enum.size;
+    NSUInteger hdr_len = self.block_meta.size;
     [data consume:hdr_len];
     
     // Encode Blocks
     NSUInteger total = hdr_len;
     NSUInteger len = 0;
-    for(int i = 0; i < self.block_enum.val.count; ++i)
+    NSObject<PCOSSerializable> * block;
+    NSString * key;
+    NSUInteger offset;
+    for(int i = 0; i < self.block_meta.val.count; ++i)
     {
-        NSString * key = [[self.block_enum.val objectAtIndex:i] block_name].string;
-        total += (len = [[blocks valueForKey:key] encode:data]);
-        [[self.block_enum.val objectAtIndex:i] block_len].val = len;
+        key = [[self.block_meta.val objectAtIndex:i] block_id].string;
+        block = [blocks valueForKey:key];
+        offset = data.offset;
+        
+        total += (len = [block encode:data]);
+        [[self.block_meta.val objectAtIndex:i] block_length].val = len;
+        
+        [self block:block withKey:key encodedToBytes:((char *) data.data.bytes + offset) withLength:len];
     }
     
     // Encode block meta
-    [self.block_enum encode:copy];
+    [self.block_meta encode:copy];
     
     return total;
 }
@@ -145,21 +158,25 @@ const PCOSDouble * protoDouble;
 -(NSUInteger) decode:(PCOSRawData *)data
 {
     NSUInteger total = 0;
-    total += [self.block_enum decode:data];
+    total = [self.block_meta decode:data];
     
-    for (int i = 0; i < self.block_enum.itemCount; ++i)
+    for (int i = 0; i < self.block_meta.itemCount; ++i)
     {
-#ifdef METABLOCK_IS_NSCOPYING
-        PCOSBlockMetaBlock * block = [self.block_enum.val objectAtIndex:i];
-        NSString * key = [[block block_name] string];
-#else
-        PCOSBlock * block = [self.block_enum.val objectAtIndex:i];
-        NSString * key = [[block.lookup valueForKey:@"block_name"] string];
-#endif
-        
-        PCOSBaseType * type = [blocks valueForKey:key];
+        PCOSBlockMetaBlock * block = [self.block_meta.val objectAtIndex:i];
+        NSString * key = block.block_id.string;
+                                                            
+        NSObject<PCOSSerializable> * type = [blocks valueForKey:key];
+        NSMutableData * block_data = [[NSMutableData alloc] init];
         if (type != nil)
-            total += [type decode:data];
+        {
+            // Prepare block_data
+            [block_data setLength:block.block_length.val];
+            [data readData:block_data length:block.block_length.val];
+            
+            PCOSRawData * raw = [[PCOSRawData alloc] initWithData:block_data offset:0];
+            [type decode:raw];
+        }
+        total += block.block_length.val;
     }
     return total;
 }

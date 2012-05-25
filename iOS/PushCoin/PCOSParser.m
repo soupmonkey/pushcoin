@@ -3,7 +3,7 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/7/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import "PCOSParser.h"
@@ -36,8 +36,8 @@
     NSUInteger size = [msg encode:data];
     
     hdr.magic.string = @"PCOS";
-    hdr.msg_id.string = [[msg class] messageID];
-    hdr.msg_len.val = size;
+    hdr.message_id.string = [[msg class] messageID];
+    hdr.message_length.val = size + hdr.size;
     
     size += [hdr encode:copy];
     return size;
@@ -58,7 +58,7 @@
 {
     NSUInteger size = [self decodeHeader:hdr from:data];
     
-    *msg = [[[messageClasses valueForKey:(*hdr).msg_id.string] alloc] init];
+    *msg = [[[messageClasses valueForKey:(*hdr).message_id.string] alloc] init];
     if (*msg)
         size += [(*msg) decode:data];
     return size;

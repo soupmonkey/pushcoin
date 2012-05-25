@@ -2,8 +2,19 @@ Requires Libraries:
 1) openssl 
 2) ZXingWidget
 3) QRCodeEncoderObjectiveCAtGitHub
+4) GMGridView
+
+ZXingWidget
+By default it only returns result in text form. To get the rawbytes, we have to modify the TwoDimensionResult class to carry the string and 
+the raw bytes. To keep zxing from iconv the encoding to UTF8, we have to pass an additional flag -DNO_ICONV to the compiler.
 
 
+
+
+
+///////////////////////////////////////////
+  Depreciated
+///////////////////////////////////////////
 
 Google Protocol Buffer
 http://nserror.me/blog/2011/06/03/protocol-buffers-and-xcode/

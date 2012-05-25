@@ -3,10 +3,11 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 5/2/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import "PCOSTypes.h"
+#import "OpenSSLWrapper.h"
 
 @implementation PCOSBaseType
 -(NSUInteger) size { return 0; }
@@ -259,8 +260,14 @@
 -(NSUInteger) encode:(PCOSRawData *)data
 {
     NSUInteger total = 0;
+    NSUInteger len = 0;
+    PCOSBaseType * type;
+    
     for (int i = 0; i < self.val.count; ++i)
-        total += [[self.val objectAtIndex:i] encode:data];
+    {
+        type = [self.val objectAtIndex:i];
+        total += (len = [type encode:data]);
+    }
     return total;
 }
 
@@ -374,7 +381,8 @@
         NSRange range;
         range.length = MIN(data.length, bytes_.length);
         range.location = 0;
-    
+        
+        [bytes_ setLength:range.length];
         [bytes_ replaceBytesInRange:range withBytes:data.bytes length:range.length];
     }
 }
@@ -552,6 +560,70 @@
 @end
 
 
+@implementation PCOSEncryptedBlock
+
+-(NSUInteger) size
+{
+    [NSException raise:@"operation not supported" format:@"size of and encrypted block is not supported"];
+    return 0;
+}
+
+
+-(NSUInteger) encode:(PCOSRawData *)data
+{
+    OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
+    
+    PCOSRawData * copy = [data copy];
+    NSUInteger total = [super encode:data];
+    
+    NSData * encrypted = [ssl rsa_encryptData: [NSData dataWithBytes:(void *)((char *)copy.data.bytes + copy.offset) length:total]];
+    [copy writeBytes:encrypted.bytes length:encrypted.length];
+    
+    data.offset = copy.offset;
+    return encrypted.length;
+}
+
+-(NSUInteger) decode:(PCOSRawData *)data
+{
+    [NSException raise:@"operation not supported" format:@"decoding encrypted block is not supported"];
+    return 0;
+}
+
+
+@end
+
+
+@implementation PCOSDataBlock
+@synthesize data;
+
+-(id) initWithData:(NSMutableData *)d
+{
+    self = [super self];
+    if (self)
+    {
+        data = [d copy];
+    }
+    return self;
+}
+
+-(NSUInteger) size
+{
+    return [data length];
+}
+
+-(NSUInteger) encode:(PCOSRawData *)raw
+{
+    [raw writeBytes:self.data.bytes length:self.data.length];
+    return self.data.length;
+}
+
+-(NSUInteger) decode:(PCOSRawData *)raw
+{
+    data = [self.data initWithBytes:(raw.data.bytes+raw.offset) length:raw.data.length];
+    return raw.data.length;
+}
+
+@end
 
 
 

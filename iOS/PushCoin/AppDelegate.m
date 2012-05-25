@@ -3,21 +3,177 @@
 //  PushCoin
 //
 //  Created by Gilbert Cheung on 4/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 PushCoin. All rights reserved.
 //
 
 #import "AppDelegate.h"
+#import "OpenSSLWrapper.h"
 
 @implementation AppDelegate
 
 @synthesize window = _window;
+@synthesize keychain = _keychain;
+@synthesize images = _images;
+@synthesize pemDsaPublicKey = _pemDsaPublicKey;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    [self prepareKeyFiles];
+    [self prepareKeyChain];
+    [self prepareDSA];
+    [self prepareRSA];
+    [self prepareImageCache];
     return YES;
 }
-							
+
+-(BOOL) prepareKeyFiles
+{
+    NSError * error;
+    NSFileManager * fileManager = [NSFileManager defaultManager];
+    NSArray * files = [NSArray arrayWithObjects:PushCoinRSAPublicKeyFile, nil];
+    NSString * fromPath = [[NSBundle mainBundle] bundlePath];
+    NSString * toPath = [self keyFilePath];
+    BOOL ret = YES;
+    for (id file in files)
+    {
+        ret &= [fileManager copyItemAtPath:[fromPath stringByAppendingPathComponent:file]
+                                    toPath:[toPath stringByAppendingPathComponent:file]
+                                     error:&error];
+    }
+    return ret;
+}
+
+-(BOOL) prepareImageCache
+{
+    self.images = [NSArray arrayWithObjects:
+                   [UIImage imageNamed:@"1.00.png"],
+                   [UIImage imageNamed:@"5.00.png"],
+                   [UIImage imageNamed:@"10.00.png"],
+                   [UIImage imageNamed:@"50.00.png"],
+                   [UIImage imageNamed:@"100.00.png"],
+                   [UIImage imageNamed:@"500.00.png"], 
+                   nil];
+    return YES;
+
+}
+             
+-(UIImage *) imageForAmountType:(PushCoinPaymentAmountType) type
+{
+    switch(type)
+    {
+        case PushCoinPaymentAmountTypeGreen:    return [self.images objectAtIndex:0];
+        case PushCoinPaymentAmountTypePurple:   return [self.images objectAtIndex:1];
+        case PushCoinPaymentAmountTypeRed:      return [self.images objectAtIndex:2];
+        case PushCoinPaymentAmountTypeBrown:    return [self.images objectAtIndex:3];
+        case PushCoinPaymentAmountTypeYellow:   return [self.images objectAtIndex:4];
+        case PushCoinPaymentAmountTypeClear:    return [self.images objectAtIndex:5];
+        default:                                return [self.images objectAtIndex:5];
+    }
+}
+
+-(BOOL) prepareKeyChain
+{
+    self.keychain = [[KeychainItemWrapper alloc] initWithIdentifier:PushCoinKeychainId accessGroup:nil];
+    return YES;
+}
+
+- (BOOL) prepareDSA
+{
+    NSString * dsaPrivateKey = self.dsaPrivateKey;
+    if (dsaPrivateKey.length == 0)
+    {
+        return NO;
+    }
+    else 
+    {
+        OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
+        [ssl prepareDsaWithPrivateKey:dsaPrivateKey];
+        return YES;
+    }
+}
+
+- (BOOL) prepareRSA
+{
+    OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
+    [ssl prepareRsaWithKeyFile:[NSString stringWithFormat:@"%@/%@", self.keyFilePath, PushCoinRSAPublicKeyFile]];
+    return YES;
+}
+
+- (BOOL) registered
+{
+    OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
+    return ssl.dsa && ssl.rsa && self.authToken.length;
+}
+
+- (NSString *) authToken
+{
+    return [self.keychain objectForKey:(__bridge id)kSecAttrAccount];
+}
+
+- (void) setAuthToken:(NSString *)authToken
+{
+    [self.keychain setObject:authToken forKey:(__bridge id)kSecAttrAccount];
+}
+
+- (NSString *) dsaPrivateKey
+{
+    return [self.keychain objectForKey:(__bridge id)kSecValueData];
+}
+
+-(NSString *) pemDsaPublicKey
+{
+    NSString * pemPublicKey = [NSString stringWithContentsOfFile:[self.keyFilePath stringByAppendingPathComponent: PushCoinDSAPublicKeyFile] encoding:NSASCIIStringEncoding error:nil];
+    
+    NSRange headerRange = [pemPublicKey rangeOfString:@"---\n"];
+    pemPublicKey = [pemPublicKey substringFromIndex:headerRange.location + headerRange.length];
+    
+    NSRange footerRange = [pemPublicKey rangeOfString:@"\n---"];
+    pemPublicKey = [pemPublicKey substringToIndex:footerRange.location];
+    
+    return pemPublicKey;
+}
+
+- (void) setDsaPrivateKey:(NSString *)dsaPrivateKey
+{
+    [self.keychain setObject:dsaPrivateKey forKey:(__bridge id)kSecValueData];
+}
+
+- (NSString *)keyFilePath
+{
+	NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+	return dir;
+}
+
+-(void)registerFromController:(UIViewController<RegistrationControllerDelegate> *)viewController
+{
+    if (!self.registered)
+    {
+        RegistrationController * controller = [self viewControllerWithIdentifier:@"RegistrationController"];
+        controller.delegate = viewController;
+        controller.modalTransitionStyle =  UIModalTransitionStyleCoverVertical;
+        
+        [viewController presentModalViewController:controller animated:NO];
+    }
+}
+
+-(id)viewControllerWithIdentifier:(NSString *) identifier
+{
+    UIStoryboard * storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:[NSBundle mainBundle]];
+    id controller = [storyboard instantiateViewControllerWithIdentifier:identifier];
+    return controller;
+}
+
+
+- (void) showAlert:(NSString *)message withTitle:(NSString *)title
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"Close" 
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     /*
@@ -32,6 +188,10 @@
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
      If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
      */
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName: @"handleCleanup" 
+                                                        object: nil 
+                                                      userInfo: nil];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application

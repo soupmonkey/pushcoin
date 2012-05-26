@@ -8,6 +8,8 @@
 
 #import "AppDelegate.h"
 #import "OpenSSLWrapper.h"
+#import "NSString+HexStringToBytes.h"
+#import "NSData+BytesToHexString.h"
 
 @implementation AppDelegate
 
@@ -105,6 +107,37 @@
     return ssl.dsa && ssl.rsa && self.authToken.length;
 }
 
+- (void) setPasscode:(NSString *)hash
+{
+    if (hash && hash.length != 0)
+    {
+        OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
+        NSData * data = [ssl sha1_hashData:[hash dataUsingEncoding:NSASCIIStringEncoding]];
+        [self.keychain setObject:data.bytesToHexString forKey:(__bridge id)kSecAttrDescription];
+    }
+    else
+    {
+        [self.keychain setObject:@"" forKey:(__bridge id)kSecAttrDescription];            
+    }
+}
+
+- (BOOL) hasPasscode
+{
+    NSString * hash = [self.keychain objectForKey:(__bridge id)kSecAttrDescription];            
+    return (hash && hash.length != 0);
+}
+
+-(BOOL) validatePasscode:(NSString *)passcode
+{
+    NSString * hash = [self.keychain objectForKey:(__bridge id)kSecAttrDescription];            
+    if (!hash || hash.length == 0) return YES;
+    
+    OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
+    NSData * data = [ssl sha1_hashData:[passcode dataUsingEncoding:NSASCIIStringEncoding]];
+    
+    return [data isEqualToData:hash.hexStringToBytes];
+}
+
 - (NSString *) authToken
 {
     return [self.keychain objectForKey:(__bridge id)kSecAttrAccount];
@@ -154,6 +187,19 @@
         
         [viewController presentModalViewController:controller animated:NO];
     }
+}
+
+-(void)passcodeFromController:(UIViewController<KKPasscodeViewControllerDelegate> *)viewController
+{
+    KKPasscodeViewController * controller = [[KKPasscodeViewController alloc] init];
+    controller.delegate = viewController;
+    controller.mode = KKPasscodeModeEnter;
+    controller.passcodeLockOn = YES;
+    controller.eraseData = NO;
+    controller.passcode = @"";
+    controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    
+    [viewController presentModalViewController:controller animated:YES];
 }
 
 -(id)viewControllerWithIdentifier:(NSString *) identifier

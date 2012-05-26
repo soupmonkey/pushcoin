@@ -9,17 +9,20 @@
 #import <Foundation/Foundation.h>
 
 @interface PushCoinTransaction : NSObject<NSCopying>
-@property (nonatomic, assign) NSString * transactionID;
+@property (nonatomic, strong) NSString * transactionID;
 @property (nonatomic, assign) char transactionType;
 @property (nonatomic, assign) NSUInteger amountValue;
 @property (nonatomic, assign) NSInteger amountScale;
-@property (nonatomic, assign) NSString * merchantName;
+@property (nonatomic, strong) NSString * merchantName;
+@property (nonatomic, assign) NSUInteger timestamp;
+
 
 -(id) initWithID:(NSString *)transactionID
             type:(char)transactionType
      amountValue:(NSUInteger)amountValue
      amountScale:(NSInteger)amountScale
-    merchantName:(NSString*)merchantName;
+    merchantName:(NSString*)merchantName
+       timestamp:(NSUInteger)timestamp;
 
 
 @end

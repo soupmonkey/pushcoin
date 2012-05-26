@@ -120,8 +120,6 @@ static OpenSSLWrapper * singleton;
         return NO;
     }
 
-    
-     
     int len;
     unsigned char * buf = NULL;
     

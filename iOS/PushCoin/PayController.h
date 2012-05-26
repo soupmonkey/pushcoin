@@ -11,14 +11,16 @@
 #import "QRViewController.h"
 #import "GMGridView.h"
 #import "PaymentCell.h"
-#import "KeypadController.h"
+#import "AddPaymentController.h"
+#import "PasscodeViewController.h"
 
 
-@interface PayController : UIViewController <QRViewControllerDelegate, KeypadControllerDelegate, /*ABPeoplePickerNavigationControllerDelegate,*/ GMGridViewDataSource, GMGridViewSortingDelegate,  GMGridViewActionDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate>
+@interface PayController : UIViewController <QRViewControllerDelegate, AddPaymentControllerDelegate, /*ABPeoplePickerNavigationControllerDelegate,*/ GMGridViewDataSource, GMGridViewSortingDelegate,  GMGridViewActionDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate, KKPasscodeViewControllerDelegate>
 {
     NSMutableArray *payments_;
     NSInteger lastDeleteItemIndexAsked_;
     BOOL movingCell_;
+    PushCoinPayment * savedPayment_;
 }
 
 

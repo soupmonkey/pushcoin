@@ -24,4 +24,5 @@
 @property (weak, nonatomic) IBOutlet UITextField *paymentTextField;
 - (IBAction)scan:(id)sender;
 - (IBAction)backgroundTouched:(id)sender;
+@property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @end

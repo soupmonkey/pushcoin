@@ -14,6 +14,7 @@
 #import "NSData+Base64.h"
 #import "PushCoinTransaction.h"
 #import "TransactionCell.h"
+#import "BalanceCell.h"
 
 @implementation HistoryController
 @synthesize tableView;
@@ -35,13 +36,13 @@
     buffer =  [[NSMutableData alloc] initWithLength:PushCoinWebServiceOutBufferSize];
     parser = [[PushCoinMessageParser alloc] init];
     transactions = [[NSMutableArray alloc] init];
+    balance = 0;
+    timestamp = 0;
     
     numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
     [numberFormatter setCurrencySymbol:@"$"];
     [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-    
-   
     
     self.tableView.dataSource = self;
 }
@@ -63,7 +64,7 @@
     trxMsg.block.ref_data.string=@"";
     trxMsg.block.keywords.string=@"";
     trxMsg.block.page.val = 0;
-    trxMsg.block.page.val = 100;
+    trxMsg.block.page_size_hint.val = 50;
     
     [parser encodeMessage:trxMsg to:trxData];
     [webService sendMessage:trxData.consumedData];
@@ -153,7 +154,8 @@ andDescription:(NSString *)description
                                                                         type:trx.tx_type.val
                                                                  amountValue:trx.amount.value.val
                                                                  amountScale:trx.amount.scale.val
-                                                                merchantName:trx.merchant_name.string];
+                                                                merchantName:trx.merchant_name.string
+                                                                   timestamp:0];
         [transactions addObject:pTrx];
     }
     
@@ -163,6 +165,8 @@ andDescription:(NSString *)description
 -(void) didDecodeBalanceReportMessage:(BalanceReportMessage *)msg withHeader:(PCOSHeaderBlock *)hdr
 {
     balance = msg.block.balance.value.val * (pow(10.0f, (Float32)msg.block.balance.scale.val));
+    timestamp = msg.block.utc_balance_time.val;
+    
     [self.tableView reloadData];
 }
 
@@ -175,10 +179,9 @@ andDescription:(NSString *)description
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
 {
-    if (section == 0)
-        return @"";
-    else 
+    if (section == 1 && transactions.count)
         return @"Transaction History";
+    return @"";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -189,22 +192,45 @@ andDescription:(NSString *)description
         return transactions.count;
 }
 
+-(NSString*) tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    if (section == 0)
+        return @"";
+    
+    if (timestamp == 0)
+        return @"";
+    
+    NSDate * date = [NSDate dateWithTimeIntervalSince1970:timestamp];
+    NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterFullStyle];
+    
+    return [NSString stringWithFormat:@"Last Updated: %@", [formatter stringFromDate:date]];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TransactionCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"Transaction"];
-    if (!cell)
-    {
-        cell = [[TransactionCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"Transaction"];
-    }
-    
     if (indexPath.section == 0)
     {
+        BalanceCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"Balance"];
+        if (!cell)
+        {
+            cell = [[BalanceCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"Balance"];
+        }
+
         NSNumber *c = [NSNumber numberWithFloat:balance];
         cell.detailTextLabel.text = [numberFormatter stringFromNumber:c];
         cell.textLabel.text = @"Balance";
+        
+        return cell;
     }
     else
     {
+        TransactionCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"Transaction"];
+        if (!cell)
+        {
+            cell = [[TransactionCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"Transaction"];
+        }
+    
         PushCoinTransaction * trx = [transactions objectAtIndex:indexPath.row];
     
         Float32 amount = trx.amountValue * pow(10.0f, (Float32)trx.amountScale);
@@ -212,11 +238,12 @@ andDescription:(NSString *)description
             amount *= -1.0f;
         
         NSNumber *c = [NSNumber numberWithFloat:amount];
-        cell.detailTextLabel.text = [numberFormatter stringFromNumber:c];
-        cell.textLabel.text = trx.merchantName;
+        cell.rightTextLabel.text = [numberFormatter stringFromNumber:c];
+        cell.titleTextLabel.text = trx.merchantName;
+        cell.detailTextLabel.text = trx.transactionType == 'C'? @"credit":@"debit";
+        
+        return cell;
     }
-    
-    return cell;
 }
 
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle

@@ -20,6 +20,7 @@
     NSMutableArray * transactions;
     NSNumberFormatter * numberFormatter;
     Float32 balance;
+    NSInteger timestamp;
 }
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 - (IBAction)settingsButtonTapped:(id)sender;

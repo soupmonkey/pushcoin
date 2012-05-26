@@ -16,6 +16,7 @@
 
 
 @implementation ReceiveController
+@synthesize navigationBar;
 @synthesize paymentTextField;
 
 - (void)didReceiveMemoryWarning
@@ -41,6 +42,7 @@
 - (void)viewDidUnload
 {
     [self setPaymentTextField:nil];
+    [self setNavigationBar:nil];
     [super viewDidUnload];
 }
 
@@ -79,6 +81,9 @@
 {
     [self.paymentTextField resignFirstResponder];
     
+    if (storedValue.intValue == 0)
+        return;
+        
     ZXingWidgetController *widController = [[ZXingWidgetController alloc] initWithDelegate:self
                                                                                 showCancel:YES 
                                                                                   OneDMode:NO];
@@ -92,8 +97,7 @@
 
 - (IBAction)backgroundTouched:(id)sender 
 {
-    [self.paymentTextField resignFirstResponder];
-
+    //[self.paymentTextField resignFirstResponder];
 }
 
 #pragma mark -
@@ -165,9 +169,11 @@
                       withTitle:@"Unknown"];
 }
 
+
+#pragma mark UITextFieldDelegate
+
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    NSLog(@"%d %d", range.location, range.length);
     if (range.length > 0)
     {
         if (storedValue.length > 0)
@@ -175,14 +181,27 @@
     }
     else
     {
-        [storedValue appendString:string];
+        if (storedValue.length + string.length <= 6)
+            [storedValue appendString:string];
     }
     
-    NSString *newAmount = [self formatCurrencyValue:([storedValue doubleValue]/100)];
+    double value = storedValue.doubleValue;
+    if (value == 0)
+        storedValue.string = @"";
     
+    NSString *newAmount = [self formatCurrencyValue:(value/100)];
     [textField setText:[NSString stringWithFormat:@"%@",newAmount]];
     return NO;
 }
+
+
+- (BOOL)textFieldShouldClear:(UITextField *)textField
+{
+    textField.text = @"$0.00";
+    storedValue.string = @"";
+    return NO;
+}
+
 
 -(NSString*) formatCurrencyValue:(double)value
 {
@@ -195,6 +214,28 @@
     return [numberFormatter stringFromNumber:c];
 }
 
+-(void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    UINavigationItem * item = [self.navigationBar.items objectAtIndex:self.navigationBar.items.count - 1];
+    UIBarButtonItem * hideItem = [[UIBarButtonItem alloc] initWithTitle:@"Hide" style:UIBarButtonItemStyleBordered
+                                                                   target:self action:@selector(hideButtonTapped:)];
+    hideItem.tintColor = UIColorFromRGB(0xC84131);
+    
+    if (item)
+        item.rightBarButtonItem = hideItem;
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    UINavigationItem * item = [self.navigationBar.items objectAtIndex:self.navigationBar.items.count - 1];
+    if (item)
+        item.rightBarButtonItem = nil;
+}
+
+-(void) hideButtonTapped:(id)sender
+{
+    [self.paymentTextField resignFirstResponder];
+}
 
 @end
 

@@ -16,6 +16,7 @@
 @synthesize unregisterButton;
 @synthesize preAuthorizationTestButton;
 @synthesize delegate;
+@synthesize passcodeButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -58,7 +59,8 @@
     self.unregisterButton.titleLabel.shadowColor = [UIColor lightGrayColor];
     self.unregisterButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
     
-    [self updateRegisterButtonStatus];    
+    [self updateRegisterButtonStatus];  
+    [self updatePasscodeButton];
 }
 
 - (void) updateRegisterButtonStatus
@@ -74,10 +76,23 @@
         preAuthorizationTestButton.enabled = YES;
     }
 }
+
+-(void) updatePasscodeButton
+{
+    if (!self.appDelegate.hasPasscode)
+    {
+        [self.passcodeButton setTitle:@"Enable Passcode" forState:UIControlStateNormal];
+    }
+    else
+    {
+        [self.passcodeButton setTitle:@"Disable Passcode" forState:UIControlStateNormal];
+    }
+}
 - (void)viewDidUnload
 {
     [self setUnregisterButton:nil];
     [self setPreAuthorizationTestButton:nil];
+    [self setPasscodeButton:nil];
     [super viewDidUnload];
 }
 
@@ -202,6 +217,41 @@
     {
         [self.delegate settingsControllerDidClose:self];
     }
+}
+
+- (IBAction)enablePasscode:(id)sender {
+    
+    KKPasscodeViewController * controller = [[KKPasscodeViewController alloc] init];
+    controller.delegate = self;
+    controller.passcodeLockOn = self.appDelegate.hasPasscode;
+    controller.passcode = @"";
+    controller.eraseData = NO;
+    controller.mode = controller.passcodeLockOn ? KKPasscodeModeDisabled : KKPasscodeModeSet;
+    controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [self presentModalViewController:controller animated:YES];
+}
+
+
+- (BOOL)validatePasscode:(NSString *)passcode
+{
+    return [self.appDelegate validatePasscode:passcode];
+}
+
+- (void)didSettingsChanged:(KKPasscodeViewController *)viewController
+{
+    [self dismissModalViewControllerAnimated:YES];
+
+    if (viewController.passcodeLockOn)
+        self.appDelegate.passcode = viewController.passcode;
+    else
+        self.appDelegate.passcode = @"";
+    
+    [self updatePasscodeButton];
+}
+
+-(void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController *)viewController
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 @end
 

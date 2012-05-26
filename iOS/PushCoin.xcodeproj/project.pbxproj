@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D041DC2157071FC00F3AABB /* AddPaymentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D041DC1157071FC00F3AABB /* AddPaymentController.m */; };
+		0D041DC515707BDF00F3AABB /* BalanceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D041DC415707BDF00F3AABB /* BalanceCell.m */; };
+		0D041DC815708AD000F3AABB /* PasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D041DC715708AD000F3AABB /* PasscodeViewController.m */; };
+		0D041DCD15708D0C00F3AABB /* box_empty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D041DC915708D0C00F3AABB /* box_empty@2x.png */; };
+		0D041DCE15708D0C00F3AABB /* box_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D041DCA15708D0C00F3AABB /* box_empty.png */; };
+		0D041DCF15708D0C00F3AABB /* box_filled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D041DCB15708D0C00F3AABB /* box_filled@2x.png */; };
+		0D041DD015708D0C00F3AABB /* box_filled.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D041DCC15708D0C00F3AABB /* box_filled.png */; };
 		0D0B3807155A0CCB002BF845 /* keyBG_touched.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D0B37E5155A0CCB002BF845 /* keyBG_touched.png */; };
 		0D0B3808155A0CCB002BF845 /* keyBG.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D0B37E6155A0CCB002BF845 /* keyBG.png */; };
 		0D0B3809155A0CCB002BF845 /* keyNE_BG_touched.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D0B37E7155A0CCB002BF845 /* keyNE_BG_touched.png */; };
@@ -208,6 +215,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0D041DC0157071FC00F3AABB /* AddPaymentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddPaymentController.h; sourceTree = "<group>"; };
+		0D041DC1157071FC00F3AABB /* AddPaymentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddPaymentController.m; sourceTree = "<group>"; };
+		0D041DC315707BDF00F3AABB /* BalanceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BalanceCell.h; sourceTree = "<group>"; };
+		0D041DC415707BDF00F3AABB /* BalanceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BalanceCell.m; sourceTree = "<group>"; };
+		0D041DC615708AD000F3AABB /* PasscodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasscodeViewController.h; sourceTree = "<group>"; };
+		0D041DC715708AD000F3AABB /* PasscodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasscodeViewController.m; sourceTree = "<group>"; };
+		0D041DC915708D0C00F3AABB /* box_empty@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "box_empty@2x.png"; sourceTree = "<group>"; };
+		0D041DCA15708D0C00F3AABB /* box_empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = box_empty.png; sourceTree = "<group>"; };
+		0D041DCB15708D0C00F3AABB /* box_filled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "box_filled@2x.png"; sourceTree = "<group>"; };
+		0D041DCC15708D0C00F3AABB /* box_filled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = box_filled.png; sourceTree = "<group>"; };
 		0D0B37E5155A0CCB002BF845 /* keyBG_touched.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = keyBG_touched.png; path = KeyPad/keyBG_touched.png; sourceTree = SOURCE_ROOT; };
 		0D0B37E6155A0CCB002BF845 /* keyBG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = keyBG.png; path = KeyPad/keyBG.png; sourceTree = SOURCE_ROOT; };
 		0D0B37E7155A0CCB002BF845 /* keyNE_BG_touched.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = keyNE_BG_touched.png; path = KeyPad/keyNE_BG_touched.png; sourceTree = SOURCE_ROOT; };
@@ -389,6 +406,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0D041DBB156FB65C00F3AABB /* PCOS */ = {
+			isa = PBXGroup;
+			children = (
+				0D20D8A515576E1700098838 /* PCOS-CPP.h */,
+				0D20D89615571ED300098838 /* PCOS.h */,
+				0D20D89715571ED300098838 /* PCOS.m */,
+				0D20D89A15571ED300098838 /* PCOSMessage.h */,
+				0D20D89B15571ED300098838 /* PCOSMessage.m */,
+				0D20D89E15571ED300098838 /* PCOSTypes.h */,
+				0D20D89F15571ED300098838 /* PCOSTypes.m */,
+				0DACCD721558A02A00A69DED /* PCOSParser.h */,
+				0DACCD731558A02A00A69DED /* PCOSParser.m */,
+			);
+			name = PCOS;
+			sourceTree = "<group>";
+		};
+		0D041DBC15706EE600F3AABB /* Passcode */ = {
+			isa = PBXGroup;
+			children = (
+				0D041DC615708AD000F3AABB /* PasscodeViewController.h */,
+				0D041DC715708AD000F3AABB /* PasscodeViewController.m */,
+			);
+			name = Passcode;
+			sourceTree = "<group>";
+		};
 		0D0B37CD155A0B73002BF845 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -505,6 +547,7 @@
 		0D37761315683B17003FB8B3 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				0D041DBC15706EE600F3AABB /* Passcode */,
 				0DBC491C1543C58200E56EDF /* KeyPad */,
 				0D19E2DE1541CCAE00C8671B /* MainStoryboard.storyboard */,
 				0DF6C5C61563446500E28B99 /* MainTabBarController.h */,
@@ -513,6 +556,8 @@
 				0D19E2E21541CCAE00C8671B /* PayController.mm */,
 				0D37760C15683949003FB8B3 /* PaymentCell.h */,
 				0D37760D15683949003FB8B3 /* PaymentCell.m */,
+				0D041DC0157071FC00F3AABB /* AddPaymentController.h */,
+				0D041DC1157071FC00F3AABB /* AddPaymentController.m */,
 				0D19E2E81541CCAE00C8671B /* ReceiveController.h */,
 				0D19E2E91541CCAE00C8671B /* ReceiveController.mm */,
 				0D7A8FE31542609600634A79 /* SettingsController.h */,
@@ -533,6 +578,8 @@
 				0DDD0959156F19FC001C36BB /* PaymentDetailsController.m */,
 				0DDD095B156F1A41001C36BB /* PaymentTipCell.h */,
 				0DDD095C156F1A41001C36BB /* PaymentTipCell.m */,
+				0D041DC315707BDF00F3AABB /* BalanceCell.h */,
+				0D041DC415707BDF00F3AABB /* BalanceCell.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -540,15 +587,9 @@
 		0D3EA6BD154F629F0088EFE1 /* Messaging */ = {
 			isa = PBXGroup;
 			children = (
-				0D20D8A515576E1700098838 /* PCOS-CPP.h */,
-				0D20D89615571ED300098838 /* PCOS.h */,
-				0D20D89715571ED300098838 /* PCOS.m */,
-				0D20D89A15571ED300098838 /* PCOSMessage.h */,
-				0D20D89B15571ED300098838 /* PCOSMessage.m */,
-				0D20D89E15571ED300098838 /* PCOSTypes.h */,
-				0D20D89F15571ED300098838 /* PCOSTypes.m */,
-				0DACCD721558A02A00A69DED /* PCOSParser.h */,
-				0DACCD731558A02A00A69DED /* PCOSParser.m */,
+				0D041DBB156FB65C00F3AABB /* PCOS */,
+				0D20D89C15571ED300098838 /* PushCoinMessages.h */,
+				0D20D89D15571ED300098838 /* PushCoinMessages.m */,
 			);
 			name = Messaging;
 			sourceTree = "<group>";
@@ -580,8 +621,6 @@
 				0D3EA6BD154F629F0088EFE1 /* Messaging */,
 				0D3EA61E1548783D0088EFE1 /* PushCoinConfig.h */,
 				0D3EA61F1548783D0088EFE1 /* PushCoinConfig.m */,
-				0D20D89C15571ED300098838 /* PushCoinMessages.h */,
-				0D20D89D15571ED300098838 /* PushCoinMessages.m */,
 				0D3EA6211548FB0A0088EFE1 /* PushCoinWebService.h */,
 				0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */,
 				0D37761415684E8B003FB8B3 /* PushCoinPayment.h */,
@@ -661,6 +700,10 @@
 		0DBC491D1543C59A00E56EDF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0D041DC915708D0C00F3AABB /* box_empty@2x.png */,
+				0D041DCA15708D0C00F3AABB /* box_empty.png */,
+				0D041DCB15708D0C00F3AABB /* box_filled@2x.png */,
+				0D041DCC15708D0C00F3AABB /* box_filled.png */,
 				0DF8D8EB156E255B00AEA91D /* Default@2x.png */,
 				0DF8D8E9156E255600AEA91D /* Default.png */,
 				0DF8D8E5156E253F00AEA91D /* startup_background.png */,
@@ -877,6 +920,10 @@
 				0DF8D8E8156E253F00AEA91D /* startup_background@2x.png in Resources */,
 				0DF8D8EA156E255600AEA91D /* Default.png in Resources */,
 				0DF8D8EC156E255B00AEA91D /* Default@2x.png in Resources */,
+				0D041DCD15708D0C00F3AABB /* box_empty@2x.png in Resources */,
+				0D041DCE15708D0C00F3AABB /* box_empty.png in Resources */,
+				0D041DCF15708D0C00F3AABB /* box_filled@2x.png in Resources */,
+				0D041DD015708D0C00F3AABB /* box_filled.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -918,6 +965,9 @@
 				0DF8D8EF156EFF3200AEA91D /* TransactionCell.m in Sources */,
 				0DDD095A156F19FC001C36BB /* PaymentDetailsController.m in Sources */,
 				0DDD095D156F1A42001C36BB /* PaymentTipCell.m in Sources */,
+				0D041DC2157071FC00F3AABB /* AddPaymentController.m in Sources */,
+				0D041DC515707BDF00F3AABB /* BalanceCell.m in Sources */,
+				0D041DC815708AD000F3AABB /* PasscodeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

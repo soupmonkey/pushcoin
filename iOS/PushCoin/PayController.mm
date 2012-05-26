@@ -43,6 +43,9 @@
     
     [self prepareNavigationBar];
     [self preparePaymentGrid];
+    
+    
+
 }
 
 -(NSString *) dataFilePath
@@ -70,7 +73,7 @@
     self.gridView = [[GMGridView alloc] initWithFrame: frame];
     self.gridView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     //self.gridView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"payment_grid_background.png"]];  
-    self.gridView.backgroundColor = [UIColor darkGrayColor];
+    self.gridView.backgroundColor = [UIColor clearColor];
     self.gridView.opaque = YES;
 
     self.gridView.actionDelegate = self;
@@ -98,6 +101,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -124,25 +128,61 @@
 
 - (IBAction)push:(id)sender payment:(PushCoinPayment *)payment
 {
-    QRViewController * controller = [self.appDelegate viewControllerWithIdentifier:@"QRViewController"];
+    savedPayment_ = [payment copy];
+    if (self.appDelegate.hasPasscode)
+        [self.appDelegate passcodeFromController:self];
+    else
+        [self processPayment];
+}
+
+-(void)processPayment
+{
+    PushCoinPayment * payment = savedPayment_;
+    savedPayment_ = nil;
     
-    if (controller)
+    if (payment)
     {
-        controller.delegate = self;
-        controller.payment = [payment copy];
-        controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        [self presentModalViewController:controller animated:YES];
+        QRViewController * controller = [self.appDelegate viewControllerWithIdentifier:@"QRViewController"];
+    
+        if (controller)
+        {
+            controller.delegate = self;
+            controller.payment = [payment copy];
+            controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+            [self presentModalViewController:controller animated:YES];
+        }
     }
 }
 
 - (IBAction)editPayment:(id)sender 
 {
     self.gridView.editing = !self.gridView.editing;
+    [self updateButtonStatus];
+}
+
+- (void) updateButtonStatus
+{
+    UIBarButtonItem * editItem = self.navigationBar.topItem.leftBarButtonItem;
+    UIBarButtonItem * addItem = self.navigationBar.topItem.rightBarButtonItem;
+    
+    if (self.gridView.editing)
+    {
+        //        editItem.tintColor = UIColorFromRGB(0xC84131);
+        editItem.tintColor = [UIColor colorWithHue:0.6 saturation:0.33 brightness:0.69 alpha:0];
+        editItem.title = @"Done";
+        addItem.enabled = NO;
+    }
+    else
+    {
+        editItem.tintColor = nil;
+        editItem.title = @"Edit";
+        addItem.enabled = YES;    
+    }
 }
 
 - (IBAction)addPayment:(id)sender 
 {
-    KeypadController * controller = [self.appDelegate viewControllerWithIdentifier:@"KeypadController"];
+    AddPaymentController * controller = [self.appDelegate viewControllerWithIdentifier:@"AddPaymentController"];
     
     if (controller)
     {
@@ -154,19 +194,23 @@
 
 
 #pragma mark -
-#pragma mark KeypadController
--(void)keypadControllerDidClose:(KeypadController *)controller
+#pragma mark AddPaymentController
+-(void)addPaymentControllerDidClose:(AddPaymentController *)controller
 {
     [self dismissViewControllerAnimated:YES completion:nil];
     
-    if (controller.payment.amountValue != 0)
+    if (controller.paymentValue != 0)
     {
-        [payments_ addObject:[controller.payment copy]];
+        PushCoinPayment * payment = [[PushCoinPayment alloc] init];
+        payment.amountValue = controller.paymentValue;
+        payment.amountScale = controller.paymentScale;
+        
+        [payments_ addObject:payment];
         [self.gridView insertObjectAtIndex:payments_.count-1 withAnimation:GMGridViewItemAnimationFade];
     }
 }
 
--(void)keypadControllerDidCancel:(KeypadController *)controller
+-(void)addPaymentControllerDidCancel:(AddPaymentController *)controller
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -278,6 +322,7 @@
 -(void) GMGridViewDidTapOnEmptySpace:(GMGridView *)gridView
 {
     self.gridView.editing = NO;
+   [self updateButtonStatus];
 }
 
 
@@ -333,6 +378,20 @@
 {
     [payments_ exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
 }
+- (BOOL) validatePasscode:(NSString *)passcode
+{
+    return [self.appDelegate validatePasscode:passcode];
+}
+
+- (void)didPasscodeEnteredCorrectly:(KKPasscodeViewController*)viewController
+{
+    [viewController dismissViewControllerAnimated:YES completion:^{[self processPayment];} ];
+}
+- (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController
+{
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 
 
 

@@ -125,6 +125,8 @@ class RmoteCall:
 		count = body.read_int16()
 		for i in xrange(0, count):
 			tx_id = binascii.hexlify( body.read_short_string() ) # transaction ID
+			epoch_tx_time = body.read_int64() # transaction time of day
+			tx_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(epoch_tx_time))
 			tx_type = body.read_fixed_string(1) # transaction type
 			value = body.read_int64() # value
 			scale = body.read_int16() # scale
@@ -135,7 +137,7 @@ class RmoteCall:
 			pta_receiver = body.read_short_string() # PTA receiver
 			pta_user_data = body.read_short_string() # PTA user-data
 			invoice = body.read_short_string() # invoice
-			print "--- %s/%s ---\ntx-id: %s\ntx_type: %s\npayment: %s\ncurrency: %s\nmerchant_name: %s\nmerchant_email: %s\npta_receiver: %s\npta_user_data: %s\ninvoice: %s\n" % (i, count, tx_id, tx_type, payment, currency, merchant_name, merchant_email, pta_receiver, pta_user_data, invoice)
+			print "--- %s/%s ---\ntx-id: %s\ntx_time: %s\ntx_type: %s\npayment: %s\ncurrency: %s\nmerchant_name: %s\nmerchant_email: %s\npta_receiver: %s\npta_user_data: %s\ninvoice: %s\n" % (i, count, tx_id, tx_time, tx_type, payment, currency, merchant_name, merchant_email, pta_receiver, pta_user_data, invoice)
 		log.info('Returned %s records', count)
 
 

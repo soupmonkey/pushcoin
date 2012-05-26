@@ -11,9 +11,9 @@
 @implementation PushCoinTransaction
 @synthesize amountScale = amountScale_;
 @synthesize amountValue = amountValue_;
-@synthesize transactionID    = transactionID_;
-@synthesize transactionType    = transactionType_;
-@synthesize merchantName    = merchantName_;
+@synthesize transactionID = transactionID_;
+@synthesize transactionType = transactionType_;
+@synthesize merchantName = merchantName_;
 @synthesize timestamp = timestamp_;
 
 -(id) init

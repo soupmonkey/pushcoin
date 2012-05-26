@@ -80,6 +80,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
 
 @implementation Transaction
 @synthesize transaction_id;
+@synthesize utc_transaction_time;
 @synthesize tx_type;
 @synthesize amount;
 @synthesize currency;
@@ -95,6 +96,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
     if (self)
     {
         self.transaction_id =[[PCOSShortArray alloc] initWithItemPrototype:protoByte];
+        self.utc_transaction_time = [[PCOSInt64 alloc] init];
         self.tx_type =[[PCOSChar alloc] init]; 
         self.amount =[[Amount alloc] init]; 
         self.currency =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:3]; 
@@ -105,6 +107,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         self.invoice =[[PCOSShortArray alloc] initWithItemPrototype:protoChar];
         
         [self addField:self.transaction_id withName:@"transaction_id"];
+        [self addField:self.utc_transaction_time withName:@"utc_transaction_time"];
         [self addField:self.tx_type withName:@"tx_type"];
         [self addField:self.amount withName:@"amount"];
         [self addField:self.currency withName:@"currency"];
@@ -591,7 +594,7 @@ NSString * const MID_PREAUTHORIZATION_REQUEST = @"Pr";
         self.utc_ctime =[[PCOSInt64 alloc] init]; 
         self.transfer =[[Amount alloc] init]; 
         self.currency =[[PCOSFixedArray alloc] initWithItemPrototype:protoChar andCount:3]; 
-        self.note =[[PCOSLongArray alloc] initWithItemPrototype:protoChar]; 
+        self.note =[[PCOSShortArray alloc] initWithItemPrototype:protoChar]; 
 
         [self addField:self.mat withName:@"mat"];
         [self addField:self.ref_data withName:@"ref_data"];

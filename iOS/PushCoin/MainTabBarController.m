@@ -41,7 +41,7 @@
 -(void) viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:(BOOL)animated];
-    [self.appDelegate registerFromController:self];
+    [self.appDelegate requestRegistrationWithDelegate:self];
 }
 
 

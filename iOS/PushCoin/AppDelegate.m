@@ -34,7 +34,7 @@
     NSFileManager * fileManager = [NSFileManager defaultManager];
     NSArray * files = [NSArray arrayWithObjects:PushCoinRSAPublicKeyFile, nil];
     NSString * fromPath = [[NSBundle mainBundle] bundlePath];
-    NSString * toPath = [self keyFilePath];
+    NSString * toPath = [self documentPath];
     BOOL ret = YES;
     for (id file in files)
     {
@@ -97,14 +97,13 @@
 - (BOOL) prepareRSA
 {
     OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
-    [ssl prepareRsaWithKeyFile:[NSString stringWithFormat:@"%@/%@", self.keyFilePath, PushCoinRSAPublicKeyFile]];
+    [ssl prepareRsaWithKeyFile:[NSString stringWithFormat:@"%@/%@", self.documentPath, PushCoinRSAPublicKeyFile]];
     return YES;
 }
 
 - (BOOL) registered
 {
-    OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
-    return ssl.dsa && ssl.rsa && self.authToken.length;
+    return self.authToken.length != 0;
 }
 
 - (void) setPasscode:(NSString *)hash
@@ -155,7 +154,7 @@
 
 -(NSString *) pemDsaPublicKey
 {
-    NSString * pemPublicKey = [NSString stringWithContentsOfFile:[self.keyFilePath stringByAppendingPathComponent: PushCoinDSAPublicKeyFile] encoding:NSASCIIStringEncoding error:nil];
+    NSString * pemPublicKey = [NSString stringWithContentsOfFile:[self.documentPath stringByAppendingPathComponent: PushCoinDSAPublicKeyFile] encoding:NSASCIIStringEncoding error:nil];
     
     NSRange headerRange = [pemPublicKey rangeOfString:@"---\n"];
     pemPublicKey = [pemPublicKey substringFromIndex:headerRange.location + headerRange.length];
@@ -171,35 +170,35 @@
     [self.keychain setObject:dsaPrivateKey forKey:(__bridge id)kSecValueData];
 }
 
-- (NSString *)keyFilePath
+- (NSString *)documentPath
 {
 	NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 	return dir;
 }
 
--(void)registerFromController:(UIViewController<RegistrationControllerDelegate> *)viewController
+-(void)requestRegistrationWithDelegate:(NSObject<RegistrationControllerDelegate> *)delegate
 {
     if (!self.registered)
     {
         RegistrationController * controller = [self viewControllerWithIdentifier:@"RegistrationController"];
-        controller.delegate = viewController;
+        controller.delegate = delegate;
         controller.modalTransitionStyle =  UIModalTransitionStyleCoverVertical;
         
-        [viewController presentModalViewController:controller animated:NO];
+        [self.window.rootViewController presentModalViewController:controller animated:NO];
     }
 }
 
--(void)passcodeFromController:(UIViewController<KKPasscodeViewControllerDelegate> *)viewController
+-(void)requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate
 {
     KKPasscodeViewController * controller = [[KKPasscodeViewController alloc] init];
-    controller.delegate = viewController;
+    controller.delegate = delegate;
     controller.mode = KKPasscodeModeEnter;
     controller.passcodeLockOn = YES;
     controller.eraseData = NO;
     controller.passcode = @"";
     controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     
-    [viewController presentModalViewController:controller animated:YES];
+    [self.window.rootViewController presentModalViewController:controller animated:YES];
 }
 
 -(id)viewControllerWithIdentifier:(NSString *) identifier

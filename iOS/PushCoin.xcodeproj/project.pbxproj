@@ -76,6 +76,7 @@
 		0D3EA6201548783D0088EFE1 /* PushCoinConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA61F1548783D0088EFE1 /* PushCoinConfig.m */; };
 		0D3EA6231548FB0A0088EFE1 /* PushCoinWebService.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */; };
 		0D3EA63F154936C50088EFE1 /* ChallengeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3EA63E154936C50088EFE1 /* ChallengeController.m */; };
+		0D402EE715715AF300DE35EB /* SettingsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D402EE615715AF200DE35EB /* SettingsNavigationController.m */; };
 		0D4923CA1568C37A00626AC2 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D7A8F8A1542031C00634A79 /* libiconv.dylib */; };
 		0D4923D7156B274400626AC2 /* libGMGridView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D4923D4156B272C00626AC2 /* libGMGridView.a */; };
 		0D4923E4156B3CA900626AC2 /* 1.00.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D4923D8156B3CA900626AC2 /* 1.00.png */; };
@@ -302,6 +303,8 @@
 		0D3EA6221548FB0A0088EFE1 /* PushCoinWebService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushCoinWebService.m; sourceTree = "<group>"; };
 		0D3EA63D154936C50088EFE1 /* ChallengeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChallengeController.h; sourceTree = "<group>"; };
 		0D3EA63E154936C50088EFE1 /* ChallengeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChallengeController.m; sourceTree = "<group>"; };
+		0D402EE515715AF200DE35EB /* SettingsNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsNavigationController.h; sourceTree = "<group>"; };
+		0D402EE615715AF200DE35EB /* SettingsNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsNavigationController.m; sourceTree = "<group>"; };
 		0D4923CC156B272C00626AC2 /* GMGridView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GMGridView.xcodeproj; path = ../../../v1/GMGridView/GMGridView/GMGridView.xcodeproj; sourceTree = "<group>"; };
 		0D4923D8156B3CA900626AC2 /* 1.00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.00.png; sourceTree = "<group>"; };
 		0D4923D9156B3CA900626AC2 /* 1.00@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1.00@2x.png"; sourceTree = "<group>"; };
@@ -580,6 +583,8 @@
 				0DDD095C156F1A41001C36BB /* PaymentTipCell.m */,
 				0D041DC315707BDF00F3AABB /* BalanceCell.h */,
 				0D041DC415707BDF00F3AABB /* BalanceCell.m */,
+				0D402EE515715AF200DE35EB /* SettingsNavigationController.h */,
+				0D402EE615715AF200DE35EB /* SettingsNavigationController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -968,6 +973,7 @@
 				0D041DC2157071FC00F3AABB /* AddPaymentController.m in Sources */,
 				0D041DC515707BDF00F3AABB /* BalanceCell.m in Sources */,
 				0D041DC815708AD000F3AABB /* PasscodeViewController.m in Sources */,
+				0D402EE715715AF300DE35EB /* SettingsNavigationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

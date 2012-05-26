@@ -21,18 +21,18 @@
 @property (nonatomic, readonly) BOOL hasPasscode;
 
 @property (nonatomic, readonly) NSString * pemDsaPublicKey;
-@property (nonatomic, readonly) NSString * keyFilePath;
+@property (nonatomic, readonly) NSString * documentPath;
 
 @property (nonatomic) NSString * authToken;
 @property (nonatomic) NSString * dsaPrivateKey;
 
+-(void)setPasscode:(NSString *)passcode;
 -(BOOL) validatePasscode:(NSString *)passcode;
 
--(void)setPasscode:(NSString *)passcode;
--(void)registerFromController:(UIViewController<RegistrationControllerDelegate> *)viewController;
--(void)passcodeFromController:(UIViewController<KKPasscodeViewControllerDelegate> *)viewController;
+-(void)requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate;
+-(void)requestRegistrationWithDelegate:(NSObject<RegistrationControllerDelegate> *)delegate;
+- (void) showAlert:(NSString *)message withTitle:(NSString *)title;
 
 -(id)viewControllerWithIdentifier:(NSString *) identifier;
-- (void) showAlert:(NSString *)message withTitle:(NSString *)title;
 -(UIImage *) imageForAmountType:(PushCoinPaymentAmountType) type;
 @end

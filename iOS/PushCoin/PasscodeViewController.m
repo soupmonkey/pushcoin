@@ -48,7 +48,7 @@
 	[super loadView];
 	
 	self.view.backgroundColor = [UIColor whiteColor];
-	
+    
 	_enterPasscodeTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
 	_enterPasscodeTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	_enterPasscodeTableView.delegate = self;
@@ -99,8 +99,6 @@
 	_boxes = [[NSMutableArray alloc] init];
 	
     
-    
-    
     if (_mode == KKPasscodeModeSet) {
         self.navigationItem.title = @"Set Passcode";
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
@@ -121,8 +119,6 @@
     } else {
         self.navigationItem.title = @"Enter Passcode";
     }
-    
-    
     
 	if (_mode == KKPasscodeModeSet || _mode == KKPasscodeModeChange) {
 		if (_passcodeLockOn) {
@@ -203,18 +199,16 @@
 }
 
 
-
-
-
 #pragma mark -
 #pragma mark Private methods
 
 
 - (void)cancelButtonPressed:(id)sender
 {
-	[self dismissModalViewControllerAnimated:YES];
+    if ([_delegate respondsToSelector:@selector(didPasscodeCancel:)]) {
+        [_delegate performSelector:@selector(didPasscodeCancel:) withObject:self];
+    }
 }
-
 
 - (void)incrementFailedAttemptsLabel
 {

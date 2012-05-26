@@ -91,7 +91,7 @@
     
     OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
     [ssl generateDsaPrivateKey:&privateKey andPublicKey:&publicKey withBits:512 toPEMFile:
-     [self.appDelegate.keyFilePath stringByAppendingPathComponent:PushCoinDSAPublicKeyFile]];
+     [self.appDelegate.documentPath stringByAppendingPathComponent:PushCoinDSAPublicKeyFile]];
     self.appDelegate.dsaPrivateKey = privateKey;
     
     RegisterMessage * msgOut = [[RegisterMessage alloc] init];

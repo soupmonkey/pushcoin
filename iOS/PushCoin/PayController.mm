@@ -50,7 +50,7 @@
 
 -(NSString *) dataFilePath
 {
-    return [self.appDelegate.keyFilePath stringByAppendingPathComponent:@"payments.dat"];            
+    return [self.appDelegate.documentPath stringByAppendingPathComponent:@"payments.dat"];            
 }
         
 -(void)saveAndCleanup
@@ -130,7 +130,7 @@
 {
     savedPayment_ = [payment copy];
     if (self.appDelegate.hasPasscode)
-        [self.appDelegate passcodeFromController:self];
+        [self.appDelegate requestPasscodeWithDelegate:self];
     else
         [self processPayment];
 }
@@ -167,7 +167,7 @@
     
     if (self.gridView.editing)
     {
-        //        editItem.tintColor = UIColorFromRGB(0xC84131);
+        //editItem.tintColor = UIColorFromRGB(0xC84131);
         editItem.tintColor = [UIColor colorWithHue:0.6 saturation:0.33 brightness:0.69 alpha:0];
         editItem.title = @"Done";
         addItem.enabled = NO;

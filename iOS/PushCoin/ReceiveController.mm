@@ -30,6 +30,14 @@
 {
     [super viewDidLoad];
 
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    
+    numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
+    [numberFormatter setCurrencySymbol:@"$"];
+    [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    [numberFormatter setLocale:usLocale];
+
     webService = [[PushCoinWebService alloc] initWithDelegate:self];
     buffer =  [[NSMutableData alloc] initWithLength:PushCoinWebServiceOutBufferSize];
     parser = [[PushCoinMessageParser alloc] init];
@@ -205,11 +213,6 @@
 
 -(NSString*) formatCurrencyValue:(double)value
 {
-    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
-    [numberFormatter setCurrencySymbol:@"$"];
-    [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-    
     NSNumber *c = [NSNumber numberWithFloat:value];
     return [numberFormatter stringFromNumber:c];
 }

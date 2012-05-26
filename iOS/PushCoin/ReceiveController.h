@@ -16,6 +16,7 @@
 
 @interface ReceiveController : UIViewController<PushCoinWebServiceDelegate, PushCoinMessageReceiver, ZXingDelegate, UITextFieldDelegate>
 {
+    NSNumberFormatter * numberFormatter;
     PushCoinMessageParser * parser;
     PushCoinWebService * webService;
     NSMutableData * buffer;

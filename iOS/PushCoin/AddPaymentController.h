@@ -20,6 +20,7 @@
 @interface AddPaymentController : UIViewController<UITextFieldDelegate>
 {
     NSMutableString * storedValue;
+    NSNumberFormatter * numberFormatter;
 }
 @property (weak, nonatomic) IBOutlet UITextField *paymentTextField;
 @property (weak, nonatomic) IBOutlet UIButton *addButton;

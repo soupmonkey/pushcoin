@@ -151,11 +151,6 @@
     [self showPaymentDetails];
 }
 
-- (IBAction)detailViewTapped:(id)sender 
-{
-    [self showPaymentDetails];
-}
-
 - (void) showPaymentDetails
 {
     PaymentDetailsController * controller = [self.appDelegate viewControllerWithIdentifier:@"PaymentDetailsController"];

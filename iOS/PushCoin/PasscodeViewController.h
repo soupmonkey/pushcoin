@@ -61,6 +61,7 @@ typedef NSUInteger KKPasscodeMode;
 
 @optional
 
+- (void)didPasscodeCancel:(KKPasscodeViewController*)viewController;
 - (void)didPasscodeEnteredCorrectly:(KKPasscodeViewController*)viewController;
 - (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController;
 - (void)shouldEraseApplicationData:(KKPasscodeViewController*)viewController;

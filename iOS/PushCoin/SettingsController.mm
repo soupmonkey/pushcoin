@@ -15,7 +15,6 @@
 @implementation SettingsController
 @synthesize unregisterButton;
 @synthesize preAuthorizationTestButton;
-@synthesize delegate;
 @synthesize passcodeButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -128,7 +127,7 @@
         self.appDelegate.dsaPrivateKey = @"";
         
         [self updateRegisterButtonStatus];
-        [self.appDelegate registerFromController:self];
+        [self.appDelegate requestRegistrationWithDelegate:self];
     }
 }
 
@@ -213,10 +212,7 @@
 
 - (IBAction)closeButtonTapped:(id)sender 
 {
-    if (self.delegate)
-    {
-        [self.delegate settingsControllerDidClose:self];
-    }
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (IBAction)enablePasscode:(id)sender {
@@ -228,7 +224,10 @@
     controller.eraseData = NO;
     controller.mode = controller.passcodeLockOn ? KKPasscodeModeDisabled : KKPasscodeModeSet;
     controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    [self presentModalViewController:controller animated:YES];
+    
+    
+    [self.navigationController pushViewController:controller animated:YES];
+//    [self presentModalViewController:controller animated:YES];
 }
 
 
@@ -239,7 +238,7 @@
 
 - (void)didSettingsChanged:(KKPasscodeViewController *)viewController
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [self.navigationController popToViewController:self animated:YES];
 
     if (viewController.passcodeLockOn)
         self.appDelegate.passcode = viewController.passcode;
@@ -249,9 +248,14 @@
     [self updatePasscodeButton];
 }
 
+-(void)didPasscodeCancel:(KKPasscodeViewController *)viewController
+{
+    [self.navigationController popToViewController:self animated:YES];
+}
+
 -(void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController *)viewController
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [self.navigationController popToViewController:self animated:YES];
 }
 @end
 

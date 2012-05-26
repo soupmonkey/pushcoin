@@ -33,7 +33,6 @@
 
 - (IBAction)closeButtonTapped:(id)sender;
 - (IBAction)addTipsButtonTapped:(id)sender;
-- (IBAction)detailViewTapped:(id)sender;
 
 
 @end

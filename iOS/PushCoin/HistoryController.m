@@ -38,11 +38,26 @@
     transactions = [[NSMutableArray alloc] init];
     balance = 0;
     timestamp = 0;
+
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+
+    dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDoesRelativeDateFormatting:YES];
+    [dateFormatter setDateStyle:NSDateFormatterFullStyle];
+    [dateFormatter setTimeZone:[NSTimeZone defaultTimeZone]];
+    [dateFormatter setLocale:usLocale];
     
+    timeFormatter = [[NSDateFormatter alloc] init];
+    [timeFormatter setDoesRelativeDateFormatting:YES];
+    [timeFormatter setTimeStyle:NSTimeZoneNameStyleShortGeneric];
+    [timeFormatter setTimeZone:[NSTimeZone defaultTimeZone]];
+    [timeFormatter setLocale:usLocale];
+
     numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
     [numberFormatter setCurrencySymbol:@"$"];
     [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    [numberFormatter setLocale:usLocale];
     
     self.tableView.dataSource = self;
 }
@@ -56,6 +71,16 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [self queryRequest];
+}
+
+- (IBAction)refreshButtonTapped:(id)sender 
+{
+    [self queryRequest];
+}
+
+-(void)queryRequest
+{
     // Create transfer request
     TransactionHistoryQueryMessage * trxMsg = [[TransactionHistoryQueryMessage alloc] init];
     PCOSRawData * trxData = [[PCOSRawData alloc] initWithData:buffer];
@@ -68,7 +93,7 @@
     
     [parser encodeMessage:trxMsg to:trxData];
     [webService sendMessage:trxData.consumedData];
-        
+    
     // Create balance request
     BalanceQueryMessage * balMsg = [[BalanceQueryMessage alloc] init];
     PCOSRawData * balData = [[PCOSRawData alloc] initWithData:buffer];
@@ -78,6 +103,7 @@
     
     [parser encodeMessage:balMsg to:balData];
     [webService sendMessage:balData.consumedData];
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -96,18 +122,10 @@
     
     if (controller)
     {
-        controller.delegate = self;
         controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
         [self presentModalViewController:controller animated:YES];
     }
 }
-
--(void) settingsControllerDidClose:(SettingsController *)controller
-{
-    [self dismissModalViewControllerAnimated:YES];
-}
-
-
 
 #pragma mark PushCoinWebserviceDelegate
 
@@ -155,7 +173,7 @@ andDescription:(NSString *)description
                                                                  amountValue:trx.amount.value.val
                                                                  amountScale:trx.amount.scale.val
                                                                 merchantName:trx.merchant_name.string
-                                                                   timestamp:0];
+                                                                   timestamp:trx.utc_transaction_time.val];
         [transactions addObject:pTrx];
     }
     
@@ -164,8 +182,10 @@ andDescription:(NSString *)description
 
 -(void) didDecodeBalanceReportMessage:(BalanceReportMessage *)msg withHeader:(PCOSHeaderBlock *)hdr
 {
+    NSDate *now = [[NSDate alloc] init];
+    
     balance = msg.block.balance.value.val * (pow(10.0f, (Float32)msg.block.balance.scale.val));
-    timestamp = msg.block.utc_balance_time.val;
+    timestamp = [now timeIntervalSince1970];
     
     [self.tableView reloadData];
 }
@@ -199,12 +219,10 @@ andDescription:(NSString *)description
     
     if (timestamp == 0)
         return @"";
-    
+        
     NSDate * date = [NSDate dateWithTimeIntervalSince1970:timestamp];
-    NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterFullStyle];
-    
-    return [NSString stringWithFormat:@"Last Updated: %@", [formatter stringFromDate:date]];
+    return [NSString stringWithFormat:@"Last Updated: %@, %@", [dateFormatter stringFromDate:date],
+            [timeFormatter stringFromDate:date]];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -238,9 +256,11 @@ andDescription:(NSString *)description
             amount *= -1.0f;
         
         NSNumber *c = [NSNumber numberWithFloat:amount];
-        cell.rightTextLabel.text = [numberFormatter stringFromNumber:c];
+        NSDate * date = [NSDate dateWithTimeIntervalSince1970:trx.timestamp];
+
         cell.titleTextLabel.text = trx.merchantName;
-        cell.detailTextLabel.text = trx.transactionType == 'C'? @"credit":@"debit";
+        cell.detailTextLabel.text = [dateFormatter stringFromDate:date];
+        cell.rightTextLabel.text = [numberFormatter stringFromNumber:c];
         
         return cell;
     }

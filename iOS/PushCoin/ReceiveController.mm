@@ -113,6 +113,7 @@
 
 - (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSData*)data
 {
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     [self dismissModalViewControllerAnimated:NO];
     
     NSDate * now = [NSDate date];

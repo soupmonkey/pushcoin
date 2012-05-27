@@ -108,8 +108,8 @@ class RmoteCall:
 		bo.write_fixed_string( binascii.unhexlify( self.args['mat'] ), size=20 ) # mat
 		bo.write_short_string( '', max=20 ) # ref-data
 		bo.write_short_string( '', max=127 ) # keywords
-		bo.write_int16( 0 )
-		bo.write_int16( 100 )
+		bo.write_int16( int(self.args['page']) )
+		bo.write_int16( int(self.args['size']) )
 		req.add( bo )
 
 		res = self.send( req )
@@ -125,6 +125,8 @@ class RmoteCall:
 		count = body.read_int16()
 		for i in xrange(0, count):
 			tx_id = binascii.hexlify( body.read_short_string() ) # transaction ID
+			epoch_tx_time = body.read_int64() # transaction time of day
+			tx_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(epoch_tx_time))
 			tx_type = body.read_fixed_string(1) # transaction type
 			value = body.read_int64() # value
 			scale = body.read_int16() # scale
@@ -135,7 +137,7 @@ class RmoteCall:
 			pta_receiver = body.read_short_string() # PTA receiver
 			pta_user_data = body.read_short_string() # PTA user-data
 			invoice = body.read_short_string() # invoice
-			print "--- %s/%s ---\ntx-id: %s\ntx_type: %s\npayment: %s\ncurrency: %s\nmerchant_name: %s\nmerchant_email: %s\npta_receiver: %s\npta_user_data: %s\ninvoice: %s\n" % (i, count, tx_id, tx_type, payment, currency, merchant_name, merchant_email, pta_receiver, pta_user_data, invoice)
+			print "--- %s/%s ---\ntx-id: %s\ntx_time: %s\ntx_type: %s\npayment: %s\ncurrency: %s\nmerchant_name: %s\nmerchant_email: %s\npta_receiver: %s\npta_user_data: %s\ninvoice: %s\n" % (i, count, tx_id, tx_time, tx_type, payment, currency, merchant_name, merchant_email, pta_receiver, pta_user_data, invoice)
 		log.info('Returned %s records', count)
 
 
@@ -152,9 +154,7 @@ class RmoteCall:
 		preauth.write_fixed_string( binascii.unhexlify( self.args['preauth_mat'] ), size=20 ) # mat
 		preauth.write_short_string( '', max=20 ) # user data
 		# preauth amount
-		charge = Decimal(self.args['charge']).normalize()
-		charge_scale = int(charge.as_tuple()[2])
-		charge_int = long(charge.shift(abs(charge_scale)))
+		(charge_int, charge_scale) = decimal_to_parts(Decimal(self.args['charge']))
 		preauth.write_int64( charge_int ) # value
 		preauth.write_int16( charge_scale ) # scale
 		preauth.write_fixed_string( "USD", size=3 ) # currency
@@ -246,9 +246,7 @@ class RmoteCall:
 		p1.write_int64( now + 24 * 3600 ) # certificate expiry (in 24 hrs)
 
 		# payment-limit
-		payment = Decimal(self.args['limit'])
-		payment_scale = int(payment.as_tuple()[2])
-		payment_int = long(payment.shift(abs(payment_scale)))
+		(payment_int, payment_scale) = decimal_to_parts(Decimal(self.args['limit']))
 		p1.write_int64( payment_int ) # value
 		p1.write_int16( payment_scale ) # scale
 
@@ -263,9 +261,7 @@ class RmoteCall:
 				tip_type = 'A'
 
 		if tipv:
-			tip = Decimal(tipv).normalize()
-			tip_scale = int(tip.as_tuple()[2])
-			tip_int = long(tip.shift(abs(tip_scale)))
+			(tip_int, tip_scale) = decimal_to_parts(Decimal(tipv))
 			p1.write_byte(1) # optional indicator
 			p1.write_fixed_string(tip_type, size=1) # tip type (P or A)
 			p1.write_int64( tip_int ) # value

@@ -20,6 +20,9 @@
     PushCoinMessageParser * parser;
     PushCoinWebService * webService;
     NSMutableData * buffer;
+    KKPasscodeViewController * setPasscodeController;
+    KKPasscodeViewController * preAuthTestPasscodeController;
+    
 }
 
 @property (weak, nonatomic) IBOutlet UIButton *unregisterButton;

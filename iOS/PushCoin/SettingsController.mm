@@ -59,7 +59,7 @@
     self.unregisterButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
     
     [self updateRegisterButtonStatus];  
-    [self updatePasscodeButton];
+    [self updatePasscodeButtonStatus];
 }
 
 - (void) updateRegisterButtonStatus
@@ -76,7 +76,7 @@
     }
 }
 
--(void) updatePasscodeButton
+-(void) updatePasscodeButtonStatus
 {
     if (!self.appDelegate.hasPasscode)
     {
@@ -120,13 +120,15 @@
 {
     if (buttonIndex == 1)
     {
-        OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
-        ssl.dsa = NULL;
-        
+        NSData * emptyData = [[NSData alloc] init];
         self.appDelegate.authToken = @"";
-        self.appDelegate.dsaPrivateKey = @"";
+        [self.appDelegate setPasscode:@"" oldPasscode:@""];
+        [self.appDelegate setDsaPrivateKey:emptyData withPasscode:@""];
         
         [self updateRegisterButtonStatus];
+        [self updatePasscodeButtonStatus];
+        
+        [self dismissModalViewControllerAnimated:NO];
         [self.appDelegate requestRegistrationWithDelegate:self];
     }
 }
@@ -170,6 +172,16 @@
 
 - (IBAction)preAuthorizationTest:(id)sender 
 {
+    if (self.appDelegate.hasPasscode)
+        preAuthTestPasscodeController = [self.appDelegate requestPasscodeWithDelegate:self viewController:self];
+    else
+        [self doPreAuthorizationTestWithPasscode:nil];
+}
+
+-(void) doPreAuthorizationTestWithPasscode:(NSString*) passcode
+{    
+    [self.appDelegate unlockDsaPrivateKeyWithPasscode:passcode];
+    
     NSDate * now = [NSDate date];
 
     //set data
@@ -217,17 +229,15 @@
 
 - (IBAction)enablePasscode:(id)sender {
     
-    KKPasscodeViewController * controller = [[KKPasscodeViewController alloc] init];
-    controller.delegate = self;
-    controller.passcodeLockOn = self.appDelegate.hasPasscode;
-    controller.passcode = @"";
-    controller.eraseData = NO;
-    controller.mode = controller.passcodeLockOn ? KKPasscodeModeDisabled : KKPasscodeModeSet;
-    controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    setPasscodeController = [[KKPasscodeViewController alloc] init];
+    setPasscodeController.delegate = self;
+    setPasscodeController.passcodeLockOn = self.appDelegate.hasPasscode;
+    setPasscodeController.passcode = @"";
+    setPasscodeController.eraseData = NO;
+    setPasscodeController.mode = setPasscodeController.passcodeLockOn ? KKPasscodeModeDisabled : KKPasscodeModeSet;
+    setPasscodeController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     
-    
-    [self.navigationController pushViewController:controller animated:YES];
-//    [self presentModalViewController:controller animated:YES];
+    [self.navigationController pushViewController:setPasscodeController animated:YES];
 }
 
 
@@ -238,24 +248,50 @@
 
 - (void)didSettingsChanged:(KKPasscodeViewController *)viewController
 {
-    [self.navigationController popToViewController:self animated:YES];
+    if (viewController == setPasscodeController)
+    {
+        [self.navigationController popToViewController:self animated:YES];
 
-    if (viewController.passcodeLockOn)
-        self.appDelegate.passcode = viewController.passcode;
-    else
-        self.appDelegate.passcode = @"";
+        if (viewController.passcodeLockOn)
+            [self.appDelegate setPasscode:viewController.passcode oldPasscode:@""];
+        else
+            [self.appDelegate setPasscode:@"" oldPasscode:viewController.passcode];
     
-    [self updatePasscodeButton];
+        [self updatePasscodeButtonStatus];
+    }
 }
 
 -(void)didPasscodeCancel:(KKPasscodeViewController *)viewController
 {
-    [self.navigationController popToViewController:self animated:YES];
+    if (viewController == setPasscodeController)
+    {
+        [self.navigationController popToViewController:self animated:YES];
+    }
+    else
+    {
+        [self dismissModalViewControllerAnimated:YES];
+    }
 }
 
 -(void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController *)viewController
 {
-    [self.navigationController popToViewController:self animated:YES];
+    if (viewController == setPasscodeController)
+    {
+        [self.navigationController popToViewController:self animated:YES];
+    }
+    else
+    {
+        [self dismissModalViewControllerAnimated:YES];    
+    }
+}
+
+-(void)didPasscodeEnteredCorrectly:(KKPasscodeViewController *)viewController
+{
+    if (viewController == preAuthTestPasscodeController)
+    {
+        [self dismissModalViewControllerAnimated:YES];
+        [self doPreAuthorizationTestWithPasscode:viewController.passcode];
+    }
 }
 @end
 

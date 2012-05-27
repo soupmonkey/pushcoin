@@ -81,6 +81,9 @@
 
 -(void)queryRequest
 {
+    if (!self.appDelegate.registered)
+        return;
+
     // Create transfer request
     TransactionHistoryQueryMessage * trxMsg = [[TransactionHistoryQueryMessage alloc] init];
     PCOSRawData * trxData = [[PCOSRawData alloc] initWithData:buffer];
@@ -103,7 +106,6 @@
     
     [parser encodeMessage:balMsg to:balData];
     [webService sendMessage:balData.consumedData];
-
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

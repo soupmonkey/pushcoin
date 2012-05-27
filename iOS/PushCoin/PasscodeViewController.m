@@ -332,15 +332,14 @@
 				}
 			}						 
 		} else if (_mode == KKPasscodeModeChange) {
-			NSString* passcode = self.passcode;
 			if ([textField isEqual:_enterPasscodeTextField]) {
-				if ([passcode isEqualToString:_enterPasscodeTextField.text]) {
+				if ([self.passcode isEqualToString:_enterPasscodeTextField.text]) {
 					[self moveToNextTableView];
 				} else {
 					[self incrementFailedAttemptsLabel];
 				}
 			} else if ([textField isEqual:_setPasscodeTextField]) {
-				if ([passcode isEqualToString:_setPasscodeTextField.text]) {
+				if ([self.passcode isEqualToString:_setPasscodeTextField.text]) {
 					_setPasscodeTextField.text = @"";
 					_passcodeConfirmationWarningLabel.text = @"Enter a different passcode. You cannot re-use the same passcode.";
 					_passcodeConfirmationWarningLabel.frame = CGRectMake(0.0, 132.0, self.view.bounds.size.width, 60.0);
@@ -372,11 +371,10 @@
 {
     if (_mode == KKPasscodeModeDisabled) {
         
-        NSString *passcode = _enterPasscodeTextField.text;
-        BOOL validated = [self.delegate validatePasscode:passcode];
+        self.passcode = _enterPasscodeTextField.text;
+        BOOL validated = [self.delegate validatePasscode:self.passcode];
 
         if (validated) {
-            self.passcode = @"";
             self.passcodeLockOn = NO;
             
             if ([_delegate respondsToSelector:@selector(didSettingsChanged:)]) {
@@ -386,8 +384,8 @@
             [self incrementFailedAttemptsLabel];
         }
     } else if (_mode == KKPasscodeModeEnter) {
-        NSString *passcode = _enterPasscodeTextField.text;
-        BOOL validated = [self.delegate validatePasscode:passcode];
+        self.passcode = _enterPasscodeTextField.text;
+        BOOL validated = [self.delegate validatePasscode:self.passcode];
 
         if (validated) {
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -404,10 +402,10 @@
             [self incrementFailedAttemptsLabel];
         }
     } else if (_mode == KKPasscodeModeChange) {
-        NSString *passcode = textField.text;
+        self.passcode = textField.text;
 
         if ([textField isEqual:_enterPasscodeTextField]) {
-            BOOL validated = [self.delegate validatePasscode:passcode];
+            BOOL validated = [self.delegate validatePasscode:self.passcode];
 
             if (validated) {
                 [self moveToNextTableView];
@@ -415,7 +413,7 @@
                 [self incrementFailedAttemptsLabel];
             }
         } else if ([textField isEqual:_setPasscodeTextField]) {
-            BOOL validated = [self.delegate validatePasscode:passcode];
+            BOOL validated = [self.delegate validatePasscode:self.passcode];
 
             if (validated) {
                 _setPasscodeTextField.text = @"";

@@ -11,19 +11,51 @@
 #import "NSString+HexStringToBytes.h"
 #import "NSData+BytesToHexString.h"
 
+@implementation SingleUseData
+
++(id) dataWithData:(NSData *)d
+{
+    return [[SingleUseData alloc] initWithData:d];
+}
+-(id) initWithData:(NSData *)d
+{
+    self = [self init];
+    if (self)
+    {
+        self.data = d;
+    }
+    return self;
+}
+
+-(void) setData:(NSData *)data
+{
+    data_ = [data copy];
+}
+
+-(NSData *) data
+{
+    NSData * res = data_;
+    data_ = nil;
+    return res;
+}
+@end
+
+
 @implementation AppDelegate
 
 @synthesize window = _window;
 @synthesize keychain = _keychain;
 @synthesize images = _images;
 @synthesize pemDsaPublicKey = _pemDsaPublicKey;
+@synthesize dsaDecryptedKey = _dsaDecryptedKey;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    self.dsaDecryptedKey = [[SingleUseData alloc] init];
+    
     [self prepareKeyFiles];
     [self prepareKeyChain];
-    [self prepareDSA];
-    [self prepareRSA];
+    [self prepareOpenSSLWrapper];
     [self prepareImageCache];
     return YES;
 }
@@ -73,25 +105,23 @@
     }
 }
 
+-(BOOL) prepareOpenSSLWrapper
+{
+    OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
+    ssl.delegate = self;
+    
+    return [self prepareRSA];
+}
+
+-(NSData *)sslNeedsDsaPrivateKey:(OpenSSLWrapper *)ssl
+{
+    return self.dsaPrivateKey;
+}
+
 -(BOOL) prepareKeyChain
 {
     self.keychain = [[KeychainItemWrapper alloc] initWithIdentifier:PushCoinKeychainId accessGroup:nil];
     return YES;
-}
-
-- (BOOL) prepareDSA
-{
-    NSString * dsaPrivateKey = self.dsaPrivateKey;
-    if (dsaPrivateKey.length == 0)
-    {
-        return NO;
-    }
-    else 
-    {
-        OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
-        [ssl prepareDsaWithPrivateKey:dsaPrivateKey];
-        return YES;
-    }
 }
 
 - (BOOL) prepareRSA
@@ -106,12 +136,21 @@
     return self.authToken.length != 0;
 }
 
-- (void) setPasscode:(NSString *)hash
+
+- (void) setPasscode:(NSString *)passcode oldPasscode:(NSString *)oldPasscode
 {
-    if (hash && hash.length != 0)
+    [self unlockDsaPrivateKeyWithPasscode:oldPasscode];
+    
+    NSData * privateKey = [self dsaPrivateKey];
+    if (privateKey && privateKey.length)
+    {
+        [self setDsaPrivateKey:privateKey withPasscode:passcode];
+    }
+
+    if (passcode && passcode.length != 0)
     {
         OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
-        NSData * data = [ssl sha1_hashData:[hash dataUsingEncoding:NSASCIIStringEncoding]];
+        NSData * data = [ssl sha1_hashData:[passcode dataUsingEncoding:NSASCIIStringEncoding]];
         [self.keychain setObject:data.bytesToHexString forKey:(__bridge id)kSecAttrDescription];
     }
     else
@@ -147,11 +186,6 @@
     [self.keychain setObject:authToken forKey:(__bridge id)kSecAttrAccount];
 }
 
-- (NSString *) dsaPrivateKey
-{
-    return [self.keychain objectForKey:(__bridge id)kSecValueData];
-}
-
 -(NSString *) pemDsaPublicKey
 {
     NSString * pemPublicKey = [NSString stringWithContentsOfFile:[self.documentPath stringByAppendingPathComponent: PushCoinDSAPublicKeyFile] encoding:NSASCIIStringEncoding error:nil];
@@ -165,9 +199,39 @@
     return pemPublicKey;
 }
 
-- (void) setDsaPrivateKey:(NSString *)dsaPrivateKey
+- (BOOL) unlockDsaPrivateKeyWithPasscode:(NSString *)passcode
 {
-    [self.keychain setObject:dsaPrivateKey forKey:(__bridge id)kSecValueData];
+    NSData * encryptedKey = ((NSString *)[self.keychain objectForKey:(__bridge id)kSecValueData]).hexStringToBytes;
+    if (encryptedKey && encryptedKey.length)
+    {
+        if (passcode && passcode.length)
+        {
+            OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
+            self.dsaDecryptedKey.data = [ssl des3_decrypt:encryptedKey withKey:passcode];
+        }
+        else 
+        {
+            self.dsaDecryptedKey.data = encryptedKey;
+        }
+    }
+    return YES;
+}
+
+- (NSData *) dsaPrivateKey
+{
+    return self.dsaDecryptedKey.data;
+}
+
+- (void) setDsaPrivateKey:(NSData *)dsaPrivateKey withPasscode:(NSString *)passcode
+{
+    if (!passcode || passcode.length == 0)
+        [self.keychain setObject:dsaPrivateKey.bytesToHexString forKey:(__bridge id)kSecValueData];
+    else
+    {
+        OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
+        NSData * encryptedKey = [ssl des3_encrypt:dsaPrivateKey withKey:passcode];
+        [self.keychain setObject:encryptedKey.bytesToHexString forKey:(__bridge id)kSecValueData];
+    }
 }
 
 - (NSString *)documentPath
@@ -176,7 +240,13 @@
 	return dir;
 }
 
--(void)requestRegistrationWithDelegate:(NSObject<RegistrationControllerDelegate> *)delegate
+-(RegistrationController *)requestRegistrationWithDelegate:(NSObject<RegistrationControllerDelegate> *)delegate
+{
+    return [self requestRegistrationWithDelegate:delegate viewController:self.window.rootViewController];
+}
+
+-(RegistrationController *)requestRegistrationWithDelegate:(NSObject<RegistrationControllerDelegate> *)delegate
+                                            viewController:(UIViewController *)viewController
 {
     if (!self.registered)
     {
@@ -184,11 +254,19 @@
         controller.delegate = delegate;
         controller.modalTransitionStyle =  UIModalTransitionStyleCoverVertical;
         
-        [self.window.rootViewController presentModalViewController:controller animated:NO];
+        [viewController presentModalViewController:controller animated:NO];
+        return controller;
     }
+    return nil;
 }
 
--(void)requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate
+-(KKPasscodeViewController *)requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate
+{
+    return [self requestPasscodeWithDelegate:delegate viewController:self.window.rootViewController];
+}
+
+-(KKPasscodeViewController *)requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate
+                                          viewController:(UIViewController *)viewController
 {
     KKPasscodeViewController * controller = [[KKPasscodeViewController alloc] init];
     controller.delegate = delegate;
@@ -198,7 +276,8 @@
     controller.passcode = @"";
     controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     
-    [self.window.rootViewController presentModalViewController:controller animated:YES];
+    [viewController presentModalViewController:controller animated:YES];
+    return controller;
 }
 
 -(id)viewControllerWithIdentifier:(NSString *) identifier
@@ -209,7 +288,7 @@
 }
 
 
-- (void) showAlert:(NSString *)message withTitle:(NSString *)title
+- (UIAlertView *) showAlert:(NSString *)message withTitle:(NSString *)title
 {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
                                                     message:message
@@ -217,6 +296,7 @@
                                           cancelButtonTitle:@"Close" 
                                           otherButtonTitles:nil];
     [alert show];
+    return alert;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

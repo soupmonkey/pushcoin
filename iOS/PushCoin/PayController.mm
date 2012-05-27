@@ -132,10 +132,10 @@
     if (self.appDelegate.hasPasscode)
         [self.appDelegate requestPasscodeWithDelegate:self];
     else
-        [self processPayment];
+        [self processPaymentWithPasscode:nil];
 }
 
--(void)processPayment
+-(void)processPaymentWithPasscode:(NSString *)passcode
 {
     PushCoinPayment * payment = savedPayment_;
     savedPayment_ = nil;
@@ -148,6 +148,7 @@
         {
             controller.delegate = self;
             controller.payment = [payment copy];
+            controller.passcode = passcode;
             controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
             [self presentModalViewController:controller animated:YES];
         }
@@ -385,7 +386,10 @@
 
 - (void)didPasscodeEnteredCorrectly:(KKPasscodeViewController*)viewController
 {
-    [viewController dismissViewControllerAnimated:YES completion:^{[self processPayment];} ];
+    [viewController dismissViewControllerAnimated:YES completion:^
+    {
+        [self processPaymentWithPasscode:viewController.passcode];
+    }];
 }
 - (void)didPasscodeEnteredIncorrectly:(KKPasscodeViewController*)viewController
 {

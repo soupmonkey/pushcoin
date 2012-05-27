@@ -11,8 +11,21 @@
 #import "RegistrationController.h"
 #import "PasscodeViewController.h"
 #import "PushCoinPayment.h"
+#import "OpenSSLWrapper.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+
+@interface SingleUseData : NSObject
+{
+    NSData * data_;
+}
+@property (nonatomic, strong) NSData * data;
+
++(id) dataWithData:(NSData *)d;
+-(id) initWithData:(NSData *)d;
+@end
+
+
+@interface AppDelegate : UIResponder <UIApplicationDelegate, OpenSSLWrapperDSAPrivateKeyDelegate>
 @property (strong, nonatomic) KeychainItemWrapper * keychain;
 @property (strong, nonatomic) UIWindow * window;
 @property (strong, nonatomic) NSArray * images;
@@ -24,14 +37,25 @@
 @property (nonatomic, readonly) NSString * documentPath;
 
 @property (nonatomic) NSString * authToken;
-@property (nonatomic) NSString * dsaPrivateKey;
+@property (nonatomic, readonly) NSData * dsaPrivateKey;
 
--(void)setPasscode:(NSString *)passcode;
+@property (nonatomic, strong) SingleUseData * dsaDecryptedKey;
+
+-(void) setPasscode:(NSString *)passcode oldPasscode:(NSString *)oldPasscode;
 -(BOOL) validatePasscode:(NSString *)passcode;
 
--(void)requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate;
--(void)requestRegistrationWithDelegate:(NSObject<RegistrationControllerDelegate> *)delegate;
-- (void) showAlert:(NSString *)message withTitle:(NSString *)title;
+-(void) setDsaPrivateKey:(NSData *)dsaPrivateKey withPasscode:(NSString *)passcode;
+-(BOOL) unlockDsaPrivateKeyWithPasscode:(NSString *)passcode;
+
+-(KKPasscodeViewController *) requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate;
+-(KKPasscodeViewController *) requestPasscodeWithDelegate:(NSObject<KKPasscodeViewControllerDelegate> *)delegate
+                                           viewController:(UIViewController *)controller;
+
+-(RegistrationController *) requestRegistrationWithDelegate:(NSObject<RegistrationControllerDelegate> *)delegate;
+-(RegistrationController *) requestRegistrationWithDelegate:(NSObject<RegistrationControllerDelegate> *)delegate
+                                             viewController:(UIViewController *)controller;
+
+-(UIAlertView *) showAlert:(NSString *)message withTitle:(NSString *)title;
 
 -(id)viewControllerWithIdentifier:(NSString *) identifier;
 -(UIImage *) imageForAmountType:(PushCoinPaymentAmountType) type;

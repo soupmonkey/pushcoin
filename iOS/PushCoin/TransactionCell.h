@@ -10,4 +10,8 @@
 
 @interface TransactionCell : UITableViewCell
 
+@property (nonatomic, weak) IBOutlet UILabel * titleTextLabel;
+@property (nonatomic, weak) IBOutlet UILabel * detailTextLabel;
+@property (nonatomic, weak) IBOutlet UILabel * rightTextLabel;
+
 @end

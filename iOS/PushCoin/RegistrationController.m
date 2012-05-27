@@ -69,12 +69,20 @@
         return NO;
     }
     
-    if (charCount == 4 || charCount == 9 || charCount == 14) {
-        newString = [newString stringByAppendingString:@"-"];
+    if ([newString characterAtIndex:newString.length -1] == '-')
+    {
+        newString = [newString substringToIndex:newString.length - 1];
     }
-    
+    else
+    {
+        if (charCount == 5 || charCount == 10 || charCount == 15) 
+        {
+            NSMutableString * mutableString = [NSMutableString stringWithString:newString];
+            [mutableString insertString:@"-" atIndex:mutableString.length - 1];
+            newString = mutableString;
+        }
+    }
     textField.text = newString;
-    
     return NO;
 }
 
@@ -86,13 +94,13 @@
 
 -(void)register
 {
-    NSString * privateKey;
-    NSString * publicKey;
+    NSData * privateKey;
+    NSData * publicKey;
     
     OpenSSLWrapper * ssl = [OpenSSLWrapper instance];
     [ssl generateDsaPrivateKey:&privateKey andPublicKey:&publicKey withBits:512 toPEMFile:
-     [self.appDelegate.keyFilePath stringByAppendingPathComponent:PushCoinDSAPublicKeyFile]];
-    self.appDelegate.dsaPrivateKey = privateKey;
+    [self.appDelegate.documentPath stringByAppendingPathComponent:PushCoinDSAPublicKeyFile]];
+    [self.appDelegate setDsaPrivateKey:privateKey withPasscode:@""];
     
     RegisterMessage * msgOut = [[RegisterMessage alloc] init];
     PCOSRawData * dataOut = [[PCOSRawData alloc] initWithData:buffer];

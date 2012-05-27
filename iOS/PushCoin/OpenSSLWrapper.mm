@@ -9,9 +9,11 @@
 #import "OpenSSLWrapper.h"
 #import "NSData+BytesToHexString.h"
 #import "NSString+HexStringToBytes.h"
+#import <CommonCrypto/CommonCryptor.h>
 
 
 @implementation OpenSSLWrapper
+@synthesize delegate;
 
 static OpenSSLWrapper * singleton;
 
@@ -36,7 +38,6 @@ static OpenSSLWrapper * singleton;
     self = [super init];
     if (self)
     {
-        self.dsa = NULL;
         self.rsa = NULL;
     }
     return self;
@@ -54,20 +55,6 @@ static OpenSSLWrapper * singleton;
     rsa_ = rsa;
     hasRSA_ = (rsa != NULL);
 }
-- (DSA *) dsa
-{ 
-    return hasDSA_ ? dsa_ : NULL;
-}
-- (void) setDsa:(DSA *)dsa
-{
-    if (hasDSA_)
-        DSA_free(dsa_);
-
-    dsa_ = dsa;
-    hasDSA_ = (dsa != NULL);
-}
-
-
 
 -(BOOL) prepareRsaWithKeyFile:(NSString*) keyFile
 {
@@ -82,74 +69,68 @@ static OpenSSLWrapper * singleton;
     return self.rsa != NULL;
 }
 
--(BOOL) prepareDsaWithKeyFile:(NSString*) keyFile
+-(DSA *) prepareDsaWithKeyFile:(NSString*) keyFile
 {
     NSString * path = keyFile;
     FILE * privateKeyFile = fopen(path.UTF8String, "r");
     if (privateKeyFile == NULL)
         return NO;
     
-    self.dsa = ::PEM_read_DSAPrivateKey(privateKeyFile, 0, 0, 0);
+    DSA * dsa = ::PEM_read_DSAPrivateKey(privateKeyFile, 0, 0, 0);
     fclose(privateKeyFile);
     
-    return self.dsa != NULL;
+    return dsa;
 }
 
-
-
--(BOOL) prepareDsaWithPrivateKey:(NSString *)privateKey
+-(DSA *) prepareDsaWithPrivateKey:(NSData *)privateKey
 {
-    NSData * bytes = privateKey.hexStringToBytes;
-    unsigned char const * p = (unsigned char const *) bytes.bytes;
-    self.dsa = d2i_DSAPrivateKey(NULL, &p, bytes.length);
-    return self.dsa != NULL;
+    unsigned char const * p = (unsigned char const *) privateKey.bytes;
+    return d2i_DSAPrivateKey(NULL, &p, privateKey.length);
 }
 
--(BOOL) generateDsaPrivateKey:(NSString **)privateKey 
-                 andPublicKey:(NSString**)publicKey 
+-(BOOL) generateDsaPrivateKey:(NSData **)privateKey 
+                 andPublicKey:(NSData **)publicKey 
                      withBits:(NSInteger)bits 
                     toPEMFile:(NSString *)pemFile
 {
-    self.dsa = DSA_generate_parameters(bits,NULL,0,NULL,NULL,NULL,NULL);
-    if (!self.dsa)
+    DSA * dsa = DSA_generate_parameters(bits,NULL,0,NULL,NULL,NULL,NULL);
+    if (!dsa)
         return NO;
     
-    if (!DSA_generate_key(self.dsa))
+    if (!DSA_generate_key(dsa))
     {
-        self.dsa = NULL;
+        DSA_free(dsa);
         return NO;
     }
 
-    
-     
     int len;
     unsigned char * buf = NULL;
     
-    len = ::i2d_DSAPrivateKey(self.dsa, &buf);
+    len = ::i2d_DSAPrivateKey(dsa, &buf);
     NSData * pri_data = [NSData dataWithBytes:buf length:len];
-    *privateKey = [pri_data bytesToHexString];
+    *privateKey = [pri_data copy];
     
     free(buf);
     buf = NULL;
     
-    len = ::i2d_DSAPublicKey(self.dsa, &buf);
+    len = ::i2d_DSAPublicKey(dsa, &buf);
     NSData * pub_data = [NSData dataWithBytes:buf length:len];
-    *publicKey = [pub_data bytesToHexString];
+    *publicKey = [pub_data copy];
     
     free(buf);
     buf = NULL;
     
     NSString * path = pemFile;
     FILE * fp = fopen(path.UTF8String, "w+");
-    PEM_write_DSA_PUBKEY(fp, self.dsa);
+    PEM_write_DSA_PUBKEY(fp, dsa);
     fclose(fp);
     
-    return self.dsa != NULL;
+    DSA_free(dsa);
+    return YES;
 }
 
 -(void) dealloc
 {
-    self.dsa = NULL;
     self.rsa = NULL;
 }
 
@@ -186,29 +167,98 @@ static OpenSSLWrapper * singleton;
     return [NSData dataWithBytes:md length:MD5_DIGEST_LENGTH];
 }
 
--(NSData *) dsa_signData: (NSData *) data
+-(NSData *) des3_encrypt: (NSData *) data withKey:(NSString *)originalKey
 {
-    unsigned char * sig = (unsigned char *) calloc(DSA_size(self.dsa), 1);
-    unsigned int sig_len;
+    NSMutableData * key = [NSMutableData dataWithLength:MAX(originalKey.length, 24)];
     
-    bzero(sig, DSA_size(self.dsa));
-
-    if (::DSA_sign(0, (const unsigned char *) data.bytes, data.length, sig, &sig_len, self.dsa) != 1)
-    {
-        free(sig);
-        return nil;
-    }
+    NSRange range;
+    range.length = originalKey.length;
+    range.location = 0;
     
-    NSData * res = [NSData dataWithBytes:sig length:sig_len];
-    free(sig);
+    /// key has to be at least 24 bytes
+    [key replaceBytesInRange:range withBytes:originalKey.UTF8String length:originalKey.length];
     
-    return res;
+    NSString *initVec = @"init Vec";
+    NSMutableData * res = [[NSMutableData alloc] initWithLength:data.length * 2];
+    size_t movedBytes = 0;
+    
+    CCCrypt(kCCEncrypt, kCCAlgorithm3DES, kCCOptionPKCS7Padding,
+            key.bytes, key.length, initVec.UTF8String, data.bytes, data.length, res.mutableBytes, res.length, &movedBytes);
+   
+    res.length = movedBytes;
+    return [NSData dataWithData:res];
 }
 
+-(NSData *) des3_decrypt: (NSData *) data withKey:(NSString *)originalKey
+{
+    NSMutableData * key = [NSMutableData dataWithLength:MAX(originalKey.length, 24)];
+    
+    NSRange range;
+    range.length = originalKey.length;
+    range.location = 0;
+    
+    /// key has to be at least 24 bytes
+    [key replaceBytesInRange:range withBytes:originalKey.UTF8String length:originalKey.length];
+    
+    NSString *initVec = @"init Vec";
+    NSMutableData * res = [[NSMutableData alloc] initWithLength:data.length * 2];
+    size_t movedBytes = 0;
+    
+    CCCrypt(kCCDecrypt, kCCAlgorithm3DES, kCCOptionPKCS7Padding,
+            key.bytes, key.length, initVec.UTF8String, data.bytes, data.length, res.mutableBytes, res.length, &movedBytes);
+
+    res.length = movedBytes;
+    return [NSData dataWithData:res];
+}
+
+-(NSData *) dsa_signData: (NSData *) data 
+{
+    return [self dsa_signData:data privateKey:[self.delegate sslNeedsDsaPrivateKey:self]];
+}
+
+-(NSData *) dsa_signData: (NSData *) data privateKey:(NSData *)privateKey
+{
+    DSA * dsa = [self prepareDsaWithPrivateKey:privateKey];
+    if (dsa)
+    {
+        unsigned char * sig = (unsigned char *) calloc(DSA_size(dsa), 1);
+        unsigned int sig_len;
+    
+        bzero(sig, DSA_size(dsa));
+
+        if (::DSA_sign(0, (const unsigned char *) data.bytes, data.length, sig, &sig_len, dsa) != 1)
+        {
+            free(sig);
+            return nil;
+        }
+    
+        NSData * res = [NSData dataWithBytes:sig length:sig_len];
+        free(sig);
+        DSA_free(dsa);
+        
+        return res;
+    }
+    
+    return nil;
+}
 
 -(BOOL) dsa_verifyData: (NSData *) data withSignature:(NSData *)signature
 {
-    return ::DSA_verify(0, (const unsigned char *) data.bytes, data.length, (const unsigned char *) signature.bytes, signature.length, self.dsa) == 1;
+    return [self dsa_verifyData:data withSignature:signature privateKey:[self.delegate sslNeedsDsaPrivateKey:self]];
+}
+
+-(BOOL) dsa_verifyData: (NSData *) data withSignature:(NSData *)signature privateKey:(NSData *)privateKey
+{
+    DSA * dsa = [self prepareDsaWithPrivateKey:privateKey];
+    if (dsa)
+    {
+        BOOL res = ::DSA_verify(0, (const unsigned char *) data.bytes, 
+                                data.length, (const unsigned char *) signature.bytes, 
+                                signature.length, dsa) == 1;
+        DSA_free(dsa);
+        return res;
+    } 
+    return NO;
 }
 
 

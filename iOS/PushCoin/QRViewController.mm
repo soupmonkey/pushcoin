@@ -20,6 +20,7 @@
 @synthesize imageView;
 @synthesize parser;
 @synthesize buffer;
+@synthesize passcode;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -58,6 +59,8 @@
 - (void) prepareQR
 {
     NSDate * now = [NSDate date];
+    
+    [self.appDelegate unlockDsaPrivateKeyWithPasscode:self.passcode];
     
     //set data
     PaymentTransferAuthorizationMessage * msgOut = [[PaymentTransferAuthorizationMessage alloc] init];
@@ -147,11 +150,6 @@
 }
 
 - (IBAction)addTipsButtonTapped:(id)sender 
-{
-    [self showPaymentDetails];
-}
-
-- (IBAction)detailViewTapped:(id)sender 
 {
     [self showPaymentDetails];
 }

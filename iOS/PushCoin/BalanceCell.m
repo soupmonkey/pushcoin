@@ -1,17 +1,14 @@
 //
-//  TransactionCell.m
+//  BalanceCell.m
 //  PushCoin
 //
-//  Created by Gilbert Cheung on 5/24/12.
+//  Created by Gilbert Cheung on 5/25/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "TransactionCell.h"
+#import "BalanceCell.h"
 
-@implementation TransactionCell
-@synthesize titleTextLabel;
-@synthesize detailTextLabel;
-@synthesize rightTextLabel;
+@implementation BalanceCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

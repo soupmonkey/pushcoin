@@ -66,7 +66,7 @@ int KeyBackgroundStyle = 1;
                          CGRectInset(self.displayBackground.frame, 5.0f, 5.0f)];    
     self.displayLabel.opaque = NO;
 	self.displayLabel.font = [UIFont systemFontOfSize:50.0f];
-    self.displayLabel.textColor = [UIColor blackColor];
+    self.displayLabel.textColor = [UIColor darkGrayColor];
     self.displayLabel.backgroundColor = [UIColor clearColor];
     self.displayLabel.textAlignment = UITextAlignmentRight;
    

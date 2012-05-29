@@ -12,30 +12,26 @@
 #import "KeychainItemWrapper.h"
 #import "OpenSSLWrapper.h"
 #import "RegistrationController.h"
-
-@class SettingsController;
-
-@protocol SettingsControllerDelegate <NSObject>
-
-- (void)settingsControllerDidClose:
-(SettingsController *)controller;
-
-@end
+#import "PasscodeViewController.h"
 
 @interface SettingsController : UIViewController< PushCoinWebServiceDelegate, PushCoinMessageReceiver,
-    UIAlertViewDelegate, RegistrationControllerDelegate>
+    UIAlertViewDelegate, RegistrationControllerDelegate, KKPasscodeViewControllerDelegate>
 {
     PushCoinMessageParser * parser;
     PushCoinWebService * webService;
     NSMutableData * buffer;
+    KKPasscodeViewController * setPasscodeController;
+    KKPasscodeViewController * preAuthTestPasscodeController;
+    
 }
 
 @property (weak, nonatomic) IBOutlet UIButton *unregisterButton;
 @property (weak, nonatomic) IBOutlet UIButton *preAuthorizationTestButton;
-@property (weak, nonatomic) NSObject<SettingsControllerDelegate> * delegate;
+@property (weak, nonatomic) IBOutlet UIButton *passcodeButton;
 
 - (IBAction)unregister:(id)sender;
 - (IBAction)preAuthorizationTest:(id)sender;
 - (IBAction)closeButtonTapped:(id)sender;
+- (IBAction)enablePasscode:(id)sender;
 
 @end

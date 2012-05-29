@@ -29,11 +29,10 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIView *detailView;
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
-
+@property (nonatomic, strong) NSString * passcode;
 
 - (IBAction)closeButtonTapped:(id)sender;
 - (IBAction)addTipsButtonTapped:(id)sender;
-- (IBAction)detailViewTapped:(id)sender;
 
 
 @end

@@ -11,9 +11,10 @@
 @implementation PushCoinTransaction
 @synthesize amountScale = amountScale_;
 @synthesize amountValue = amountValue_;
-@synthesize transactionID    = transactionID_;
-@synthesize transactionType    = transactionType_;
-@synthesize merchantName    = merchantName_;
+@synthesize transactionID = transactionID_;
+@synthesize transactionType = transactionType_;
+@synthesize merchantName = merchantName_;
+@synthesize timestamp = timestamp_;
 
 -(id) init
 {
@@ -25,6 +26,7 @@
         self.amountValue = 0;
         self.amountScale = 0;
         self.merchantName = @"";
+        self.timestamp = 0;
     }
     return self;
 }
@@ -34,6 +36,7 @@
      amountValue:(NSUInteger)amountValue
      amountScale:(NSInteger)amountScale
     merchantName:(NSString*)merchantName
+       timestamp:(NSUInteger)timestamp
 {
     self = [super init];
     if (self)
@@ -43,6 +46,7 @@
         self.merchantName = merchantName;
         self.transactionType = transactionType;
         self.transactionID = transactionID;
+        self.timestamp = timestamp;
     }
     return self;
 }
@@ -53,7 +57,8 @@
                                                                      type:self.transactionType
                                                               amountValue:self.amountValue
                                                               amountScale:self.amountScale
-                                                             merchantName:self.merchantName];
+                                                             merchantName:self.merchantName
+                                                                timestamp:self.timestamp];
     return other;
     
 }

@@ -14,6 +14,7 @@
 #import "NSData+Base64.h"
 #import "PushCoinTransaction.h"
 #import "TransactionCell.h"
+#import "BalanceCell.h"
 
 @implementation HistoryController
 @synthesize tableView;
@@ -35,13 +36,28 @@
     buffer =  [[NSMutableData alloc] initWithLength:PushCoinWebServiceOutBufferSize];
     parser = [[PushCoinMessageParser alloc] init];
     transactions = [[NSMutableArray alloc] init];
+    balance = 0;
+    timestamp = 0;
+
+    NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+
+    dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDoesRelativeDateFormatting:YES];
+    [dateFormatter setDateStyle:NSDateFormatterFullStyle];
+    [dateFormatter setTimeZone:[NSTimeZone defaultTimeZone]];
+    [dateFormatter setLocale:usLocale];
     
+    timeFormatter = [[NSDateFormatter alloc] init];
+    [timeFormatter setDoesRelativeDateFormatting:YES];
+    [timeFormatter setTimeStyle:NSTimeZoneNameStyleShortGeneric];
+    [timeFormatter setTimeZone:[NSTimeZone defaultTimeZone]];
+    [timeFormatter setLocale:usLocale];
+
     numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
     [numberFormatter setCurrencySymbol:@"$"];
     [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-    
-   
+    [numberFormatter setLocale:usLocale];
     
     self.tableView.dataSource = self;
 }
@@ -55,6 +71,19 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [self queryRequest];
+}
+
+- (IBAction)refreshButtonTapped:(id)sender 
+{
+    [self queryRequest];
+}
+
+-(void)queryRequest
+{
+    if (!self.appDelegate.registered)
+        return;
+
     // Create transfer request
     TransactionHistoryQueryMessage * trxMsg = [[TransactionHistoryQueryMessage alloc] init];
     PCOSRawData * trxData = [[PCOSRawData alloc] initWithData:buffer];
@@ -63,11 +92,11 @@
     trxMsg.block.ref_data.string=@"";
     trxMsg.block.keywords.string=@"";
     trxMsg.block.page.val = 0;
-    trxMsg.block.page.val = 100;
+    trxMsg.block.page_size_hint.val = 50;
     
     [parser encodeMessage:trxMsg to:trxData];
     [webService sendMessage:trxData.consumedData];
-        
+    
     // Create balance request
     BalanceQueryMessage * balMsg = [[BalanceQueryMessage alloc] init];
     PCOSRawData * balData = [[PCOSRawData alloc] initWithData:buffer];
@@ -95,18 +124,10 @@
     
     if (controller)
     {
-        controller.delegate = self;
         controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
         [self presentModalViewController:controller animated:YES];
     }
 }
-
--(void) settingsControllerDidClose:(SettingsController *)controller
-{
-    [self dismissModalViewControllerAnimated:YES];
-}
-
-
 
 #pragma mark PushCoinWebserviceDelegate
 
@@ -153,7 +174,8 @@ andDescription:(NSString *)description
                                                                         type:trx.tx_type.val
                                                                  amountValue:trx.amount.value.val
                                                                  amountScale:trx.amount.scale.val
-                                                                merchantName:trx.merchant_name.string];
+                                                                merchantName:trx.merchant_name.string
+                                                                   timestamp:trx.utc_transaction_time.val];
         [transactions addObject:pTrx];
     }
     
@@ -162,7 +184,11 @@ andDescription:(NSString *)description
 
 -(void) didDecodeBalanceReportMessage:(BalanceReportMessage *)msg withHeader:(PCOSHeaderBlock *)hdr
 {
+    NSDate *now = [[NSDate alloc] init];
+    
     balance = msg.block.balance.value.val * (pow(10.0f, (Float32)msg.block.balance.scale.val));
+    timestamp = [now timeIntervalSince1970];
+    
     [self.tableView reloadData];
 }
 
@@ -175,10 +201,9 @@ andDescription:(NSString *)description
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section 
 {
-    if (section == 0)
-        return @"";
-    else 
+    if (section == 1 && transactions.count)
         return @"Transaction History";
+    return @"";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -189,22 +214,43 @@ andDescription:(NSString *)description
         return transactions.count;
 }
 
+-(NSString*) tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    if (section == 0)
+        return @"";
+    
+    if (timestamp == 0)
+        return @"";
+        
+    NSDate * date = [NSDate dateWithTimeIntervalSince1970:timestamp];
+    return [NSString stringWithFormat:@"Last Updated: %@, %@", [dateFormatter stringFromDate:date],
+            [timeFormatter stringFromDate:date]];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TransactionCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"Transaction"];
-    if (!cell)
-    {
-        cell = [[TransactionCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"Transaction"];
-    }
-    
     if (indexPath.section == 0)
     {
+        BalanceCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"Balance"];
+        if (!cell)
+        {
+            cell = [[BalanceCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"Balance"];
+        }
+
         NSNumber *c = [NSNumber numberWithFloat:balance];
         cell.detailTextLabel.text = [numberFormatter stringFromNumber:c];
         cell.textLabel.text = @"Balance";
+        
+        return cell;
     }
     else
     {
+        TransactionCell * cell = [self.tableView dequeueReusableCellWithIdentifier:@"Transaction"];
+        if (!cell)
+        {
+            cell = [[TransactionCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"Transaction"];
+        }
+    
         PushCoinTransaction * trx = [transactions objectAtIndex:indexPath.row];
     
         Float32 amount = trx.amountValue * pow(10.0f, (Float32)trx.amountScale);
@@ -212,11 +258,14 @@ andDescription:(NSString *)description
             amount *= -1.0f;
         
         NSNumber *c = [NSNumber numberWithFloat:amount];
-        cell.detailTextLabel.text = [numberFormatter stringFromNumber:c];
-        cell.textLabel.text = trx.merchantName;
+        NSDate * date = [NSDate dateWithTimeIntervalSince1970:trx.timestamp];
+
+        cell.titleTextLabel.text = trx.merchantName;
+        cell.detailTextLabel.text = [dateFormatter stringFromDate:date];
+        cell.rightTextLabel.text = [numberFormatter stringFromNumber:c];
+        
+        return cell;
     }
-    
-    return cell;
 }
 
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle

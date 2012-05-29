@@ -123,21 +123,28 @@ class RmoteCall:
 
 		# read number of transactions
 		count = body.read_int16()
-		for i in xrange(0, count):
+		for i in xrange(1, count+1):
 			tx_id = binascii.hexlify( body.read_short_string() ) # transaction ID
+			counterparty = binascii.hexlify( body.read_short_string() ) # counterparty ID
 			epoch_tx_time = body.read_int64() # transaction time of day
 			tx_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(epoch_tx_time))
 			tx_type = body.read_fixed_string(1) # transaction type
+			tx_context = body.read_fixed_string(1) # transaction context: (P)ayment or (T)ransfer
 			value = body.read_int64() # value
 			scale = body.read_int16() # scale
-			payment = value * math.pow(10, scale)
+			amount = value * math.pow(10, scale)
+			value = body.read_int64() # value
+			scale = body.read_int16() # scale
+			tip = value * math.pow(10, scale)
+			value = body.read_int64() # value
+			scale = body.read_int16() # scale
+			tax = value * math.pow(10, scale)
 			currency = body.read_fixed_string(3) # currency
 			merchant_name = body.read_short_string() # merchant name
-			merchant_email = body.read_short_string() # merchant email
 			pta_receiver = body.read_short_string() # PTA receiver
-			pta_user_data = body.read_short_string() # PTA user-data
 			invoice = body.read_short_string() # invoice
-			print "--- %s/%s ---\ntx-id: %s\ntx_time: %s\ntx_type: %s\npayment: %s\ncurrency: %s\nmerchant_name: %s\nmerchant_email: %s\npta_receiver: %s\npta_user_data: %s\ninvoice: %s\n" % (i, count, tx_id, tx_time, tx_type, payment, currency, merchant_name, merchant_email, pta_receiver, pta_user_data, invoice)
+			note = body.read_short_string() # note
+			print "--- %s/%s ---\ntx-id: %s\ntx_time: %s\ntx_type: %s\ntx_context: %s\namount: %s\ntip: %s\ntax: %s\ncurrency: %s\nmerchant_name: %s\npta_receiver: %s\ninvoice: %s\nnote: %s\n" % (i, count, tx_id, tx_time, tx_type, tx_context, amount, tip, tax, currency, merchant_name, pta_receiver, invoice, note)
 		log.info('Returned %s records', count)
 
 
@@ -179,7 +186,7 @@ class RmoteCall:
 		# create transfer-request block
 		r1 = pcos.Block( 'R1', 1024, 'O' )
 		r1.write_fixed_string( binascii.unhexlify( self.args['receiver_mat'] ), size=20 ) # mat
-		r1.write_short_string( '', max=127 ) # ref_data
+		r1.write_short_string( 'transfer-ref', max=127 ) # ref_data
 		r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
 
 		# transfer amount
@@ -211,14 +218,23 @@ class RmoteCall:
 		# create payment-request block
 		r1 = pcos.Block( 'R1', 1024, 'O' )
 		r1.write_fixed_string( binascii.unhexlify( self.args['merchant_mat'] ), size=20 ) # mat
-		r1.write_short_string( '', max=127 ) # ref_data
+		r1.write_short_string( 'charge-ref', max=127 ) # ref_data
 		r1.write_int64( long( time.time() + 0.5 ) ) # request create-time
 
 		# charge amount
 		(charge_value, charge_scale) = decimal_to_parts(Decimal(self.args['charge']))
-
 		r1.write_int64( charge_value ) # value
 		r1.write_int16( charge_scale ) # scale
+
+		# tip
+		(tip_value, tip_scale) = decimal_to_parts(Decimal(self.args['tip']))
+		r1.write_int64( tip_value ) # value
+		r1.write_int16( tip_scale ) # scale
+
+		# tax
+		(tax_value, tax_scale) = decimal_to_parts(Decimal(self.args['tax']))
+		r1.write_int64( tax_value ) # value
+		r1.write_int16( tax_scale ) # scale
 
 		r1.write_fixed_string( "USD", size=3 ) # currency
 		r1.write_short_string( 'inv-123', max=24 ) # invoice ID
@@ -451,7 +467,7 @@ class RmoteCall:
 				transaction_id = er.read_short_string();
 				code = er.read_int32();
 				what = er.read_short_string();
-				raise RuntimeError('tx-id=%s;what=%s;code=%s' % (binascii.hexlify( transaction_id ), what, code )) 
+				raise RuntimeError('tx-id=%s;ref_data=%s;what=%s;code=%s' % (binascii.hexlify( transaction_id ), binascii.hexlify( ref_data ), what, code )) 
 			else:
 				raise RuntimeError('ERROR -- cause unknown') 
 

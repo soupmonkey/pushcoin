@@ -32,7 +32,7 @@ class QrCodeScanner (QThread):
 		self.onStatus.emit('<font color="red">%s</font>' % txt)
 
 	def progress(self, txt):
-		self.onStatus.emit(txt)
+		self.onStatus.emit('<font color="green">%s</font>' % txt)
 
 	def stop(self):
 		self.__mtx.lock()
@@ -61,9 +61,7 @@ class QrCodeScanner (QThread):
 		if not self.scanner_dev:
 			self.scanner_dev = usb.core.find(idVendor=self.vendor_id, idProduct=self.product_id)
 			if not self.scanner_dev:
-				self.error(self.model + " not found")
-			else:
-				self.progress(self.model + " found")
+				self.error("Scanner: not found")
 		return ( self.scanner_dev != None )
 
 	def __release(self):
@@ -87,7 +85,7 @@ class QrCodeScanner (QThread):
 
 			# obtain the endpoint
 			self.endpoint = self.scanner_dev[0][(0,0)][0]
-			self.progress(self.model + " is ready")
+			self.progress("Scanner: Ready")
 		return ( self.endpoint != None )
 
 
@@ -98,7 +96,6 @@ class QrCodeScanner (QThread):
 				chunk_list = self.scanner_dev.read(self.endpoint.bEndpointAddress, 0x40, 0, 100)
 				chunk = ''.join([chr(x) for x in chunk_list])
 				data += chunk
-				print ("read %s of data" % len(chunk))
 			except usb.core.USBError as e:
 				if e.args == ('Operation timed out',):
 					if len(data) < 100:
@@ -129,7 +126,7 @@ class QrCodeScanner (QThread):
 
 	def run(self):
 		# Give the app some time before emitting status
-		QThread.sleep(2)
+		QThread.sleep(1)
 		while True:
 			if self.__is_exiting():
 				break
@@ -137,14 +134,13 @@ class QrCodeScanner (QThread):
 			if self.__present() and self.__claimed():
 				data = self.__read_data()
 				if data:
-					self.progress("Scanned %s bytes." % len(self.data) )
 					pcos = self.__process_data(data)
+					# publish scanned data
+					if pcos:
+						self.onData.emit(pcos)
 			else:
 				QThread.sleep(2)
 
-			# simulate arrival of data
-			if pcos:
-				self.progress("PCOS %s bytes" % len(pcos))
-
 		# release resources prior to exiting
 		self.__release()
+		QThread.sleep(1)

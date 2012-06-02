@@ -17,16 +17,31 @@
 # this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 # Place, Suite 330, Boston, MA  02111-1307  USA
 #
-import sys, pcos, datetime
+import sys, pcos, datetime, time
 from decimal import Decimal
 from PySide.QtCore import *
-
+import settings as const
 
 class AppController(QObject):
 	'''Handles data events, communicates with the PushCoin backend'''
 
 	onRenderData = Signal(object)
 	onStatus = Signal(object)
+
+	pta_with_tip_tmpl = '''<center><h2><hr />Payment Authorization<hr /></h2></center>
+<table align="right">
+<tr><td align="right">Limit: </td><td align="right"><font size="12" color="black"><strong>{limit}</strong></font></td></tr>
+<tr><td align="right">Tip: </td><td align="right"><font size="12" color="blue"><strong>{tip}</strong></font></td></tr>
+<tr><td align="right" colspan="2"><br />{expiry}</td></tr>
+</table>
+'''
+
+	pta_no_tip_tmpl = '''<center><h2><hr />Payment Authorization<hr /></h2></center>
+<table align="right">
+<tr><td align="right">Limit: </td><td align="right"><font size="12" color="black"><strong>{limit}</strong></font></td></tr>
+<tr><td align="right" colspan="2"><br />{expiry}</td></tr>
+</table>
+'''
 
 	def error(self, txt):
 		self.onStatus.emit('<font color="red">%s</font>' % txt)
@@ -36,40 +51,70 @@ class AppController(QObject):
 
 		# public block of PTA
 		p1 = self.doc.block( 'P1' )
+		
+		self.pta = Segment()
 
 		# parse PTA's public members
-		ctime = p1.read_int64() # create time
-		expiry = p1.read_int64() # expiry
+		self.pta.ctime = p1.read_int64() # create time
+		self.pta.expiry = p1.read_int64() # expiry
 		
 		# payment limit
-		payment_limit = decimal_from_parts(p1.read_int64(), p1.read_int16())
+		self.pta.payment_limit = decimal_from_parts(p1.read_int64(), p1.read_int16())
 		
 		# optional gratuity
-		has_tip = bool( p1.read_byte() ) # has tip?
-		if has_tip:
+		self.pta.has_tip = bool( p1.read_byte() ) # has tip?
+		self.pta.tip = Decimal("0.00")
+		if self.pta.has_tip:
 			# gratuity type
-			tip_type = p1.read_fixed_string(1)
-			if tip_type not in ('A', 'P'):
-				raise pcos.PcosError( consts.ERR_INVALID_GRATUITY_TYPE, "PTA: '%s' is not a supported gratuity type" % tip_type)
+			self.pta.tip_type = p1.read_fixed_string(1)
+			if self.pta.tip_type not in ('A', 'P'):
+				raise pcos.PcosError( const.ERR_INVALID_GRATUITY_TYPE, "PTA: '%s' is not a supported gratuity type" % self.pta.tip_type)
 			
 			# gratuity amount
-			tip = decimal_from_parts(p1.read_int64(), p1.read_int16())
-			if tip < 0:
-				raise pcos.PcosError( consts.ERR_VALUE_OUT_OF_RANGE, "PTA: gratuity cannot be negative")
+			self.pta.tip = decimal_from_parts(p1.read_int64(), p1.read_int16())
+			if self.pta.tip < 0:
+				raise pcos.PcosError( const.ERR_VALUE_OUT_OF_RANGE, "PTA: gratuity cannot be negative")
 
 		# currency
-		currency = p1.read_fixed_string(3).upper()
+		self.pta.currency = p1.read_fixed_string(3).upper()
 		# presently we only deal with US dollars
-		if currency != 'USD':
-			raise pcos.PcosError( consts.ERR_INVALID_CURRENCY, "PTA: '%s' is not a supported currency" % currency)
+		if self.pta.currency != 'USD':
+			raise pcos.PcosError( const.ERR_INVALID_CURRENCY, "PTA: '%s' is not a supported currency" % self.pta.currency)
 
 		# private key identifier, not used here
 		keyid = p1.read_fixed_string(4)
 
-		receiver = p1.read_short_string() # email of the payment receiver
-		note = p1.read_short_string() # note
+		self.pta.receiver = p1.read_short_string() # email of the payment receiver
+		self.pta.note = p1.read_short_string() # note
 
-		return { 'Created': ctime, 'Expires': expiry, 'Payment': payment_limit, 'Tip': tip, 'Currency': currency, 'Recipient': receiver, 'Note': note }
+		# make PTA data pretty
+		ctime_prt = time.strftime("%x %X", time.localtime(self.pta.ctime))
+		now = long( time.time() + 0.5 )
+		seconds = self.pta.expiry - now
+		if seconds < 0:
+			expiry_prt = '<font color="red"><strong>PAYMENT EXPIRED</strong></font>'
+		else:
+			expiry_prt = '<i>Expires in %s</i>' % str(datetime.timedelta(seconds=seconds))
+		payment_limit_prt = '$' + str(self.pta.payment_limit.quantize(Decimal('0.01')))
+
+		tip_prt = ''
+		if self.pta.has_tip:
+			if self.pta.tip_type == 'A':
+				tip_prt = '$' + str(self.pta.tip.quantize(Decimal('0.01')))
+			else:
+				tip_prt = '%' + str(self.pta.tip.quantize(Decimal('0.01')))
+			html = self.pta_with_tip_tmpl.format(
+				ctime = ctime_prt, 
+				expiry = expiry_prt, 
+				limit = payment_limit_prt, 
+				tip = tip_prt)
+		else:
+			html = self.pta_no_tip_tmpl.format(
+				ctime = ctime_prt, 
+				expiry = expiry_prt, 
+				limit = payment_limit_prt)
+		return html
+
 
 	#-------------------------------
 	#  register handlers here
@@ -81,23 +126,23 @@ class AppController(QObject):
 			'Pa': self.on_payment_authorization,
 		}
 
-	@Slot(str)
+
 	def parse_pcos(self, data):
 		self.doc = pcos.Doc( data )
 		# find the message handler
 		handler = self.lookup.get( self.doc.message_id, None )
 		if handler:
 			# handler found, process the message
-			kvs = handler()
-			# format into a table
-			body = '<table>'
-			for k, v in kvs.items():
-				body += ''.join('<tr><th>', k, '</th><td>', v, '</td></tr>')
-			body += '</table>'
-			onRenderData.emit(body)
+			html = handler()
+			self.onRenderData.emit(html)
 
 		else: # unknown request
 			self.error("unknown message: %s" % doc.message_id)
+
+
+	def reset(self):
+		self.pta = None
+		self.onRenderData.emit('')
 
 
 def decimal_to_parts(value):
@@ -113,8 +158,12 @@ def decimal_to_parts(value):
 
 def decimal_from_parts(value, scale):
 	'''Returns Decimal from value and scale'''
-	if scale > consts.MAX_SCALE_VAL:
-		raise pcos.PcosError( consts.ERR_VALUE_OUT_OF_RANGE, "scale cannot exceed %s" % consts.MAX_SCALE_VAL )
+	if scale > const.MAX_SCALE_VAL:
+		raise pcos.PcosError( const.ERR_VALUE_OUT_OF_RANGE, "scale cannot exceed %s" % const.MAX_SCALE_VAL )
 	return Decimal( value ).scaleb( scale )
 
 
+class Segment():
+	'''Holds data'''
+	pass
+	

@@ -343,7 +343,7 @@ class RmoteCall:
 		# optionally generate qr-code
 		try:
 			import qrcode
-			qr = qrcode.QRCode(version=None, error_correction=qrcode.constants.ERROR_CORRECT_L)
+			qr = qrcode.QRCode(version=None, box_size=3, error_correction=qrcode.constants.ERROR_CORRECT_L)
 			qr.add_data( encoded )
 			qr.make(fit=True)
 			img = qr.make_image()

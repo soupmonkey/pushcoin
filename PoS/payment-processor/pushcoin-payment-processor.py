@@ -30,8 +30,12 @@ if __name__ == '__main__':
 	main = MainWindow()
 
 	proc = AppController()
+
 	# create the scanner and connect with its signals
 	scanner = QrCodeScanner("Honeywell MS-4980", vendor_id = 0x0c2e, product_id = 0x0009, end_tag = '000a0b')
+
+	# reset controller state when user hits 'clear'
+	main.btn_clear.clicked.connect(proc.reset)
 
 	# handle PTA from the scanner
 	proc.onRenderData.connect(main.view_display.setHtml)

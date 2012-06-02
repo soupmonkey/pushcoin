@@ -46,7 +46,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>img/settings.png</normaloff>img/settings.png</iconset>
+           <normaloff>../../../../../../.designer/backup/img/settings.png</normaloff>../../../../../../.designer/backup/img/settings.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -75,7 +75,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>img/135x40-logo.png</pixmap>
+          <pixmap>../../../../../../.designer/backup/img/135x40-logo.png</pixmap>
          </property>
         </widget>
        </item>

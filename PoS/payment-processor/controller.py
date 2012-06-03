@@ -17,7 +17,7 @@
 # this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 # Place, Suite 330, Boston, MA  02111-1307  USA
 #
-import sys, pcos, datetime, time
+import sys, pcos
 from decimal import Decimal
 from PySide.QtCore import *
 import settings as const
@@ -25,24 +25,8 @@ import settings as const
 class AppController(QObject):
 	'''Handles data events, communicates with the PushCoin backend'''
 
-	onRenderData = Signal(object)
+	onDataArrived = Signal(object)
 	onStatus = Signal(object)
-
-	pta_with_tip_tmpl = '''<center><h2><hr />Payment Authorization<hr /></h2></center>
-<table align="right">
-<tr><td align="right">Limit: </td><td align="right"><font size="12" color="black"><strong>{limit}</strong></font></td></tr>
-<tr><td align="right">Tip: </td><td align="right"><font size="12" color="blue"><strong>{tip}</strong></font></td></tr>
-<tr><td align="right" colspan="2"><br />{expiry}</td></tr>
-</table>
-'''
-
-	pta_no_tip_tmpl = '''<center><h2><hr />Payment Authorization<hr /></h2></center>
-<table align="right">
-<tr><td align="right">Limit: </td><td align="right"><font size="12" color="black"><strong>{limit}</strong></font></td></tr>
-<tr><td align="right" colspan="2"><br />{expiry}</td></tr>
-</table>
-'''
-
 	def error(self, txt):
 		self.onStatus.emit('<font color="red">%s</font>' % txt)
 
@@ -87,33 +71,8 @@ class AppController(QObject):
 		self.pta.receiver = p1.read_short_string() # email of the payment receiver
 		self.pta.note = p1.read_short_string() # note
 
-		# make PTA data pretty
-		ctime_prt = time.strftime("%x %X", time.localtime(self.pta.ctime))
-		now = long( time.time() + 0.5 )
-		seconds = self.pta.expiry - now
-		if seconds < 0:
-			expiry_prt = '<font color="red"><strong>PAYMENT EXPIRED</strong></font>'
-		else:
-			expiry_prt = '<i>Expires in %s</i>' % str(datetime.timedelta(seconds=seconds))
-		payment_limit_prt = '$' + str(self.pta.payment_limit.quantize(Decimal('0.01')))
-
-		tip_prt = ''
-		if self.pta.has_tip:
-			if self.pta.tip_type == 'A':
-				tip_prt = '$' + str(self.pta.tip.quantize(Decimal('0.01')))
-			else:
-				tip_prt = '%' + str(self.pta.tip.quantize(Decimal('0.01')))
-			html = self.pta_with_tip_tmpl.format(
-				ctime = ctime_prt, 
-				expiry = expiry_prt, 
-				limit = payment_limit_prt, 
-				tip = tip_prt)
-		else:
-			html = self.pta_no_tip_tmpl.format(
-				ctime = ctime_prt, 
-				expiry = expiry_prt, 
-				limit = payment_limit_prt)
-		return html
+		# return PTA object (acutally, just the public segment of it)
+		return self.pta
 
 
 	#-------------------------------
@@ -132,9 +91,8 @@ class AppController(QObject):
 		# find the message handler
 		handler = self.lookup.get( self.doc.message_id, None )
 		if handler:
-			# handler found, process the message
-			html = handler()
-			self.onRenderData.emit(html)
+			# handler found, process the message and emit results
+			self.onDataArrived.emit( handler() )
 
 		else: # unknown request
 			self.error("unknown message: %s" % doc.message_id)
@@ -142,7 +100,7 @@ class AppController(QObject):
 
 	def reset(self):
 		self.pta = None
-		self.onRenderData.emit('')
+		self.onDataArrived.emit( None )
 
 
 def decimal_to_parts(value):

@@ -38,7 +38,7 @@ if __name__ == '__main__':
 	main.btn_clear.clicked.connect(proc.reset)
 
 	# handle PTA from the scanner
-	proc.onRenderData.connect(main.view_display.setHtml)
+	proc.onDataArrived.connect(main.process_data)
 	proc.onStatus.connect(main.statusbar.showMessage)
 	scanner.onData.connect(proc.parse_pcos)
 	scanner.onStatus.connect(main.scannerStatus.setText)

@@ -36,7 +36,7 @@ class AppController(QObject):
 		# public block of PTA
 		p1 = self.doc.block( 'P1' )
 		
-		self.pta = Segment()
+		self.pta = Segment('PTA')
 
 		# parse PTA's public members
 		self.pta.ctime = p1.read_int64() # create time
@@ -87,20 +87,26 @@ class AppController(QObject):
 
 
 	def parse_pcos(self, data):
-		self.doc = pcos.Doc( data )
-		# find the message handler
-		handler = self.lookup.get( self.doc.message_id, None )
-		if handler:
-			# handler found, process the message and emit results
-			self.onDataArrived.emit( handler() )
+		try:
+			self.doc = pcos.Doc( data )
+			# find the message handler
+			handler = self.lookup.get( self.doc.message_id, None )
+			if handler:
+				# handler found, process the message and emit results
+				self.onDataArrived.emit( handler() )
 
-		else: # unknown request
-			self.error("unknown message: %s" % doc.message_id)
+			else: # unknown request
+				raise RuntimeError("Unsupported PTA message: %s" % self.doc.message_id)
+
+		except Exception, e:
+			err = Segment('Er')
+			err.what = str(e)
+			self.onDataArrived(err)
 
 
 	def reset(self):
 		self.pta = None
-		self.onDataArrived.emit( None )
+		self.onDataArrived.emit( Segment('Clear') )
 
 
 def decimal_to_parts(value):
@@ -122,6 +128,8 @@ def decimal_from_parts(value, scale):
 
 
 class Segment():
-	'''Holds data'''
-	pass
-	
+	'''Named data chunk'''
+
+	def __init__(self, name):
+		self.msgid = name
+

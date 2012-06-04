@@ -226,15 +226,17 @@ class RmoteCall:
 		r1.write_int64( charge_value ) # value
 		r1.write_int16( charge_scale ) # scale
 
-		# tip
-		(tip_value, tip_scale) = decimal_to_parts(Decimal(self.args['tip']))
-		r1.write_int64( tip_value ) # value
-		r1.write_int16( tip_scale ) # scale
-
 		# tax
+		p2.write_byte(1) # optional indicator
 		(tax_value, tax_scale) = decimal_to_parts(Decimal(self.args['tax']))
 		r1.write_int64( tax_value ) # value
 		r1.write_int16( tax_scale ) # scale
+
+		# tip
+		p1.write_byte(1) # optional indicator
+		(tip_value, tip_scale) = decimal_to_parts(Decimal(self.args['tip']))
+		r1.write_int64( tip_value ) # value
+		r1.write_int16( tip_scale ) # scale
 
 		r1.write_fixed_string( "USD", size=3 ) # currency
 		r1.write_short_string( 'inv-123', max=24 ) # invoice ID

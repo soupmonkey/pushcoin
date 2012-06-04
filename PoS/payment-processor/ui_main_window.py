@@ -22,6 +22,7 @@ PTA_NO_TIP_TMPL = '''<center><h2><hr />Payment Authorization<hr /></h2></center>
 
 MSG_CERTIFICATE_EXPIRED = '<font color="#ff4433">Certificate expired</font>'
 MSG_CERTIFICATE_ALMOST_EXPIRED = '<font color="#ffaa33">Certificate expires...</font>'
+MSG_TOTAL_HIGHER_THAN_LIMIT = 'Total exceeds limit'
 
 def format_tip(tip_val, tip_type):
 	'''Returns tip value either as absolute dollar value or percentage'''
@@ -131,7 +132,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 				self.view_tip.setText('N/A')
 				self.chbox_tip.setChecked(False)
 
-		self.btn_accept.setEnabled( bool(self.pta and not self.pta.expired and total > 0) )
+		# decide if to enable Accept button
+		if self.pta and not self.pta.expired and total > 0:
+			# let merchant know total exceeds payment-limit
+			if self.pta.payment_limit >= total:
+				self.btn_accept.setEnabled( True )
+				self.statusbar.clear()
+				return
+			else:
+				self.statusbar.showMessage(MSG_TOTAL_HIGHER_THAN_LIMIT)
+
+		# by default, Accept is off
+		self.btn_accept.setEnabled( False )
 
 
 	def __reset(self):

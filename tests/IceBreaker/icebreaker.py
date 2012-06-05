@@ -273,8 +273,8 @@ class RmoteCall:
 		p1 = pcos.Block( 'P1', 512, 'O' )
 		now = long( time.time() + 0.5 )
 		p1.write_int64( now ) # certificate create-time
-		# p1.write_int64( now + 24 * 3600 ) # certificate expiry (in 24 hrs)
-		p1.write_int64( now + 60*2 ) # certificate expiry
+		p1.write_int64( now + 24 * 3600 ) # certificate expiry (in 24 hrs)
+		# p1.write_int64( now + 60*2 ) # certificate expiry
 
 		# payment-limit
 		(payment_int, payment_scale) = decimal_to_parts(Decimal(self.args['limit']))

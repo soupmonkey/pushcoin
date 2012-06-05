@@ -40,6 +40,10 @@ def until_expired(expiry_tm):
 	return max(0, seconds)
 
 
+class Form():
+	'''Holds submitted form attributes'''
+	pass;
+
 class MainWindow(QMainWindow, Ui_MainWindow):
 
 
@@ -133,7 +137,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 				self.chbox_tip.setChecked(False)
 
 		# decide if to enable Accept button
-		if self.pta and not self.pta.expired and total > 0:
+		if self.pta and total > 0:
 			# let merchant know total exceeds payment-limit
 			if self.pta.payment_limit >= total:
 				self.btn_accept.setEnabled( True )
@@ -165,6 +169,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 			self.__reset()
 			self.view_display.setText( data.what )
 			self.certificateStatus.setText('ERROR...')
+			return
+		elif data.msgid == 'Ok':
+			self.__reset()
+			self.view_display.setHtml( data.what )
+			self.certificateStatus.setText('Success')
 			return
 		elif data.msgid != 'PTA':
 			self.__reset()
@@ -201,3 +210,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		# recalculate total
 		self.__recalculate()
 		
+
+	def form_fields( ui ):
+		'''Takes UI element and builds a simple form'''
+		form = Form()
+		form.charge = Decimal(ui.view_total.text())
+		if ui.chbox_tip.isChecked():
+			form.tip = Decimal(ui.view_total.text()) - Decimal(ui.input_cost.text()) 
+		else:
+			form.tip = None
+		form.order_id = ui.input_order_id.text().encode("utf8","ignore")
+		form.note = ui.input_note.text().encode("utf8","ignore")
+		return form
+

@@ -36,6 +36,8 @@ if __name__ == '__main__':
 
 	# reset controller state when user hits 'clear'
 	main.btn_clear.clicked.connect(proc.reset)
+	# when user accepts payment, let controller handle it
+	main.btn_accept.clicked.connect(lambda: proc.submit( main.form_fields() ) )
 
 	# handle PTA from the scanner
 	proc.onDataArrived.connect(main.process_data)

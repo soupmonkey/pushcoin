@@ -130,15 +130,26 @@ class RmoteCall:
 			tx_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(epoch_tx_time))
 			tx_type = body.read_fixed_string(1) # transaction type
 			tx_context = body.read_fixed_string(1) # transaction context: (P)ayment or (T)ransfer
+
+			#amount
 			value = body.read_int64() # value
 			scale = body.read_int16() # scale
 			amount = value * math.pow(10, scale)
-			value = body.read_int64() # value
-			scale = body.read_int16() # scale
-			tip = value * math.pow(10, scale)
-			value = body.read_int64() # value
-			scale = body.read_int16() # scale
-			tax = value * math.pow(10, scale)
+			# tax
+			if bool(body.read_byte()):
+				value = body.read_int64() # value
+				scale = body.read_int16() # scale
+				tax = value * math.pow(10, scale)
+			else:
+				tax = 'not provided'
+			#tip
+			if bool(body.read_byte()):
+				value = body.read_int64() # value
+				scale = body.read_int16() # scale
+				tip = value * math.pow(10, scale)
+			else:
+				tip = 'not provided'
+			
 			currency = body.read_fixed_string(3) # currency
 			merchant_name = body.read_short_string() # merchant name
 			pta_receiver = body.read_short_string() # PTA receiver
@@ -226,15 +237,17 @@ class RmoteCall:
 		r1.write_int64( charge_value ) # value
 		r1.write_int16( charge_scale ) # scale
 
-		# tip
-		(tip_value, tip_scale) = decimal_to_parts(Decimal(self.args['tip']))
-		r1.write_int64( tip_value ) # value
-		r1.write_int16( tip_scale ) # scale
-
 		# tax
+		p2.write_byte(1) # optional indicator
 		(tax_value, tax_scale) = decimal_to_parts(Decimal(self.args['tax']))
 		r1.write_int64( tax_value ) # value
 		r1.write_int16( tax_scale ) # scale
+
+		# tip
+		p1.write_byte(1) # optional indicator
+		(tip_value, tip_scale) = decimal_to_parts(Decimal(self.args['tip']))
+		r1.write_int64( tip_value ) # value
+		r1.write_int16( tip_scale ) # scale
 
 		r1.write_fixed_string( "USD", size=3 ) # currency
 		r1.write_short_string( 'inv-123', max=24 ) # invoice ID

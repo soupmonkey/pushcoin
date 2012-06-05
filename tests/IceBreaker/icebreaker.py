@@ -130,15 +130,26 @@ class RmoteCall:
 			tx_time = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(epoch_tx_time))
 			tx_type = body.read_fixed_string(1) # transaction type
 			tx_context = body.read_fixed_string(1) # transaction context: (P)ayment or (T)ransfer
+
+			#amount
 			value = body.read_int64() # value
 			scale = body.read_int16() # scale
 			amount = value * math.pow(10, scale)
-			value = body.read_int64() # value
-			scale = body.read_int16() # scale
-			tip = value * math.pow(10, scale)
-			value = body.read_int64() # value
-			scale = body.read_int16() # scale
-			tax = value * math.pow(10, scale)
+			# tax
+			if bool(body.read_byte()):
+				value = body.read_int64() # value
+				scale = body.read_int16() # scale
+				tax = value * math.pow(10, scale)
+			else:
+				tax = 'not provided'
+			#tip
+			if bool(body.read_byte()):
+				value = body.read_int64() # value
+				scale = body.read_int16() # scale
+				tip = value * math.pow(10, scale)
+			else:
+				tip = 'not provided'
+			
 			currency = body.read_fixed_string(3) # currency
 			merchant_name = body.read_short_string() # merchant name
 			pta_receiver = body.read_short_string() # PTA receiver

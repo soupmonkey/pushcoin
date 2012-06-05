@@ -152,10 +152,11 @@ class RmoteCall:
 			
 			currency = body.read_fixed_string(3) # currency
 			merchant_name = body.read_short_string() # merchant name
-			pta_receiver = body.read_short_string() # PTA receiver
+			recipient = body.read_short_string() # PTA recipient
+			ref_data = binascii.hexlify( body.read_short_string() ) # ref_data
 			invoice = body.read_short_string() # invoice
 			note = body.read_short_string() # note
-			print "--- %s/%s ---\ntx-id: %s\ntx_time: %s\ntx_type: %s\ntx_context: %s\namount: %s\ntip: %s\ntax: %s\ncurrency: %s\nmerchant_name: %s\npta_receiver: %s\ninvoice: %s\nnote: %s\n" % (i, count, tx_id, tx_time, tx_type, tx_context, amount, tip, tax, currency, merchant_name, pta_receiver, invoice, note)
+			print "--- %s/%s ---\ntx-id: %s\ntx_time: %s\ntx_type: %s\ntx_context: %s\namount: %s\ntip: %s\ntax: %s\ncurrency: %s\nmerchant_name: %s\nrecipient: %s\nref-data: %s\ninvoice: %s\nnote: %s\n" % (i, count, tx_id, tx_time, tx_type, tx_context, amount, tip, tax, currency, merchant_name, recipient, ref_data, invoice, note)
 		log.info('Returned %s records', count)
 
 

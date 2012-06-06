@@ -255,6 +255,9 @@ class RmoteCall:
 		r1.write_short_string( 'happy meal', max=127 ) # note
 		r1.write_int16(0) # list of purchased goods
 
+		# no geo-location available
+		r1.write_byte(0)
+
 		# package everything and ship out
 		req = pcos.Doc( name="Pt" )
 		req.add( pta )
@@ -376,12 +379,28 @@ class RmoteCall:
 		bo = pcos.Block( 'Bo', 512, 'O' )
 		bo.write_short_string( self.args['registration_id'], max=64 ) # registration ID
 		bo.write_long_string( base64.b64decode(TEST_DSA_KEY_PUB_PEM) )
-		bo.write_long_string( ';'.join( ('IceBreaker/1.0', sys.platform, sys.byteorder, sys.version) ) )
-		req.add( bo )
+		# user-agent attributes
+		user_agent = [
+			('appname', 'IceBreaker'), 
+			('appver', '1.0'), 
+			('appurl', 'https://pushcoin.com/Pub/SDK/WelcomeDevelopers'), 
+			('author', 'PushCoin <ask@pushcoin.com>'), 
+			('os', '%s %s' % (sys.platform, sys.version)), 
+		]
+		bo.write_byte( len(user_agent) )
+		for kv in user_agent:
+			bo.write_short_string( kv[0], max=32 )
+			bo.write_short_string( kv[1], max=127 )
 
+		req.add( bo )
 		res = self.send( req )
 
+		assert res.message_id == 'Ac'
 		# jump to the block of interest
+		tm = res.block( 'Bo' )
+		mat = tm.read_fixed_string(20);
+		log.info('Success (mat: %s)', binascii.hexlify( mat ))
+
 
 	# CMD: `ping'
 	def ping(self):

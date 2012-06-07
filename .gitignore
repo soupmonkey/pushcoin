@@ -18,3 +18,9 @@ local.properties
 # python, PCOS
 *.pyc
 *.pcos
+
+#WP - local lib + bin + obj
+WP/lib
+WP/PushCoin/bin
+WP/PushCoin/obj
+WP/PushCoin/ec.txt
